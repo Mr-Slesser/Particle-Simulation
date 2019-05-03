@@ -1,13 +1,11 @@
 workspace "Particle"
+    architecture "x64"
     configurations
     {
-        "Debug32", 
-        "Dist32",
-        "Release32"
+        "Debug", 
+        "Dist",
+        "Release"
     }
-
-    filter "configurations:*32"
-        architecture "x86"
 
 out = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -20,15 +18,13 @@ project "Particle"
 
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.hpp",
-        "%{prj.name}/src/**cpp"
+        "%{prj.name}/src/**",
     }
 
     includedirs
     {
-        "%{prj.name}/vendor/glad/",
-        "/usr/local/include/"
+        "%{prj.name}/vendor/glfw/include",
+        "%{prj.name}/vendor/glad/include"
     }
 
     libdirs {
@@ -36,17 +32,27 @@ project "Particle"
     }
 
     links {
-        "glfw"
+        "glfw3",
+        "opengl32"
     }
 
+    filter "system:windows"
+        cppdialect "C++17"
+        systemversion "latest"
+
+        defines
+        {
+            "PT_WIN"
+        }
+
     filter "configurations:Debug"
-        defines { "DEBUG" }
+        defines { "PT_DEBUG" }
         symbols "On"
 
     filter "configurations:Dist"
-        defines { "NDEBUG" }
+        defines { "PT_NDEBUG" }
         optimize "On"
 
     filter "configurations:Release"
-        defines { "NDEBUG" }
+        defines { "PT_NDEBUG" }
         optimize "On"

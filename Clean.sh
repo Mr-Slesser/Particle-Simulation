@@ -5,5 +5,5 @@ rm -rf node_modules
 rm -rf .vscode
 rm -rf **/*.xc*
 rm -rf *.xcworkspace
-rm -rf **/*.vc*
+rm -rf **/*.vcx*
 rm -rf *.sln
