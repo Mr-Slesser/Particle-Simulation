@@ -1,0 +1,15 @@
+/bin
+/bin-int
+
+# XCode
+**/*.xc*
+
+# Visual Studi0
+**/*.vc*
+**/*.sln
+
+# Node
+/node_modules
+
+# Misc
+.vscode
