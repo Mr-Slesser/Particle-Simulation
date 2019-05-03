@@ -1,11 +1,13 @@
 workspace "Particle"
-    architecture "x86_64"
     configurations
     {
-        "Debug", 
-        "Dist",
-        "Release"
+        "Debug32", 
+        "Dist32",
+        "Release32"
     }
+
+    filter "configurations:*32"
+        architecture "x86"
 
 out = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -26,7 +28,15 @@ project "Particle"
     includedirs
     {
         "%{prj.name}/vendor/glad/",
-        "%{prj.name}/vendor/glfw/"
+        "/usr/local/include/"
+    }
+
+    libdirs {
+        "%{prj.name}/vendor/glfw/lib"
+    }
+
+    links {
+        "glfw"
     }
 
     filter "configurations:Debug"

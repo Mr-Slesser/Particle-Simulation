@@ -26,3 +26,14 @@ The project includes a `.gitignore` file that will filter out the specific proje
 
 Windows `Clean.bat`
 MacOS `Clean.sh`
+
+## Mac - GLFW
+
+Download and extract the GLFW source code.
+Open the Terminal.
+cd to the extracted directory.
+Type in cmake ., hit return.
+A Makefile will be created for you.
+Type in make, hit return.
+After the compilation process, type in sudo make install.
+The libraries will be copied to /usr/local/lib/, the header files to /usr/local/include/.
