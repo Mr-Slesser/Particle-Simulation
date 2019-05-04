@@ -31,18 +31,34 @@ project "Particle"
         "%{prj.name}/vendor/glfw/lib"
     }
 
-    links {
-        "glfw3",
-        "opengl32"
-    }
-
     filter "system:windows"
         cppdialect "C++17"
         systemversion "latest"
-
+        
+        links {
+            "glfw3",
+            "opengl32"
+        }
         defines
         {
             "PT_WIN"
+        }
+
+    
+    filter "system:macosx"
+        cppdialect "C++17"
+
+        links {
+            "glfw3",
+            "OpenGL.framework",
+            "Cocoa.framework",
+            "IOKit.framework",
+            "CoreVideo.framework"
+        }
+
+        defines
+        {
+            "PT_MAC"
         }
 
     filter "configurations:Debug"

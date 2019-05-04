@@ -1,7 +1,5 @@
 # Premake 5 C++ Project
 
-**Note that currently windows BAT files have not been tested, use with care until this message is removed**
-
 Premake is a build configuration tool for C/C++ in that it generates project files using a LUA configuration.
 [Read more about Premake](https://premake.github.io/)
 
