@@ -1,0 +1,45 @@
+{
+	"configurations": [
+		{
+			"name": "Mac",
+			"includePath": ["/usr/include"],
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true,
+				"databaseFilename": ""
+			},
+			"macFrameworkPath": [
+				"/System/Library/Frameworks",
+				"/Library/Frameworks"
+			],
+			"intelliSenseMode": "clang-x64",
+			"compilerPath": "/usr/local/bin/gcc-8",
+			"cStandard": "c11",
+			"cppStandard": "c++17"
+		},
+		{
+			"name": "Linux",
+			"includePath": ["${workspaceFolder}/**"],
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true,
+				"databaseFilename": ""
+			},
+			"intelliSenseMode": "gcc-x64",
+			"compilerPath": "/usr/local/bin/gcc-8",
+			"cStandard": "c11",
+			"cppStandard": "c++17"
+		},
+		{
+			"name": "Win32",
+			"includePath": ["${workspaceFolder}/**"],
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true,
+				"databaseFilename": ""
+			},
+			"intelliSenseMode": "msvc-x64",
+			"compilerPath": "/usr/local/bin/gcc-8",
+			"cStandard": "c11",
+			"cppStandard": "c++17"
+		}
+	],
+	"version": 4
+}

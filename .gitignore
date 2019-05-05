@@ -8,9 +8,11 @@
 *.vcxproj*
 **/*.sln
 
+# Make
+**/Makefile
+
 # Node
 /node_modules
 
 # Misc
-.vscode
 .vs

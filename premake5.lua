@@ -23,12 +23,12 @@ project "Particle"
 
     includedirs
     {
-        "%{prj.name}/vendor/glfw/include",
-        "%{prj.name}/vendor/glad/include"
+        "vendor/glfw/include",
+        "vendor/glad/include"
     }
 
     libdirs {
-        "%{prj.name}/vendor/glfw/lib"
+        "vendor/glfw/lib"
     }
 
     filter "system:windows"
@@ -59,6 +59,10 @@ project "Particle"
         defines
         {
             "PT_MAC"
+        }
+        linkoptions
+        {
+            "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
         }
 
     filter "configurations:Debug"
