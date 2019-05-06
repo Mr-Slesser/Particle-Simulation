@@ -8,8 +8,9 @@
 #include "Exception.hpp"
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#define FATAL(t, msg, fn) Error::Fatal(t, msg, __FILENAME__, __LINE__, fn)
-#define FATAL(t, msg) Error::Fatal(t, msg, __FILENAME__, __LINE__)s
+
+#define FATALF(t, msg, fn) Error::Fatal(t, msg, __FILENAME__, __LINE__, fn)
+#define FATAL(t, msg) Error::Fatal(t, msg, __FILENAME__, __LINE__)
 
 namespace Error
 {

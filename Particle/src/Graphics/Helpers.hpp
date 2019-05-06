@@ -17,12 +17,7 @@ namespace GL
         
         if (vertexFile.fail())
         {
-            //  TODO: FIX THIS
-            FATAL(Error::TYPE::PROGRAM_SHADER_LOAD, strerror(errno), 
-                []() {
-                    printf("LOL");
-                }
-            );
+            FATALF(Error::TYPE::PROGRAM_SHADER_LOAD, strerror(errno), []() { printf("This is optional\n"); });
         }
 
         std::string fileContents;
