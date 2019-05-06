@@ -16,14 +16,13 @@ GLFWwindow* Window::init()
 
     ctx = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
 
-	if (context == NULL)
+	if (ctx == NULL)
 	{
         FATAL(Error::TYPE::WINDOW_CREATION_FAIL, "Failed to initialise window");
         return nullptr;
 	}
 
 	glfwMakeContextCurrent(ctx);
-    printf("Context has been set...");
 	glfwSetFramebufferSizeCallback(ctx, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -43,12 +42,6 @@ bool Window::isActive()
 void Window::defaultConfig()
 {
     config = {};
-}
-
-void Window::processInput()
-{
-	if (glfwGetKey(ctx, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(ctx, true);
 }
 
 // SECTION: Accessors

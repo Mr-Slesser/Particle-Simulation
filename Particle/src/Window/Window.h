@@ -48,8 +48,7 @@ public:
     GLFWwindow* init();
     bool isActive();
     void defaultConfig();
-    void processInput();
-
+    
     // SECTION: Accessors
     GLFWwindow* context();
     unsigned int getWidth();

@@ -12,6 +12,8 @@
 #define FATALF(t, msg, fn) Error::Fatal(t, msg, __FILENAME__, __LINE__, fn)
 #define FATAL(t, msg) Error::Fatal(t, msg, __FILENAME__, __LINE__)
 
+#
+
 namespace Error
 {
     // TODO: Error type as str?

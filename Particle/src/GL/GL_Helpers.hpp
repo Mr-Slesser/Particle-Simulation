@@ -37,13 +37,13 @@ namespace GL
         
         if(!success)
         {
-            GLint maxLength = 0;
-            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
-            std::vector<char> errorLog(maxLength);
-            // DEBUG: Can I get rid of trailing '\n'?
-            glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
+            // DEBUG: Test this
+            GLint length = 0;
+            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+            char* message = (char*)alloca(length * sizeof(char));
+            glGetShaderInfoLog(id, length, &length, message);
             glDeleteShader(id); 
-            FATAL(Error::TYPE::PROGRAM_SHADER_COMPILE, &(errorLog[0]));
+            FATAL(Error::TYPE::PROGRAM_SHADER_COMPILE, message);
         }
     }
 
