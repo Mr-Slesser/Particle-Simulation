@@ -7,13 +7,6 @@ Window::Window(const WindowConfig _config)
 
 Window::~Window()
 {
-    glfwTerminate();
-    window = nullptr;
-}
-
-GLFWwindow* Window::get()
-{
-    return window;
 }
 
 GLFWwindow* Window::init()
@@ -21,16 +14,17 @@ GLFWwindow* Window::init()
 	glfwInit();
     setGLVersion(config.major, config.minor);
 
-    window = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
+    ctx = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
 
-	if (window == NULL)
+	if (context == NULL)
 	{
         FATAL(Error::TYPE::WINDOW_CREATION_FAIL, "Failed to initialise window");
         return nullptr;
 	}
 
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwMakeContextCurrent(ctx);
+    printf("Context has been set...");
+	glfwSetFramebufferSizeCallback(ctx, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -38,12 +32,12 @@ GLFWwindow* Window::init()
         return nullptr;
 	}
 
-    return window;
+    return ctx;
 }
 
 bool Window::isActive()
 {
-    return !glfwWindowShouldClose(window);
+    return !glfwWindowShouldClose(ctx);
 }
 
 void Window::defaultConfig()
@@ -53,11 +47,16 @@ void Window::defaultConfig()
 
 void Window::processInput()
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(ctx, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(ctx, true);
 }
 
 // SECTION: Accessors
+GLFWwindow* Window::context()
+{
+    return ctx;
+}
+
 unsigned int Window::getWidth()
 {
     return config.width;

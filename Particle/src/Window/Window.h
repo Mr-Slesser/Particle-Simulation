@@ -39,19 +39,19 @@ class Window
 {
 private:
     struct WindowConfig config;
-    GLFWwindow* window;
+    GLFWwindow* ctx;
 
 public:
     Window(const WindowConfig _config = {});
     ~Window();
 
-    GLFWwindow* get();
     GLFWwindow* init();
     bool isActive();
     void defaultConfig();
     void processInput();
 
     // SECTION: Accessors
+    GLFWwindow* context();
     unsigned int getWidth();
     unsigned int getHeight();
 
