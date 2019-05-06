@@ -14,9 +14,6 @@
 #include "../GL/Buffers/VertexArray.h"
 #include "../GL/GLRenderer.h"
 
-#include "../Renderables/Primitives/Vertex.hpp"
-#include "../Renderables/Primitives/Triangle.hpp"
-
 class App
 {
 private:

@@ -15,12 +15,14 @@ void App::init()
 {
     window = new Window();
     window->init();
-
     program = new GL::GLSLProgram();
+    
     va = new GL::VertexArray();
     vb = new GL::VertexBuffer(vertices, 4 * 3 * sizeof(float), GL_STATIC_DRAW);
+
     GL::VertexBufferLayout vbl = GL::VertexBufferLayout();
     vbl.push<float>(3);
+
     va->addBuffer(*vb, vbl);
     ib = new GL::IndexBuffer(indices, 6, GL_STATIC_DRAW);
     renderer = new GL::GLRenderer();
