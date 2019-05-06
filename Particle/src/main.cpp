@@ -4,21 +4,14 @@
 #include <iostream>
 
 #include "./Window/Window.h"
-#include "./Graphics/Program.h"
+#include "./GL/GLSLProgram.h"
 
 int main()
 {
-    GLFWwindow* window = window_init();
+    Window* win = new Window();
+    GLFWwindow* window = win->init();
+    GL::GLSLProgram* program = new GL::GLSLProgram();
 
-    if (window == nullptr)
-    {
-        return -1;
-    }
-
-    int shaderProgram = program_init();
-
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	// ------------------------------------------------------------------
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f, // left  
 		 0.5f, -0.5f, 0.0f, // right
@@ -44,17 +37,14 @@ int main()
 	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 	glBindVertexArray(0);
 
-
-	// uncomment this call to draw in wireframe polygons.
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// render loop
-	// -----------
-	while (!glfwWindowShouldClose(window))
+    float dt = 0.0f;
+	//while (!glfwWindowShouldClose(window))
+    while (win->isActive())
 	{
+        dt += 0.01;
 		// input
 		// -----
-		processInput(window);
+		win->processInput();
 
 		// render
 		// ------
@@ -62,9 +52,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// draw our first triangle
-		glUseProgram(shaderProgram);
+        program->use();
+        program->setFloat("time", dt);
 		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		// glBindVertexArray(0); // no need to unbind it every time 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

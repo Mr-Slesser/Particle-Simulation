@@ -2,7 +2,11 @@
 	"configurations": [
 		{
 			"name": "Mac",
-			"includePath": ["/usr/include"],
+			"includePath": [
+				"/usr/include",
+				"./vendor/glfw/include",
+				"./vendor/glad/include"
+			],
 			"browse": {
 				"limitSymbolsToIncludedHeaders": true,
 				"databaseFilename": ""

@@ -35,5 +35,6 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "cerrno": "cpp"
-    }
+    },
+    "todo-tree.showTagsFromOpenFilesOnly": false
 }

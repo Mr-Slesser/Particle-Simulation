@@ -14,12 +14,14 @@
 
 namespace Error
 {
-    // TODO: Error type as str.
+    // TODO: Error type as str?
     enum TYPE
     {
-        PROGRAM_SHADER_LOAD,
-        PROGRAM_SHADER_COMPILE,
-        PROGRAM_SHADER_LINK
+        WINDOW_CREATION_FAIL    = 0x0001,
+        WINDOW_GLAD_FAIL        = 0x0002,
+        PROGRAM_SHADER_LOAD     = 0x0010,
+        PROGRAM_SHADER_COMPILE  = 0x0011,
+        PROGRAM_SHADER_LINK     = 0x0012
     };
 
     static void Fatal(
@@ -32,7 +34,7 @@ namespace Error
         printf("ERROR::%d: %s (%d: %s)\n", t, msg, line, file);
         if (on_exit) on_exit();
         glfwTerminate();
-        exit(0);
+        exit(-1);
     }
 
 } // Error
