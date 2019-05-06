@@ -1,6 +1,6 @@
 /bin
 /bin-int
-/ipch
+.vscode/ipch
 
 # XCode
 **/*.xc*
