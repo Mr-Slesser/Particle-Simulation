@@ -1,6 +1,7 @@
 /bin
 /bin-int
-.vscode/ipch
+/GoogleTest
+/.vs
 
 # XCode
 **/*.xc*
@@ -11,9 +12,10 @@
 
 # Make
 **/Makefile
+**/*.make
 
 # Node
 /node_modules
 
 # Misc
-.vs
+**/ipch
