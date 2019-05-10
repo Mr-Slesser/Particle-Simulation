@@ -13,6 +13,7 @@
 #include "../GL/Buffers/IndexBuffer.h"
 #include "../GL/Buffers/VertexArray.h"
 #include "../GL/GLRenderer.h"
+#include "../Renderables/Vertex.hpp"
 
 class App
 {
@@ -23,6 +24,7 @@ private:
     GL::IndexBuffer* ib;
     GL::VertexArray* va;
     GL::GLRenderer* renderer;
+    Vertex v[4];
 
     float dt;
 
