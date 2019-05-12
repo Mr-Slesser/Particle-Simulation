@@ -1,37 +1,33 @@
-# Premake 5 C++ Project
+# Particle
 
-Premake is a build configuration tool for C/C++ in that it generates project files using a LUA configuration.
-[Read more about Premake](https://premake.github.io/)
+Particle is an ongoing project with end product to be a GPU based particle simulation system.
 
-## Features
+## MacOS
 
--   Visual Studio & XCode support
--   Easy build and clean up scripts
--   Easily extensible!
+For MacOS the project includes a simple menu driven interface on the command line to handle various aspects of the project, this is in invoked in your terminal with `./Build.sh', with the following supported input:
 
-## Building
+| Input | Function | Details                                                                            |
+| ----- | -------- | ---------------------------------------------------------------------------------- |
+| 1     | Build    | Will clean files, generate a gmake project and then build and run the application. |
+| 2     | Test     | Will clean files, generate the project and then run the test application.          |
+| 3     | Generate | Generates the project files                                                        |
+| 4     | Clean    | Removes platform specific project files                                            |
+| 5     | Commit   | Will prompt for a commit message and then push to the remote repo.                 |
 
-To build the project there is an included file for both MacOS and Windows, this will generate the project files using the include Premake executable for that platform's build tool.
+## Windows
 
-Windows (VS2017) `Generate.bat`
-MacOS (XCode) `./Generate.sh`
+Generate files: `Generate.bat`
+Clean files: `Clean.bat`
 
-If you wish to build for other platforms then you can run Premake directly from the `vendor/bin/<platform>` folder, where `<platform>` is either `win` or `mac`
+## GLFW: MacOS
 
-## Clean Up
+Steps to build GLFW for MacOS:
 
-The project includes a `.gitignore` file that will filter out the specific project files and outputs, but if you need to manually trigger a clean up then you can use one of two scripts depending on your platform to remove all generated files.
-
-Windows `Clean.bat`
-MacOS `Clean.sh`
-
-## Mac - GLFW
-
-Download and extract the GLFW source code.
-Open the Terminal.
-cd to the extracted directory.
-Type in cmake ., hit return.
-A Makefile will be created for you.
-Type in make, hit return.
-After the compilation process, type in sudo make install.
-The libraries will be copied to /usr/local/lib/, the header files to /usr/local/include/.
+-   Download and extract the GLFW source code.
+-   Open the Terminal.
+-   cd to the extracted directory.
+-   Type in cmake ., hit return.
+-   A Makefile will be created for you.
+-   Type in make, hit return.
+-   After the compilation process, type in sudo make install.
+-   The libraries will be copied to /usr/local/lib/, the header files to /usr/local/include/.
