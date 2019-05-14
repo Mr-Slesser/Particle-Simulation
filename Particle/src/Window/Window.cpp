@@ -1,5 +1,6 @@
 #include "Window.h"
 
+
 Window::Window(const WindowConfig _config)
     : config(_config)
 {
@@ -30,6 +31,8 @@ GLFWwindow* Window::init()
         FATAL(Error::TYPE::WINDOW_GLAD_FAIL, "Failed to initialise GLAD");
         return nullptr;
 	}
+
+    glEnable(GL_DEPTH_TEST);
 
     return ctx;
 }
@@ -81,6 +84,15 @@ void Window::setGLVersion(const int major, const int minor)
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
+}
+
+// SECTION: Callbacks.
+void Window::registerMouseCursorHandler(void (*callback)(GLFWwindow*, double, double), void (*btn_callback)(GLFWwindow*, int, int, int), void (*scr_callback)(GLFWwindow*, double, double))
+{
+    glfwSetCursorPosCallback(ctx, callback);  
+    // TODO: Split this out..
+    glfwSetMouseButtonCallback(ctx, btn_callback);
+    glfwSetScrollCallback(ctx, scr_callback);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

@@ -25,7 +25,8 @@ project "Particle"
     includedirs
     {
         "vendor/glfw/include",
-        "vendor/glad/include"
+        "vendor/glad/include",
+        "vendor/glm",
     }
 
     libdirs {
@@ -109,7 +110,14 @@ project "ParticleTest"
 
     includedirs {
         (gtest .. "include"),
-        "./Particle/src"
+        "./Particle/src",
+        "vendor/glfw/include",
+        "vendor/glad/include",
+        "vendor/glm",
+    }
+
+    libdirs {
+        "vendor/glfw/lib"
     }
 
     links { 

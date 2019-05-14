@@ -12,19 +12,25 @@
 #define FATALF(t, msg, fn) Error::Fatal(t, msg, __FILENAME__, __LINE__, fn)
 #define FATAL(t, msg) Error::Fatal(t, msg, __FILENAME__, __LINE__)
 
-#
+#define ERROR_DEFINITION_FILE "../../Resources/Definitions/Error.def";
 
 namespace Error
 {
-    // TODO: Error type as str?
     enum TYPE
     {
-        WINDOW_CREATION_FAIL    = 0x0001,
-        WINDOW_GLAD_FAIL        = 0x0002,
-        PROGRAM_SHADER_LOAD     = 0x0010,
-        PROGRAM_SHADER_COMPILE  = 0x0011,
-        PROGRAM_SHADER_LINK     = 0x0012
+        #define ERROR_DEF(x,y) x = y,
+        #include ERROR_DEFINITION_FILE
+        #undef ERROR_DEF
     };
+    
+    static inline char* enum_print(TYPE e) {
+        switch (e) {
+            #define ERROR_DEF(x,y) case y: return #x;
+            #include ERROR_DEFINITION_FILE
+            #undef ERROR_DEF
+            default: return "Unknown";
+        }
+    }
 
     static void Fatal(
         TYPE t, 
@@ -33,7 +39,7 @@ namespace Error
         const int line = 0,
         std::function<void()> on_exit = {})
     {   
-        printf("ERROR::%d: %s (%d: %s)\n", t, msg, line, file);
+        printf("ERROR::%s: %s (%d: %s)\n", Error::enum_print(t), msg, line, file);
         if (on_exit) on_exit();
         glfwTerminate();
         exit(-1);

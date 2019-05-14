@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 
 #include <iostream>
+#include <functional>
 
 #include "./../Utility/Error.hpp"
 
@@ -60,6 +61,10 @@ public:
 
     // SECTION: Hint functions
     void setGLVersion(const int major, const int minor);
+
+    // SECTION: Callbacks.
+    // TODO: Resize call back.
+    void registerMouseCursorHandler(void (*callback)(GLFWwindow*, double, double), void (*btn_callback)(GLFWwindow*, int, int, int), void (*scr_callback)(GLFWwindow*, double, double));
 };
 
 #endif /* WINDOW_H */

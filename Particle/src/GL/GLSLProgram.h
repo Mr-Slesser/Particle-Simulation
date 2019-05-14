@@ -25,10 +25,12 @@ namespace GL
 
     public:
         GLSLProgram(const char* vertexPath = VS_BASIC, const char* fragmentPath = FS_BASIC);
-        ~GLSLProgram();
+        virtual ~GLSLProgram();
 
         void use();
         void unuse();
+
+        unsigned int getID() const { return ID; }
 
         // SECTION: Uniform helper functions.
 
