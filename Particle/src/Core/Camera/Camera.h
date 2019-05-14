@@ -31,6 +31,7 @@ protected:
 
     float pitch = 0.0f;
     float yaw = -90.0f;
+    float fov = 45.0f;
 
 public:
     static Camera* instance;
@@ -43,21 +44,22 @@ public:
     glm::mat4& setLookAt(float x, float y, float z);
     glm::mat4& setLookAt(glm::vec3& _pos);
     glm::mat4& setLookAt();
-    const glm::mat4& getLookAt();
+    glm::mat4& getLookAt();
 
-    const glm::vec3& getPosition() { return pos; }
+    glm::vec3& getPosition() { return pos; }
     void setPosition(glm::vec3 _pos);
     void addPosition(glm::vec3 _pos);
     void subtractPosition(glm::vec3 _pos);
 
-    const glm::vec3& getFront() { return front; }
+    glm::vec3& getFront() { return front; }
 
-    const glm::vec3& getUp() { return up; }
+    glm::vec3& getUp() { return up; }
 
     static Camera* getThis() {
         return instance;
     }
 
+    inline float getFOV() { return fov; }
     void setPY(float y, float p) {
         pitch += p;
         yaw += y;
@@ -76,8 +78,9 @@ public:
         setLookAt();
     }
 
-    void setProjection(float fov)
+    void setProjection(float _fov)
     {
+        fov = _fov;
         projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 200.0f);  
     }
 };

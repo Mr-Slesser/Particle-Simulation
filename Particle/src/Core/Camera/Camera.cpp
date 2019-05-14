@@ -56,7 +56,7 @@ glm::mat4& Camera::setLookAt()
     return lookAt;
 }
 
-const glm::mat4& Camera::getLookAt()
+glm::mat4& Camera::getLookAt()
 {
     return lookAt;
 }

@@ -15,6 +15,8 @@
 #define FS_BASIC "./Particle/Resources/Shaders/basic.fragment"
 
 // TODO: Uniform locations: register and add to map to stop constant lookups.
+// TODO: Have a true or false flag to say if bound or not.
+// TODO: Matrix uniforms.
 
 namespace GL
 {

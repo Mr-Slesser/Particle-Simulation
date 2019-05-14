@@ -13,8 +13,8 @@
 #include "Buffers/EBO.h"
 #include "Buffers/VAO.h"
 #include "../Renderables/Vertex.hpp"
-#include "../Camera/Camera2D.hpp"
-#include "../Camera/Camera3D.hpp"
+#include "../Core/Camera/Camera2D.hpp"
+#include "../Core/Camera/Camera3D.hpp"
 namespace GL
 {
     class GLRenderer
@@ -24,6 +24,10 @@ namespace GL
         VBO* vbo;
         EBO* ebo;
         VAO* vao;
+
+        // TODO: Model matrix vector.
+        glm::mat4 view;
+        glm::mat4 projection;
         
     public:
         GLRenderer();
@@ -31,8 +35,12 @@ namespace GL
 
         void init(unsigned int indices[6], Vertex v[4], int vsize);
 
+        void modelMatrix(float& dt, Camera* cam);
+        void viewMatrix(float& dt, Camera* cam);
+        void projectionMatrix(float& dt, Camera* cam);
+
         void clear() const;
-        void draw(float &dt, Camera* cam) const;
+        void draw(float &dt, Camera* cam);
     };
     
 } // GL

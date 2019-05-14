@@ -7,7 +7,7 @@
 #include <iostream>
 #include <functional>
 
-#include "./../Utility/Error.hpp"
+#include "../../Utility/Error.hpp"
 
 /* NOTE: Class to contain:
     - Act as a wrapper, so in future if needed to not use GLFW etc. then could easily switch
@@ -61,10 +61,6 @@ public:
 
     // SECTION: Hint functions
     void setGLVersion(const int major, const int minor);
-
-    // SECTION: Callbacks.
-    // TODO: Resize call back.
-    void registerMouseCursorHandler(void (*callback)(GLFWwindow*, double, double), void (*btn_callback)(GLFWwindow*, int, int, int), void (*scr_callback)(GLFWwindow*, double, double));
 };
 
 #endif /* WINDOW_H */

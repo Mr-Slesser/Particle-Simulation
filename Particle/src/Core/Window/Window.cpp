@@ -1,6 +1,5 @@
 #include "Window.h"
 
-
 Window::Window(const WindowConfig _config)
     : config(_config)
 {
@@ -87,14 +86,6 @@ void Window::setGLVersion(const int major, const int minor)
 }
 
 // SECTION: Callbacks.
-void Window::registerMouseCursorHandler(void (*callback)(GLFWwindow*, double, double), void (*btn_callback)(GLFWwindow*, int, int, int), void (*scr_callback)(GLFWwindow*, double, double))
-{
-    glfwSetCursorPosCallback(ctx, callback);  
-    // TODO: Split this out..
-    glfwSetMouseButtonCallback(ctx, btn_callback);
-    glfwSetScrollCallback(ctx, scr_callback);
-}
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);

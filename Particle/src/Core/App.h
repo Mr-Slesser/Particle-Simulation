@@ -2,7 +2,7 @@
 #define APP_H
 
 // TODO: Start up info print.
-
+// TODO: PT Namespace
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -10,12 +10,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../Window/Window.h"
+#include "Window/Window.h"
 #include "../GL/GLRenderer.h"
 #include "../Renderables/Vertex.hpp"
 
-#include "../Camera/Camera2D.hpp"
-#include "../Camera/Camera3D.hpp"
+#include "Input/InputManager.h"
+
+#include "Camera/Camera2D.hpp"
+#include "Camera/Camera3D.hpp"
 
 class App
 {
@@ -47,9 +49,9 @@ public:
     void run();
 
     void processInput();
-    static void mouseCursorHandler(GLFWwindow* m, double x, double y);
-    static void mouseButtonHandler(GLFWwindow* m, int button, int action, int mods);
-    static void mouseScrollHandler(GLFWwindow* window, double xoffset, double yoffset);
+    // static void mouseCursorHandler(GLFWwindow* m, double x, double y);
+    // static void mouseButtonHandler(GLFWwindow* m, int button, int action, int mods);
+    // static void mouseScrollHandler(GLFWwindow* window, double xoffset, double yoffset);
 };
 
 #endif /* APP_H */

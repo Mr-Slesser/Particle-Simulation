@@ -27,7 +27,7 @@ void App::init()
     //cam = new Camera2D();
     cam = new Camera3D();
 
-    window->registerMouseCursorHandler(App::mouseCursorHandler, App::mouseButtonHandler, App::mouseScrollHandler);
+    PT::Input::InputManager::get()->registerMouseCallbacks(window);
 }
 
 void App::run()
@@ -61,58 +61,4 @@ void App::processInput()
         cam->subtractPosition(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cSpeed);
     if (glfwGetKey(window->context(), GLFW_KEY_D) == GLFW_PRESS)
         cam->addPosition(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cSpeed);
-}
-
-// NOTE: Static
-static bool firstMouse = true;
-static int mouseHeld = false;
-void App::mouseCursorHandler(GLFWwindow* m, double x, double y)
-{
-    static float lX = 400.0f;
-    static float lY = 300.0f;
-
-    if (mouseHeld)
-    {
-        if(firstMouse) // this bool variable is initially set to true
-        {
-            lX = x;
-            lY = y;
-            firstMouse = false;
-        }
-        // TODO: Use this to wrap a functor!
-
-        float xoffset = x - lX;
-        float yoffset = lY - y; // reversed since y-coordinates range from bottom to top
-        lX = x;
-        lY = y;
-
-        static float sensitivity = 0.1f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        Camera::getThis()->setPY(xoffset, yoffset);
-    }
-}
-
-void App::mouseButtonHandler(GLFWwindow* m, int button, int action, int mods)
-{
-    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-        if(GLFW_PRESS == action)
-            mouseHeld = true;
-        else if(GLFW_RELEASE == action)
-            mouseHeld = false;
-    }
-}
-
-static float fov = 45.0f;
-void App::mouseScrollHandler(GLFWwindow* window, double xoffset, double yoffset)
-{
-    if(fov >= 1.0f && fov <= 45.0f)
-        fov -= yoffset;
-    if(fov <= 1.0f)
-        fov = 1.0f;
-    if(fov >= 45.0f)
-        fov = 45.0f;
-
-    Camera::getThis()->setProjection(fov);
 }
