@@ -1,17 +1,17 @@
 #include "App.h"
 
-App::App()
+PT::App::App()
     : dt(0.0f)
 {
     init();
 }
 
-App::~App()
+PT::App::~App()
 {
     glfwTerminate();
 }
 
-void App::init()
+void PT::App::init()
 {
     window = new Window();
     window->init();
@@ -23,14 +23,10 @@ void App::init()
 
     renderer = new GL::GLRenderer();
     renderer->init(indices, v, sizeof(v));
-
-    //cam = new Camera2D();
-    cam = new Camera3D();
-
-    PT::Input::InputManager::get()->registerMouseCallbacks(window);
+    InputManager::get()->registerMouseCallbacks(window);
 }
 
-void App::run()
+void PT::App::run()
 {
     while (window->isActive())
 	{
@@ -38,27 +34,27 @@ void App::run()
 		
         renderer->clear();
         processInput();
-        renderer->draw(dt, cam);
+        renderer->draw(dt, CameraManager::get()->getCamera());
 
 		glfwSwapBuffers(window->context());
 		glfwPollEvents();
 	}
 }
 
-void App::processInput()
+void PT::App::processInput()
 {
 	if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
 		glfwSetWindowShouldClose(window->context(), true);
     }
 
-    float cSpeed = 0.05f; // adjust accordingly
+    float cSpeed = 0.05f;
     if (glfwGetKey(window->context(), GLFW_KEY_W) == GLFW_PRESS)
-        cam->addPosition(cSpeed * cam->getFront());
+        CameraManager::get()->getCamera()->addPosition(cSpeed * CameraManager::get()->getCamera()->getFront());
     if (glfwGetKey(window->context(), GLFW_KEY_S) == GLFW_PRESS)
-        cam->subtractPosition(cSpeed * cam->getFront());
+        CameraManager::get()->getCamera()->subtractPosition(cSpeed * CameraManager::get()->getCamera()->getFront());
     if (glfwGetKey(window->context(), GLFW_KEY_A) == GLFW_PRESS)
-        cam->subtractPosition(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cSpeed);
+        CameraManager::get()->getCamera()->subtractPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
     if (glfwGetKey(window->context(), GLFW_KEY_D) == GLFW_PRESS)
-        cam->addPosition(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cSpeed);
+        CameraManager::get()->getCamera()->addPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
 }

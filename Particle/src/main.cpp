@@ -2,7 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-    App* app = new App();
+    PT::App* app = new PT::App();
     app->run();
 
 	return 0;

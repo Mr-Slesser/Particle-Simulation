@@ -37,7 +37,6 @@ namespace GL
         
         if(!success)
         {
-            // DEBUG: Test this
             GLint length = 0;
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));

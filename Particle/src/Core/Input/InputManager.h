@@ -9,11 +9,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../Window/Window.h"
-#include "../Camera/Camera.h"
-
+#include "../Camera/CameraManager.h"
 // TODO: Handlers to be created, using an input config singleton as a bridge.
 
-namespace PT::Input
+namespace PT
 {
     class InputManager
     {
@@ -34,12 +33,11 @@ namespace PT::Input
 
         void setMouseHeld(bool torf);
 
-
         const inline bool isMouseHeld() const;
         const inline float getSensitivity() const;
     };
 
-        static void mouseCursorHandler(GLFWwindow* m, double x, double y)
+    static void mouseCursorHandler(GLFWwindow* m, double x, double y)
     {
         static float lX = 400.0f;
         static float lY = 300.0f;
@@ -62,7 +60,7 @@ namespace PT::Input
             xoffset *= InputManager::get()->getSensitivity();
             yoffset *= InputManager::get()->getSensitivity();
 
-            Camera::getThis()->setPY(xoffset, yoffset);
+            CameraManager::get()->getCamera()->setPY(xoffset, yoffset);
         }
     }
 
@@ -78,7 +76,7 @@ namespace PT::Input
 
     static void mouseScrollHandler(GLFWwindow* window, double xoffset, double yoffset)
     {
-        float fov = Camera::getThis()->getFOV();
+        float fov = CameraManager::get()->getCamera()->getFOV();
         if(fov >= 1.0f && fov <= 45.0f)
             fov -= yoffset;
         if(fov <= 1.0f)
@@ -86,7 +84,7 @@ namespace PT::Input
         if(fov >= 45.0f)
             fov = 45.0f;
 
-        Camera::getThis()->setProjection(fov);
+        CameraManager::get()->getCamera()->setProjection(fov);
     }
 
 } // namespace Input

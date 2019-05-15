@@ -8,8 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// TODO: Tidy up global access of this.
-
 enum PROJECTION_TYPE
 {
     PERSPECTIVE,
@@ -18,6 +16,24 @@ enum PROJECTION_TYPE
 
 // TODO: Default camera values, i.e. implement a reset camera key.
 // TODO: Incorporate handlers / Input Manager Class
+// TODO: Camera Configuration Struct
+
+struct CameraData
+{
+    float pitch;
+    float yaw;
+    float fov;
+    glm::vec3 pos;
+    glm::vec3 front;
+    glm::vec3 up;
+};
+
+static const CameraData DEFAULT_CAMERA = { 
+    0.0f, -90.0f, 45.0f, 
+    glm::vec3(0.0f, 0.0f,  3.0f), 
+    glm::vec3(0.0f, 0.0f, -1.0f), 
+    glm::vec3(0.0f, 1.0f,  0.0f)
+};
 
 class Camera
 {
@@ -25,17 +41,11 @@ protected:
     glm::mat4 projection;
     glm::mat4 lookAt;
 
-    glm::vec3 pos;
-    glm::vec3 front;
-    glm::vec3 up;
-
-    float pitch = 0.0f;
-    float yaw = -90.0f;
-    float fov = 45.0f;
+    CameraData c;
 
 public:
     static Camera* instance;
-    Camera(PROJECTION_TYPE t);
+    Camera(PROJECTION_TYPE t, const CameraData& config = DEFAULT_CAMERA);
     virtual ~Camera();
 
     void setProjection(PROJECTION_TYPE t, float width, float height);
@@ -46,42 +56,42 @@ public:
     glm::mat4& setLookAt();
     glm::mat4& getLookAt();
 
-    glm::vec3& getPosition() { return pos; }
+    glm::vec3& getPosition() { return c.pos; }
     void setPosition(glm::vec3 _pos);
     void addPosition(glm::vec3 _pos);
     void subtractPosition(glm::vec3 _pos);
 
-    glm::vec3& getFront() { return front; }
+    glm::vec3& getFront() { return c.front; }
 
-    glm::vec3& getUp() { return up; }
+    glm::vec3& getUp() { return c.up; }
 
     static Camera* getThis() {
         return instance;
     }
 
-    inline float getFOV() { return fov; }
+    inline float getFOV() { return c.fov; }
     void setPY(float y, float p) {
-        pitch += p;
-        yaw += y;
+        c.pitch += p;
+        c.yaw += y;
 
-        if(pitch > 89.0f)
-            pitch =  89.0f;
-        if(pitch < -89.0f)
-            pitch = -89.0f;
+        if(c.pitch > 89.0f)
+            c.pitch =  89.0f;
+        if(c.pitch < -89.0f)
+            c.pitch = -89.0f;
 
         glm::vec3 f;
-        f.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-        f.y = sin(glm::radians(pitch));
-        f.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-        front = glm::normalize(f);
+        f.x = cos(glm::radians(c.pitch)) * cos(glm::radians(c.yaw));
+        f.y = sin(glm::radians(c.pitch));
+        f.z = cos(glm::radians(c.pitch)) * sin(glm::radians(c.yaw));
+        c.front = glm::normalize(f);
 
         setLookAt();
     }
 
     void setProjection(float _fov)
     {
-        fov = _fov;
-        projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 200.0f);  
+        c.fov = _fov;
+        projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 200.0f);  
     }
 };
 

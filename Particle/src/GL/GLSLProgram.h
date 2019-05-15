@@ -10,13 +10,14 @@
 #include "GL_Helpers.hpp"
 #include "../Utility/Error.hpp"
 
-// TODO: Formalize the default shader files.
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #define VS_BASIC "./Particle/Resources/Shaders/basic.vertex"
 #define FS_BASIC "./Particle/Resources/Shaders/basic.fragment"
 
 // TODO: Uniform locations: register and add to map to stop constant lookups.
-// TODO: Have a true or false flag to say if bound or not.
-// TODO: Matrix uniforms.
 
 namespace GL
 {
@@ -35,33 +36,21 @@ namespace GL
         unsigned int getID() const { return ID; }
 
         // SECTION: Uniform helper functions.
-
-        // 1 Value
         void setInt(const char* name, int value) const;
-        void setUInt(const char* name, unsigned int value) const;
         void setFloat(const char* name, float value) const;
-        // Vectors: 2 Values
-        void setInt2(const char* name, const int values[2]) const;
+        void setInt2(const char* name, const glm::ivec2& values) const;
         void setInt2(const char* name, const int& x, const int& y) const;
-        void setUInt2(const char* name, const unsigned int values[2]) const;
-        void setUInt2(const char* name, const unsigned int& x, const unsigned int& y) const;
-        void setFloat2(const char* name, const float values[2]) const;
+        void setFloat2(const char* name, const glm::vec2& values) const;
         void setFloat2(const char* name, const float& x, const float& y) const;
-        // Vectors: 3 Values
-        void setInt3(const char* name, const int values[3]) const;
+        void setInt3(const char* name, const glm::ivec3& values) const;
         void setInt3(const char* name, const int& x, const int& y, const int& z) const;
-        void setUInt3(const char* name, const unsigned int values[3]) const;
-        void setUInt3(const char* name, const unsigned int& x, const unsigned int& y, const unsigned int& z) const;
-        void setFloat3(const char* name, const float values[3]) const;
+        void setFloat3(const char* name, const glm::vec3& values) const;
         void setFloat3(const char* name, const float& x, const float& y, const float& z) const;
-
-        // Vectors: 4 Values
-        void setInt4(const char* name, const int values[4]) const;
+        void setInt4(const char* name, const glm::ivec4& values) const;
         void setInt4(const char* name, const int& x, const int& y, const int& z, const int& w) const;
-        void setUInt4(const char* name, const unsigned int values[4]) const;
-        void setUInt4(const char* name, const unsigned int& x, const unsigned int& y, const unsigned int& z, const unsigned int& w) const;
-        void setFloat4(const char* name, const float values[4]) const;
+        void setFloat4(const char* name, const glm::vec4& values) const;
         void setFloat4(const char* name, const float& x, const float& y, const float& z, const float& w) const;
+        void setMat4x4f(const char* name, const glm::mat4& values);
     };
 } // GL
 

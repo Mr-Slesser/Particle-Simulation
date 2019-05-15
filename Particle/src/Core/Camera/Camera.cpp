@@ -2,15 +2,11 @@
 
 Camera* Camera::instance = 0;
 
-Camera::Camera(PROJECTION_TYPE t)
+Camera::Camera(PROJECTION_TYPE t, const CameraData& config)
+    : c(config)
 {
-    pos = glm::vec3(0.0f, 0.0f,  3.0f);
-    front = glm::vec3(0.0f, 0.0f, -1.0f);
-    up = glm::vec3(0.0f, 1.0f,  0.0f);
-
-    lookAt = glm::lookAt(pos, pos + front, up);
+    lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     setProjection(t, 800.0f, 600.0f); 
-
     instance = this;
 }
 
@@ -38,21 +34,21 @@ glm::mat4& Camera::getProjection()
 
 glm::mat4& Camera::setLookAt(float x, float y, float z)
 {
-    pos = glm::vec3(x, y, z);
-    lookAt = glm::lookAt(pos, pos + front, up);
+    c.pos = glm::vec3(x, y, z);
+    lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     return lookAt;
 }
 
 glm::mat4& Camera::setLookAt(glm::vec3& _pos)
 {
-    pos = _pos;
-    lookAt = glm::lookAt(pos, pos + front, up);
+    c.pos = _pos;
+    lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     return lookAt;
 }
 
 glm::mat4& Camera::setLookAt()
 {
-    lookAt = glm::lookAt(pos, pos + front, up);
+    lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     return lookAt;
 }
 
@@ -63,18 +59,18 @@ glm::mat4& Camera::getLookAt()
 
 void Camera::setPosition(glm::vec3 _pos)
 {
-    pos = _pos;
+    c.pos = _pos;
     setLookAt();
 }
 
 void Camera::addPosition(glm::vec3 _pos)
 {
-    pos += _pos;
+    c.pos += _pos;
     setLookAt();
 }
 
 void Camera::subtractPosition(glm::vec3 _pos)
 {
-    pos -= _pos;
+    c.pos -= _pos;
     setLookAt();
 }

@@ -52,19 +52,14 @@ void GL::GLSLProgram::setInt(const char* name, int value) const
     glUniform1i(glGetUniformLocation(ID, name), value); 
 }
 
-void GL::GLSLProgram::setUInt(const char* name, unsigned int value) const
-{
-    glUniform1ui(glGetUniformLocation(ID, name), value); 
-}
-
 void GL::GLSLProgram::setFloat(const char* name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name), value); 
 }
 
-void GL::GLSLProgram::setInt2(const char* name, const int values[2]) const
+void GL::GLSLProgram::setInt2(const char* name, const glm::ivec2& values) const
 {
-    glUniform2iv(glGetUniformLocation(ID, name), 2, values); 
+    glUniform2iv(glGetUniformLocation(ID, name), 2, glm::value_ptr(values)); 
 }
 
 void GL::GLSLProgram::setInt2(const char* name, const int& x, const int& y) const
@@ -72,28 +67,18 @@ void GL::GLSLProgram::setInt2(const char* name, const int& x, const int& y) cons
     glUniform2i(glGetUniformLocation(ID, name), x, y); 
 }
 
-void GL::GLSLProgram::setUInt2(const char* name, const unsigned int values[2]) const
+void GL::GLSLProgram::setFloat2(const char* name, const glm::vec2& values) const
 {
-    glUniform2uiv(glGetUniformLocation(ID, name), 2, values); 
-}
-
-void GL::GLSLProgram::setUInt2(const char* name, const unsigned int& x, const unsigned int& y) const
-{
-    glUniform2ui(glGetUniformLocation(ID, name), x, y); 
-}
-
-void GL::GLSLProgram::setFloat2(const char* name, const float values[2]) const
-{
-    glUniform2fv(glGetUniformLocation(ID, name), 2, values); 
+    glUniform2fv(glGetUniformLocation(ID, name), 2, glm::value_ptr(values)); 
 }
 void GL::GLSLProgram::setFloat2(const char* name, const float& x, const float& y) const
 {
     glUniform2f(glGetUniformLocation(ID, name), x, y); 
 }
 
-void GL::GLSLProgram::setInt3(const char* name, const int values[3]) const
+void GL::GLSLProgram::setInt3(const char* name, const glm::ivec3& values) const
 {
-    glUniform3iv(glGetUniformLocation(ID, name), 3, values); 
+    glUniform3iv(glGetUniformLocation(ID, name), 3, glm::value_ptr(values)); 
 }
 
 void GL::GLSLProgram::setInt3(const char* name, const int& x, const int& y, const int& z) const
@@ -101,19 +86,9 @@ void GL::GLSLProgram::setInt3(const char* name, const int& x, const int& y, cons
     glUniform3i(glGetUniformLocation(ID, name), x, y, z); 
 }
 
-void GL::GLSLProgram::setUInt3(const char* name, const unsigned int values[3]) const
+void GL::GLSLProgram::setFloat3(const char* name, const glm::vec3& values) const
 {
-    glUniform3uiv(glGetUniformLocation(ID, name), 3, values); 
-}
-
-void GL::GLSLProgram::setUInt3(const char* name, const unsigned int& x, const unsigned int& y, const unsigned int& z) const
-{
-    glUniform3ui(glGetUniformLocation(ID, name), x, y, z); 
-}
-
-void GL::GLSLProgram::setFloat3(const char* name, const float values[3]) const
-{
-    glUniform3fv(glGetUniformLocation(ID, name), 3, values); 
+    glUniform3fv(glGetUniformLocation(ID, name), 3, glm::value_ptr(values)); 
 }
 
 void GL::GLSLProgram::setFloat3(const char* name, const float& x, const float& y, const float& z) const
@@ -121,9 +96,9 @@ void GL::GLSLProgram::setFloat3(const char* name, const float& x, const float& y
     glUniform3f(glGetUniformLocation(ID, name), x, y, z); 
 }
 
-void GL::GLSLProgram::setInt4(const char* name, const int values[4]) const
+void GL::GLSLProgram::setInt4(const char* name, const glm::ivec4& values) const
 {
-    glUniform4iv(glGetUniformLocation(ID, name), 4, values); 
+    glUniform4iv(glGetUniformLocation(ID, name), 4, glm::value_ptr(values)); 
 }
 
 void GL::GLSLProgram::setInt4(const char* name, const int& x, const int& y, const int& z, const int& w) const
@@ -131,22 +106,17 @@ void GL::GLSLProgram::setInt4(const char* name, const int& x, const int& y, cons
     glUniform4i(glGetUniformLocation(ID, name), x, y, z, w); 
 }
 
-void GL::GLSLProgram::setUInt4(const char* name, const unsigned int values[4]) const
+void GL::GLSLProgram::setFloat4(const char* name, const glm::vec4& values) const
 {
-    glUniform4uiv(glGetUniformLocation(ID, name), 4, values); 
-}
-
-void GL::GLSLProgram::setUInt4(const char* name, const unsigned int& x, const unsigned int& y, const unsigned int& z, const unsigned int& w) const
-{
-    glUniform4ui(glGetUniformLocation(ID, name), x, y, z, w); 
-}
-
-void GL::GLSLProgram::setFloat4(const char* name, const float values[4]) const
-{
-    glUniform4fv(glGetUniformLocation(ID, name), 4, values); 
+    glUniform4fv(glGetUniformLocation(ID, name), 4, glm::value_ptr(values)); 
 }
 
 void GL::GLSLProgram::setFloat4(const char* name, const float& x, const float& y, const float& z, const float& w) const
 {
     glUniform4f(glGetUniformLocation(ID, name), x, y, z, w); 
+}
+
+void GL::GLSLProgram::setMat4x4f(const char* name, const glm::mat4& values)
+{
+    glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(values));
 }

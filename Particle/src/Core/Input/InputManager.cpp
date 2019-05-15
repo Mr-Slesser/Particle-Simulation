@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-namespace PT::Input
+namespace PT
 {
     InputManager *InputManager::instance = 0;
 
@@ -26,9 +26,9 @@ namespace PT::Input
 
     void InputManager::registerMouseCallbacks(Window* window)
     {
-        glfwSetCursorPosCallback(window->context(), PT::Input::mouseCursorHandler);  
-        glfwSetMouseButtonCallback(window->context(), PT::Input::mouseButtonHandler);
-        glfwSetScrollCallback(window->context(), PT::Input::mouseScrollHandler);
+        glfwSetCursorPosCallback(window->context(), PT::mouseCursorHandler);  
+        glfwSetMouseButtonCallback(window->context(), PT::mouseButtonHandler);
+        glfwSetScrollCallback(window->context(), PT::mouseScrollHandler);
     }
 
     void InputManager::setMouseHeld(bool torf)
