@@ -2,18 +2,23 @@
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aCol;
+layout (location = 2) in mat4 tForm;
 
 out vec4 v_colour;
 
+out vec4 position_out;
+out vec3 velocity_out;
+
 uniform float time;
 
-uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main()
 {
     v_colour = aCol;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-    //gl_Position = vec4(aPos, 1.0);
+    vec4 pos = tForm * vec4(aPos, 1.0);
+    position_out = pos;
+    velocity_out = vec3(0.2, 0.6, 0.1);
+    gl_Position = projection * view * pos;
 }

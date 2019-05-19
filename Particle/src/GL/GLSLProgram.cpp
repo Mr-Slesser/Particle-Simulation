@@ -15,6 +15,18 @@ GL::GLSLProgram::GLSLProgram(const char* vertexPath, const char* fragmentPath)
 	ID = glCreateProgram();
 	glAttachShader(ID, vertexShader);
 	glAttachShader(ID, fragmentShader);
+
+    /* TRANSFORM FEEDBACK */
+    static const char * varyings[] = {
+        "position_out", "velocity_out"
+    };
+
+    glTransformFeedbackVaryings(
+        ID, 2, varyings, GL_INTERLEAVED_ATTRIBS
+    );
+
+    /* END TRANSFORM FEEDBACK */
+
 	glLinkProgram(ID);
 
     // Check for linking errors

@@ -12,7 +12,7 @@ GL::VAO::~VAO()
     glDeleteVertexArrays(1, &ID);
 }
 
-void GL::VAO::addBuffer(const VBO& vb, const VBOLayout& layout)
+void GL::VAO::addBuffer(const GLSLProgram* program, const VBO& vb, const VBOLayout& layout)
 {
     bind();
     vb.bind();
@@ -21,9 +21,20 @@ void GL::VAO::addBuffer(const VBO& vb, const VBOLayout& layout)
     for (int i = 0; i < elements.size(); ++i)
     {
         const auto& element = elements[i];
-        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
+        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride() + sizeof(glm::mat4), (const void*)offset);
         offset += element.count * VBElement::getSizeOfType(element.type);
 	    glEnableVertexAttribArray(i);
+    }
+
+    int pos = glGetAttribLocation(program->getID(), "tForm");
+    for (int i = 0; i < 4; ++i)
+    {
+	    glEnableVertexAttribArray(pos + i);
+        glVertexAttribPointer(pos + i, 4, GL_FLOAT, GL_FALSE, 
+            layout.getStride() + sizeof(glm::mat4), 
+            (void*)((offset + (sizeof(glm::vec4) * i)))
+            );
+        glVertexAttribDivisor(pos + i, 1);
     }
 }
 

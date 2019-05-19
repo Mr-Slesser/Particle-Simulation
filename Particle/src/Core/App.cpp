@@ -16,13 +16,9 @@ void PT::App::init()
     window = new Window();
     window->init();
 
-    v[0] = {{ 0.5f,  0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}};
-    v[1] = {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 1.0f, 1.0f}};
-    v[2] = {{-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}};
-    v[3] = {{-0.5f,  0.5f, 0.0f}, {1.0f, 0.0f, 1.0f, 1.0f}};
-
-    renderer = new GL::GLRenderer();
-    renderer->init(indices, v, sizeof(v));
+    //renderer = new GL::GLRenderer();
+    renderer = new PTRenderer();
+    renderer->init();
     InputManager::get()->registerMouseCallbacks(window);
 }
 

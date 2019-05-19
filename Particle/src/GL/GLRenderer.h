@@ -10,11 +10,20 @@
 
 #include "GLSLProgram.h"
 #include "Buffers/VBO.h"
-#include "Buffers/EBO.h"
+#include "Buffers//IndexBuffer/QuadIndexBuffer.hpp"
 #include "Buffers/VAO.h"
+
 #include "../Renderables/Vertex.hpp"
 #include "../Core/Camera/Camera2D.hpp"
 #include "../Core/Camera/Camera3D.hpp"
+
+#include "../Renderables/Quad.hpp"
+
+#define GLRENDERER_MAX_QUADS	100
+#define GLRENDERER_QUAD_SIZE	sizeof(Vertex) * 4
+#define GLRENDERER_BUFFER_SIZE	GLRENDERER_QUAD_SIZE * GLRENDERER_MAX_QUADS
+#define GLRENDERER_INDICES_SIZE GLRENDERER_MAX_QUADS * 6
+
 namespace GL
 {
     class GLRenderer
@@ -22,7 +31,7 @@ namespace GL
     private:
         GLSLProgram* program;
         VBO* vbo;
-        EBO* ebo;
+        IndexBuffer* ib;
         VAO* vao;
 
         // TODO: Model matrix vector.
@@ -33,7 +42,7 @@ namespace GL
         GLRenderer();
         virtual ~GLRenderer();
 
-        void init(unsigned int indices[6], Vertex v[4], int vsize);
+        void init(Vertex v[4], int vsize);
 
         void modelMatrix(float& dt, Camera* cam);
         void viewMatrix(float& dt, Camera* cam);

@@ -14,7 +14,8 @@
 #include "Input/InputManager.h"
 #include "Window/Window.h"
 #include "../GL/GLRenderer.h"
-#include "../Renderables/Vertex.hpp"
+#include "../Renderables/Quad.hpp"
+#include "../ParticleSystem/PTRenderer.h"
 
 namespace PT
 {
@@ -22,14 +23,10 @@ namespace PT
     {
     private:
         Window* window;
-        GL::GLRenderer* renderer;
-        Vertex v[4];
+        //GL::GLRenderer* renderer;
+        PTRenderer* renderer;
+        Quad q;
         float dt;
-
-        unsigned int indices[6] = {
-            0, 1, 3, 
-            1, 2, 3
-        };
 
     public:
         App();

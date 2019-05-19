@@ -19,11 +19,11 @@ void Camera::setProjection(PROJECTION_TYPE t, float width, float height)
     {
         if (t == PROJECTION_TYPE::PERSPECTIVE)
         {
-            projection = glm::perspective(glm::radians(45.0f), (width / height), 0.1f, 200.0f);
+            projection = glm::perspective(glm::radians(45.0f), (width / height), 0.1f, 5000.0f);
         }      
         else if (t == PROJECTION_TYPE::ORTHOGRAPHIC)
         {
-            projection = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, 0.1f, 100.0f);
+            projection = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, 0.1f, 5000.0f);
         }
     }
 
