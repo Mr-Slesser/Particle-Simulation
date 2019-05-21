@@ -56,7 +56,7 @@ bool PT::CameraManager::startup()
     return true;
 }
 
-bool PT::CameraManager::registerCamera(const char* camera_name, SM_CAM_TYPE type, const CameraData& data)
+bool PT::CameraManager::registerCamera(char* camera_name, SM_CAM_TYPE type, const CameraData& data)
 {
     // TODO: Handle data!
 	if (cameras.find(camera_name) == cameras.end()) {
@@ -73,10 +73,9 @@ bool PT::CameraManager::registerCamera(const char* camera_name, SM_CAM_TYPE type
         // TODO: Handle already exists.
     }
     
-    return true;
 }
 
-Camera* PT::CameraManager::getCamera(const char* camera_name)
+Camera* PT::CameraManager::getCamera(char* camera_name)
 {
     if (cameras.find(camera_name) != cameras.end()) {
         return cameras[camera_name];

@@ -17,7 +17,7 @@ namespace PT
     {
     private:
         static CameraManager* instance;
-        std::map<const char*, Camera*> cameras;
+        std::map<char*, Camera*> cameras;
 
         CameraManager();
 
@@ -31,9 +31,9 @@ namespace PT
 
         bool startup();
 
-        bool registerCamera(const char* camera_name, SM_CAM_TYPE type, const CameraData& data = {});
+        bool registerCamera(char* camera_name, SM_CAM_TYPE type, const CameraData& data = {});
 
-        Camera* getCamera(const char* camera_name = "DEFAULT");
+        Camera* getCamera(char* camera_name = "DEFAULT");
     };
     
 } // namespace PT

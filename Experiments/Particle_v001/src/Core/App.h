@@ -13,9 +13,8 @@
 #include "Camera/CameraManager.h"
 #include "Input/InputManager.h"
 #include "Window/Window.h"
-
-#include "../OpenGL/Renderer.h"
-// #include "../Renderables/Quad.hpp"
+#include "../GL/GLRenderer.h"
+#include "../Renderables/Quad.hpp"
 
 #include <cstdio>
 
@@ -25,8 +24,9 @@ namespace PT
     {
     private:
         Window* window;
-        GL::Renderer* renderer;
-        //Quad q;
+        GL::GLRenderer* renderer;
+        Quad q;
+        float dt;
 
     public:
         App();

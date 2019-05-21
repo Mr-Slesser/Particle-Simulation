@@ -33,8 +33,8 @@ namespace PT
 
         void setMouseHeld(bool torf);
 
-        const inline bool isMouseHeld() const { return mouseHeld; }
-        const inline float getSensitivity() const { return sensitivity; }
+        const inline bool isMouseHeld() const;
+        const inline float getSensitivity() const;
     };
 
     static void mouseCursorHandler(GLFWwindow* m, double x, double y)

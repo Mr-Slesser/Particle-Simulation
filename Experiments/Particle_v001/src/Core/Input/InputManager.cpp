@@ -35,5 +35,16 @@ namespace PT
     {
         mouseHeld = torf;
     }
+
+    const bool InputManager::isMouseHeld() const
+    {
+        return mouseHeld;
+    }
+
+    const float InputManager::getSensitivity() const
+    {
+        return sensitivity;
+    }
+
 } // namespace Input
 

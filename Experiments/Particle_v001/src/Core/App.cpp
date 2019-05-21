@@ -1,6 +1,7 @@
 #include "App.h"
 
 PT::App::App()
+    : dt(0.0f)
 {
     init();
 }
@@ -12,16 +13,11 @@ PT::App::~App()
 
 void PT::App::init()
 {
-    // Window
     window = new Window();
     window->init();
 
-    // Renderer
-    renderer = new GL::Renderer();
-    renderer->init();
-    // renderer->init(q.vertices, sizeof(Quad));
-
-    // InputManager
+    renderer = new GL::GLRenderer();
+    renderer->init(q.vertices, sizeof(Quad));
     InputManager::get()->registerMouseCallbacks(window);
 }
 
@@ -29,9 +25,11 @@ void PT::App::run()
 {
     while (window->isActive())
 	{
-        processInput();
+        dt += 0.01;
+		
         renderer->clear();
-        renderer->draw();
+        processInput();
+        renderer->draw(dt, CameraManager::get()->getCamera());
 
 		glfwSwapBuffers(window->context());
 		glfwPollEvents();

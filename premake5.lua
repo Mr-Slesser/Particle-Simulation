@@ -70,6 +70,7 @@ project "Particle"
     filter "configurations:Debug"
         defines { "PT_DEBUG" }
         symbols "On"
+        buildoptions {}
 
     filter "configurations:Dist"
         defines { "PT_NDEBUG" }
