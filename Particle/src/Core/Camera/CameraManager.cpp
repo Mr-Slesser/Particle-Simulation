@@ -10,7 +10,6 @@ PT::CameraManager *PT::CameraManager::get()
     return instance;
 }
 
-    // : inputMgr(nullptr)
 PT::CameraManager::CameraManager()
 {
     // REVIEW: Do we want to actually pass params to this, so make it a separate function?

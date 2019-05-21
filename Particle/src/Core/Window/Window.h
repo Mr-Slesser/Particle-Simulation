@@ -6,8 +6,11 @@
 
 #include <iostream>
 #include <functional>
+#include <cstdio>
+#include <assert.h>
 
 #include "../../Utility/Error.hpp"
+#include "../../OpenGL/GLLog.h"
 
 /* NOTE: Class to contain:
     - Act as a wrapper, so in future if needed to not use GLFW etc. then could easily switch
@@ -18,6 +21,9 @@
 */
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void glfw_error_callback(int error, const char* description);
+
+
 
 struct WindowConfig {
     unsigned int width = 800;

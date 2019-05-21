@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "GLLog.h"
 
 GL::Renderer::Renderer()
 {
@@ -11,6 +12,7 @@ GL::Renderer::~Renderer()
 void GL::Renderer::init()
 {
     program = new Program();
+    print_all(program->getID());
 
     va = new VertexArray();
     va->initBuffers(q);
@@ -57,4 +59,17 @@ void GL::Renderer::projectionMatrix()
     projection = PT::CameraManager::get()->getCamera()->getProjection();
     int projectionLoc = glGetUniformLocation(program->getID(), "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+}
+
+void GL::Renderer::changeShaders(int type)
+{
+    switch(type)
+    {
+        case 1:
+            program = new Program();
+            break;
+        case 2: 
+            program = new Program(VS_TEST, FS_TEST);
+            break;
+    }
 }

@@ -11,7 +11,13 @@ Window::~Window()
 
 GLFWwindow* Window::init()
 {
-	glfwInit();
+    assert(restart_gl_log());
+    gl_log("Starting GLFW\n%s\n", glfwGetVersionString());
+    glfwSetErrorCallback(glfw_error_callback);
+    if(!glfwInit()) {
+        fprintf(stderr, "ERROR: could not start GLFW\n");
+        // TODO: Error!
+    }
     setGLVersion(config.major, config.minor);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);  
     ctx = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
@@ -35,6 +41,7 @@ GLFWwindow* Window::init()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    log_gl_params();
     return ctx;
 }
 
@@ -93,4 +100,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // TODO: Update camera values too.
     // TODO: Size and width need to be global
 	glViewport(0, 0, width, height);
+}
+
+void glfw_error_callback(int error, const char* description)
+{
+    gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }

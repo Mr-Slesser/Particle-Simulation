@@ -11,6 +11,9 @@
 
 #define TEXTURE_LOC "./Particle/Resources/Textures/pusheen.jpeg"
 
+#define VS_TEST "./Particle/Resources/Shaders/test.vertex"
+#define FS_TEST "./Particle/Resources/Shaders/test.fragment"
+
 namespace GL
 {
     class Renderer
@@ -39,6 +42,8 @@ namespace GL
         void modelMatrix();
         void viewMatrix();
         void projectionMatrix();
+
+        void changeShaders(int type);
     };
     
 } // namespace GL
