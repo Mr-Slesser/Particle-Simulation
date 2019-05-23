@@ -21,22 +21,8 @@ bool GL::Renderer::init()
     Print_All(program->getID());
 
     va = new VertexArray();
-    Vertex v[1000];
-    ZERO_MEM(v);
-
     va->initBuffers(q);
-    // va->initBuffers(v);
-
-    for (int i = 0; i < 1000; i++)
-    {
-        positions[i] = glm::vec3(
-            (((float)(rand() % 100) / 100.0f) * 30) - 15,
-            (((float)(rand() % 100) / 100.0f) * 30) - 15,
-            (((float)(rand() % 100) / 100.0f) * 10) - 5
-        );
-    }
-    
-
+    t = new Texture(TEXTURE_LOC, GL_TEXTURE_2D);
     return true;
 }
 
@@ -48,42 +34,27 @@ void GL::Renderer::clear()
 
 void GL::Renderer::draw()
 {
+    t->bind();
     program->use();
     
+    //modelMatrix();
     viewMatrix();
     projectionMatrix();
 
     va->use();
-    //int count = 0;
-    for(unsigned int i = 0; i < 1000; i++)
+
+    glPointSize(100.0f);
+
+    for(unsigned int i = 0; i < 10; i++)
     {
-        //GL_LOG_TRACE("{}, {}, {}", positions[i].x, positions[i].y, positions[i].z);
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, positions[i]);
-        float angle = 20.0f * (i); 
+        model = glm::translate(model, cubePositions[i]);
+        float angle = 20.0f * (i + 1); 
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         program->setMat4("model", model);
 
-        GLCheck(glDrawArrays(GL_POINTS, 0, 1));
-        //count++;
+        GLCheck(glDrawArrays(GL_POINTS, 0, 36));
     }
-    
-    //GL_LOG_WARN("{}", count);
-    // for (unsigned int i = 0; i < 1000; i++)
-    // {
-    //     glm::vec3 pos = glm::vec3(
-    //         (((rand() % 100) / 100) * 30) - 15,
-    //         (((rand() % 100) / 100) * 30) - 15,
-    //         (((rand() % 100) / 100) * 30) - 15
-    //     );
-    //     glm::mat4 model = glm::mat4(1.0f);
-    //     model = glm::translate(model, pos);
-    //     float angle = 20.0f * (i + 1); 
-    //     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-    //     program->setMat4("model", model);
-
-    //     GLCheck(glDrawArrays(GL_POINTS, 0, 1));
-    // }
 
 
 }
@@ -105,4 +76,17 @@ void GL::Renderer::projectionMatrix()
 {
     // TODO: Camera to update this on change.
     program->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
+}
+
+void GL::Renderer::changeShaders(int type)
+{
+    switch(type)
+    {
+        case 1:
+            program->init();
+            break;
+        case 2: 
+            program->init(VS_TEST, FS_TEST);
+            break;
+    }
 }

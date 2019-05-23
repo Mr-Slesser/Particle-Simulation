@@ -14,7 +14,6 @@ namespace GL {
         virtual ~VertexArray();
 
         void initBuffers(Cube& q);
-        void initBuffers(Vertex v[]);
 
         void use();
 

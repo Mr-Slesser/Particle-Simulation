@@ -66,4 +66,9 @@ void PT::App::processInput()
         CameraManager::get()->getCamera()->subtractPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
     if (glfwGetKey(window->context(), GLFW_KEY_D) == GLFW_PRESS)
         CameraManager::get()->getCamera()->addPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
+
+    if (glfwGetKey(window->context(), GLFW_KEY_Q) == GLFW_PRESS)
+        renderer->changeShaders(1);
+    if (glfwGetKey(window->context(), GLFW_KEY_E) == GLFW_PRESS)
+        renderer->changeShaders(2);
 }

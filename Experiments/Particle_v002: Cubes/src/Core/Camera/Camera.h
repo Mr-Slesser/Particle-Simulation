@@ -15,8 +15,7 @@ enum PROJECTION_TYPE
 };
 
 // TODO: Default camera values, i.e. implement a reset camera key.
-// TODO: Incorporate handlers / Input Manager Class
-// TODO: Camera Configuration Struct
+// TODO: Tidy up the camera!
 
 struct CameraData
 {
@@ -38,6 +37,7 @@ static const CameraData DEFAULT_CAMERA = {
 class Camera
 {
 protected:
+    PROJECTION_TYPE type;
     glm::mat4 projection;
     glm::mat4 lookAt;
 
@@ -48,7 +48,7 @@ public:
     Camera(PROJECTION_TYPE t, const CameraData& config = DEFAULT_CAMERA);
     virtual ~Camera();
 
-    void setProjection(PROJECTION_TYPE t, float width, float height);
+    void setProjection(float width, float height);
     glm::mat4& getProjection();
 
     glm::mat4& setLookAt(float x, float y, float z);
@@ -90,11 +90,8 @@ public:
 
     void setProjection(float _fov)
     {
-        if (t == PERSPECTIVE)
-        {
-            c.fov = _fov;
-            projection = glm::perspective(glm::radians(c.fov), 1366.0f / 768.0f, 0.1f, 5000.0f);  
-        }
+        c.fov = _fov;
+        projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 5000.0f);  
     }
 };
 

@@ -6,28 +6,33 @@
 #include "VertexArray.h"
 #include "Texture.h"
 
-#include <cstdlib>
-
 #include "../Primitives/Quad.h"
 #include "../Primitives/Cube.h"
 #include "../Core/Camera/CameraManager.h"
-#include "../Primitives/Quad.h"
 
+#define TEXTURE_LOC "./Particle/Resources/Textures/pusheen.jpeg"
+//#define TEXTURE_LOC "./Particle/Resources/Textures/sprite.png"
+
+#define VS_TEST "./Particle/Resources/Shaders/test.vertex"
+#define FS_TEST "./Particle/Resources/Shaders/test.fragment"
 
 #define VS_POINT "./Particle/Resources/Shaders/point.vertex"
 #define FS_POINT "./Particle/Resources/Shaders/point.fragment"
 
-#define ZERO_MEM(a) memset(a, 0, sizeof(a))
+#define VS_POINTS "./Particle/Resources/Shaders/pointSprite.vertex"
+#define FS_POINTS "./Particle/Resources/Shaders/pointSprite.fragment"
 
 namespace GL
 {
-#define MAX_PARTICLES 1000;
     class Renderer
     {
     private:
         Program* program;
         VertexArray* va;
+        Texture* t;
         
+        unsigned int texture;
+
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
@@ -45,8 +50,8 @@ namespace GL
             glm::vec3(-1.3f,  1.0f, -1.5f)  
         };
 
-        glm::vec3 positions[1000];
 
+        //Quad q;
         Cube q;
 
     public:
