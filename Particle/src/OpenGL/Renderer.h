@@ -35,7 +35,7 @@ namespace GL
         Renderer();
         ~Renderer();
 
-        void init();
+        bool init();
         void clear();
         void draw();
 

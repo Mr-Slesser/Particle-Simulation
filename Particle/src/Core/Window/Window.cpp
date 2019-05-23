@@ -7,16 +7,17 @@ Window::Window(const WindowConfig _config)
 
 Window::~Window()
 {
+    // TODO: Handle clean up
 }
 
 GLFWwindow* Window::init()
 {
-    assert(restart_gl_log());
-    gl_log("Starting GLFW\n%s\n", glfwGetVersionString());
+    CORE_LOG_INFO("Starting GLFW: {}", glfwGetVersionString());
     glfwSetErrorCallback(glfw_error_callback);
+
     if(!glfwInit()) {
-        fprintf(stderr, "ERROR: could not start GLFW\n");
-        // TODO: Error!
+        CORE_LOG_CRITICAL("Window: could not start GLFW");
+        return nullptr;
     }
     setGLVersion(config.major, config.minor);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);  
@@ -24,7 +25,7 @@ GLFWwindow* Window::init()
 
 	if (ctx == NULL)
 	{
-        FATAL(Error::TYPE::WINDOW_CREATION_FAIL, "Failed to initialise window");
+        CORE_LOG_CRITICAL("Window: GLFWwindow init failure");
         return nullptr;
 	}
 
@@ -33,7 +34,7 @@ GLFWwindow* Window::init()
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-        FATAL(Error::TYPE::WINDOW_GLAD_FAIL, "Failed to initialise GLAD");
+        CORE_LOG_CRITICAL("Window: GLAD init failure");
         return nullptr;
 	}
     
@@ -41,7 +42,7 @@ GLFWwindow* Window::init()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    log_gl_params();
+    Log_GL_Parameters();
     return ctx;
 }
 
@@ -104,5 +105,5 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void glfw_error_callback(int error, const char* description)
 {
-    gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
+    CORE_LOG_CRITICAL("GLFW ERROR: code {} msg: {}", error, description);
 }

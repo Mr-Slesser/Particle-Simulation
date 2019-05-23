@@ -1,6 +1,8 @@
 #ifndef VERTEXARRAY_H
 #define VERTEXARRAY_H
 
+#include "OpenGL.h"
+
 #include "../Primitives/Quad.h"
 
 namespace GL {

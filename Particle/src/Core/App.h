@@ -1,10 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
-// TODO: Start up info print.
+// TODO: Add logging to all areas.
+// TODO: Review Namespaces & Align
+// TODO: Key sequernce logger. i.e. log to file.
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "../OpenGL/OpenGL.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,7 +16,6 @@
 #include "Window/Window.h"
 
 #include "../OpenGL/Renderer.h"
-// #include "../Renderables/Quad.hpp"
 
 #include <cstdio>
 
@@ -26,13 +26,12 @@ namespace PT
     private:
         Window* window;
         GL::Renderer* renderer;
-        //Quad q;
 
     public:
         App();
         ~App();
 
-        void init();
+        bool init();
         void run();
 
         void processInput();

@@ -2,6 +2,9 @@
 #define CAMERAMANAGER_H
 
 #include <map>
+#include <cassert>
+
+#include "../../Utility/Log.h"
 
 #include "Camera2D.hpp"
 #include "Camera3D.hpp"
@@ -21,7 +24,6 @@ namespace PT
 
         CameraManager();
 
-        //bool initInputManager();
         bool initCameras();
 
     public:

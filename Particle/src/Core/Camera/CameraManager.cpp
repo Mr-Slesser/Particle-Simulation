@@ -15,11 +15,12 @@ PT::CameraManager::CameraManager()
     // REVIEW: Do we want to actually pass params to this, so make it a separate function?
     if(startup())
     {
-        // Log success?
+        CORE_LOG_TRACE("CameraManager::Constructor - Startup completed.");
     }
     else
     {
-        // TODO: Error.
+        CORE_LOG_ERROR("CameraManager::Constructor - Startup error.");
+        assert(false);
     }
 }
 
@@ -28,7 +29,8 @@ bool PT::CameraManager::initCameras()
     // By default create the default camera!
     if (!registerCamera("DEFAULT", cam3D))
     {
-        // TODO: Handle 
+        CORE_LOG_ERROR("CameraManager::initCameras() - Default camera could not be initialized.");
+        return false;
     }
     return true;
 }
@@ -45,10 +47,8 @@ PT::CameraManager::~CameraManager()
 
 bool PT::CameraManager::startup()
 {
-    if (initCameras()) {
-        // Log success?
-    } else {
-        // TODO: Error.
+    if (!initCameras()) {
+        CORE_LOG_ERROR("CameraManager::startup() - Failed to initialize cameras.");
         return false;
     }
     
@@ -64,12 +64,14 @@ bool PT::CameraManager::registerCamera(const char* camera_name, SM_CAM_TYPE type
         } else if (type == cam2D) {
             cameras[camera_name] = new Camera2D();
         } else {
-            // TODO: Invalid!
+            CORE_LOG_WARN("CameraManager::registerCamera() - Invalid type specified -> {}", type);
+            return false;
         }
 	}
     else
     {
-        // TODO: Handle already exists.
+        CORE_LOG_WARN("CameraManager::registerCamera() - Name already exists -> {}", camera_name);
+        return false;
     }
     
     return true;
@@ -80,7 +82,7 @@ Camera* PT::CameraManager::getCamera(const char* camera_name)
     if (cameras.find(camera_name) != cameras.end()) {
         return cameras[camera_name];
     } else {
-        // TODO: Invalid!
+        CORE_LOG_WARN("CameraManager::getCamera() - Name invalid -> {}", camera_name);
         return nullptr;
     }
 }

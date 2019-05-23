@@ -23,7 +23,7 @@ GL::Texture::Texture(const char* filePath, GLenum _type)
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+        GL_LOG_ERROR("Failed to load texture: {}", filePath);
     }
     stbi_image_free(data);
 }

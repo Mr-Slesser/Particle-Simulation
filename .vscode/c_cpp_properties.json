@@ -8,7 +8,8 @@
 				"./vendor/glfw/include",
 				"./vendor/glad/include",
 				"./vendor/googletest/googletest/include",
-				"./vendor/glm"
+				"./vendor/glm",
+				"./vendor/spdlog/include"
 			],
 			"browse": {
 				"limitSymbolsToIncludedHeaders": true,

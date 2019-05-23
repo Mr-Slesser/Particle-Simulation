@@ -1,10 +1,12 @@
 #include "./Core/App.h"
 
-
 int main(int argc, char const *argv[])
 {
-    PT::App* app = new PT::App();
-    app->run();
+    PT::App app;
+    if (app.init())
+    {
+        app.run();
+    }
 
 	return 0;
 }

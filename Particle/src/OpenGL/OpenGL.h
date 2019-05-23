@@ -5,9 +5,16 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
+#include "../Utility/Log.h"
+#include "./GLLog.h"
+
 #define GLCheck(x)  glClearErrors_(); \
                     x; \
                     glCheckError_(__FILE__, __LINE__);
+
+#ifdef NDEBUG
+#define GLCheck(x) x;
+#endif
 
 static void glClearErrors_()
 {
@@ -30,7 +37,7 @@ static GLenum glCheckError_(const char *file, int line)
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-        std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+        GL_LOG_ERROR("{} | {} ({})", error, file , line);
     }
     return errorCode;
 }

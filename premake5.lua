@@ -27,6 +27,7 @@ project "Particle"
         "vendor/glfw/include",
         "vendor/glad/include",
         "vendor/glm",
+        "vendor/spdlog/include",
     }
 
     libdirs {
@@ -68,16 +69,16 @@ project "Particle"
         }
 
     filter "configurations:Debug"
-        defines { "PT_DEBUG" }
+        defines { "DEBUG" }
         symbols "On"
         buildoptions {}
 
     filter "configurations:Dist"
-        defines { "PT_NDEBUG" }
+        defines { "NDEBUG" }
         optimize "On"
 
     filter "configurations:Release"
-        defines { "PT_NDEBUG" }
+        defines { "NDEBUG" }
         optimize "On"
 
 project "GoogleTest"

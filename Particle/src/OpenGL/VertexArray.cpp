@@ -1,7 +1,5 @@
 #include "VertexArray.h"
 
-#include "OpenGL.h"
-
 GL::VertexArray::VertexArray()
     : VAO(0), VBO(0), EBO(0)
 {
@@ -12,9 +10,9 @@ GL::VertexArray::VertexArray()
 
 GL::VertexArray::~VertexArray()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    GLCheck(glDeleteVertexArrays(1, &VAO));
+    GLCheck(glDeleteBuffers(1, &VBO));
+    GLCheck(glDeleteBuffers(1, &EBO));
 }
 
 void GL::VertexArray::initBuffers(Quad& q)

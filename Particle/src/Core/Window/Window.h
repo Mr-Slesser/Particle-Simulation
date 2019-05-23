@@ -1,29 +1,20 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "../../OpenGL/OpenGL.h"
 
 #include <iostream>
 #include <functional>
 #include <cstdio>
 #include <assert.h>
 
-#include "../../Utility/Error.hpp"
-#include "../../OpenGL/GLLog.h"
-
 /* NOTE: Class to contain:
-    - Act as a wrapper, so in future if needed to not use GLFW etc. then could easily switch
     - wireframe mode: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     - Window size values as vector
-    - Chain hints / setters toge
-    - Input class
 */
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void glfw_error_callback(int error, const char* description);
-
-
 
 struct WindowConfig {
     unsigned int width = 800;

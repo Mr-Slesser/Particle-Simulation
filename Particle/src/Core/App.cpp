@@ -2,7 +2,6 @@
 
 PT::App::App()
 {
-    init();
 }
 
 PT::App::~App()
@@ -10,19 +9,32 @@ PT::App::~App()
     glfwTerminate();
 }
 
-void PT::App::init()
+bool PT::App::init()
 {
+    Log::init();
+    GL_LOG_TRACE("Core Logger Started");
+    GL_LOG_TRACE("GL Logger Started");    
+
     // Window
     window = new Window();
-    window->init();
+    if (window->init() == nullptr)
+    {
+        CORE_LOG_TRACE("Exiting: Window initialization failed");
+        return false;
+    }
 
     // Renderer
     renderer = new GL::Renderer();
-    renderer->init();
-    // renderer->init(q.vertices, sizeof(Quad));
+    if (!renderer->init())
+    {
+        CORE_LOG_TRACE("Exiting: Renderer initialization failed");
+        return false;
+    }
 
     // InputManager
     InputManager::get()->registerMouseCallbacks(window);
+
+    return true;
 }
 
 void PT::App::run()

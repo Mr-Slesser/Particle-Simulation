@@ -9,14 +9,21 @@ GL::Renderer::~Renderer()
 {
 }
 
-void GL::Renderer::init()
+bool GL::Renderer::init()
 {
     program = new Program();
-    print_all(program->getID());
+    if (!program->init())
+    {
+        GL_LOG_CRITICAL("Program failed to init");
+        return false;
+    }
+
+    Print_All(program->getID());
 
     va = new VertexArray();
     va->initBuffers(q);
     t = new Texture(TEXTURE_LOC, GL_TEXTURE_2D);
+    return true;
 }
 
 void GL::Renderer::clear()
@@ -36,29 +43,24 @@ void GL::Renderer::draw()
 
     va->use();
     GLCheck(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
 }
 
 void GL::Renderer::modelMatrix()
 {
-    model = glm::mat4(1.0f);
-    int modelLoc = glGetUniformLocation(program->getID(), "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    program->setMat4("model", glm::mat4(1.0f));
 }
 
 void GL::Renderer::viewMatrix()
 {
     // TODO: Camera to update this on change.
-    view = PT::CameraManager::get()->getCamera()->getLookAt();
-    int viewLoc = glGetUniformLocation(program->getID(), "view");
-    GLCheck(glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view)));
+    program->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
 }
 
 void GL::Renderer::projectionMatrix()
 {
     // TODO: Camera to update this on change.
-    projection = PT::CameraManager::get()->getCamera()->getProjection();
-    int projectionLoc = glGetUniformLocation(program->getID(), "projection");
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    program->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
 }
 
 void GL::Renderer::changeShaders(int type)
@@ -66,10 +68,10 @@ void GL::Renderer::changeShaders(int type)
     switch(type)
     {
         case 1:
-            program = new Program();
+            program->init();
             break;
         case 2: 
-            program = new Program(VS_TEST, FS_TEST);
+            program->init(VS_TEST, FS_TEST);
             break;
     }
 }

@@ -3,10 +3,10 @@
 Camera* Camera::instance = 0;
 
 Camera::Camera(PROJECTION_TYPE t, const CameraData& config)
-    : c(config)
+    : c(config), type(t)
 {
     lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
-    setProjection(t, 800.0f, 600.0f); 
+    setProjection(800.0f, 600.0f); 
     instance = this;
 }
 
@@ -15,13 +15,13 @@ Camera::~Camera()
 
 }
 
-void Camera::setProjection(PROJECTION_TYPE t, float width, float height)
+void Camera::setProjection(float width, float height)
     {
-        if (t == PROJECTION_TYPE::PERSPECTIVE)
+        if (type == PROJECTION_TYPE::PERSPECTIVE)
         {
             projection = glm::perspective(glm::radians(45.0f), (width / height), 0.1f, 5000.0f);
         }      
-        else if (t == PROJECTION_TYPE::ORTHOGRAPHIC)
+        else if (type == PROJECTION_TYPE::ORTHOGRAPHIC)
         {
             projection = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, 0.1f, 5000.0f);
         }
