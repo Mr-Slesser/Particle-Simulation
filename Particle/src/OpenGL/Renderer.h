@@ -1,18 +1,21 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <cstdlib>
+#include <vector>
+
 #include "OpenGL.h"
 #include "Program.h"
 #include "VertexArray.h"
+#include "VertexData.h"
 #include "Texture.h"
 
-#include <cstdlib>
+#include "../Particle/Particle.h"
 
 #include "../Primitives/Quad.h"
 #include "../Primitives/Cube.h"
 #include "../Core/Camera/CameraManager.h"
 #include "../Primitives/Quad.h"
-
 
 #define VS_POINT "./Particle/Resources/Shaders/point.vertex"
 #define FS_POINT "./Particle/Resources/Shaders/point.fragment"
@@ -21,33 +24,23 @@
 
 namespace GL
 {
-#define MAX_PARTICLES 1000;
     class Renderer
     {
     private:
+        const int MAX_PARTICLES = 1000000;
         Program* program;
-        VertexArray* va;
         
+        VertexData vd;
+
+        VertexArray* va;
+        VBPointer* pointer;
+
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
 
-        glm::vec3 cubePositions[10] = {
-            glm::vec3( 0.0f,  0.0f,  0.0f), 
-            glm::vec3( 2.0f,  5.0f, -15.0f), 
-            glm::vec3(-1.5f, -2.2f, -2.5f),  
-            glm::vec3(-3.8f, -2.0f, -12.3f),  
-            glm::vec3( 2.4f, -0.4f, -3.5f),  
-            glm::vec3(-1.7f,  3.0f, -7.5f),  
-            glm::vec3( 1.3f, -2.0f, -2.5f),  
-            glm::vec3( 1.5f,  2.0f, -2.5f), 
-            glm::vec3( 1.5f,  0.2f, -1.5f), 
-            glm::vec3(-1.3f,  1.0f, -1.5f)  
-        };
+        std::vector<PT::Particle*> particles;
 
-        glm::vec3 positions[1000];
-
-        Cube q;
 
     public:
         Renderer();

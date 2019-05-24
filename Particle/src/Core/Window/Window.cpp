@@ -99,8 +99,8 @@ void Window::setGLVersion(const int major, const int minor)
 // SECTION: Callbacks.
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // TODO: Update camera values too.
-    // TODO: Size and width need to be global
+    Camera* cam = PT::CameraManager::get()->getCamera();
+    cam->setProjection(width, height);
 	glViewport(0, 0, width, height);
 }
 

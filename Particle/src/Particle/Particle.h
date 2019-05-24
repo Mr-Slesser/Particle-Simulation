@@ -8,11 +8,19 @@ namespace PT
     class Particle
     {
     private:
-        Vertex vertex;
+        Vertex v; // Vertex data in memory linked to this
         
     public:
-        Particle();
+        Particle(Vertex _v);
         ~Particle();
+
+        void setPosition(const glm::vec3& pos);
+        void setColour(const glm::vec4& col);
+
+        glm::vec3& getPosition();
+        glm::vec4& getColour();
+
+        Vertex& getVertex() { return v; }
     };
 } // namespace PT
 

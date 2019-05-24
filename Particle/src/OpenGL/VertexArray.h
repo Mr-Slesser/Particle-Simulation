@@ -1,7 +1,13 @@
 #ifndef VERTEXARRAY_H
 #define VERTEXARRAY_H
 
+#include <vector>
+
 #include "OpenGL.h"
+
+#include "VertexData.h"
+#include "VertexBuffer.h"
+#include "VBOLayout.h"
 
 #include "../Primitives/Quad.h"
 #include "../Primitives/Cube.h"
@@ -13,15 +19,20 @@ namespace GL {
         VertexArray();
         virtual ~VertexArray();
 
-        void initBuffers(Cube& q);
-        void initBuffers(Vertex v[]);
+
+        void initBuffers(const unsigned long& size);
 
         void use();
+        void bindVBO();
+
+        VertexBuffer* getBuffer() { return buffers.front(); }
 
     private:
-        unsigned int VAO;
-        unsigned int VBO;
-        unsigned int EBO;
+        unsigned int ID;
+
+        std::vector<VertexBuffer*> buffers;
+
+        void setVertexLayout(VBOLayout& vbol);
     };
 
 } // namespace GL

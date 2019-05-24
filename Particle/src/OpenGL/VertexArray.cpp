@@ -1,55 +1,50 @@
 #include "VertexArray.h"
 
 GL::VertexArray::VertexArray()
-    : VAO(0), VBO(0), EBO(0)
+    : ID(0)
 {
-    GLCheck(glGenVertexArrays(1, &VAO));
-    GLCheck(glGenBuffers(1, &VBO));
+    GLCheck(glGenVertexArrays(1, &ID));
 }
 
 GL::VertexArray::~VertexArray()
 {
-    GLCheck(glDeleteVertexArrays(1, &VAO));
-    GLCheck(glDeleteBuffers(1, &VBO));
-    GLCheck(glDeleteBuffers(1, &EBO));
+    GLCheck(glDeleteVertexArrays(1, &ID));
 }
 
-void GL::VertexArray::initBuffers(Cube& q)
+void GL::VertexArray::setVertexLayout(VBOLayout& layout)
 {
     this->use();
-    
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-    GLCheck(glBufferData(GL_ARRAY_BUFFER, sizeof(q.vertices), q.vertices, GL_STATIC_DRAW));
 
-    GLCheck(glGenBuffers(1, &EBO));
-    GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
-    GLCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(q.indices), q.indices, GL_STATIC_DRAW));
-
-    GLCheck(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0));
-    GLCheck(glEnableVertexAttribArray(0));
-    GLCheck(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float))));
-    GLCheck(glEnableVertexAttribArray(1));
-    GLCheck(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(7 * sizeof(float))));
-    GLCheck(glEnableVertexAttribArray(2));
+    const auto& elements = layout.getElements();
+    unsigned int offset = 0;
+    for (int i = 0; i < elements.size(); ++i)
+    {
+        const auto& element = elements[i];
+        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
+        offset += element.count * VBElement::getSizeOfType(element.type);
+        glEnableVertexAttribArray(i);
+    }
 }
 
-void GL::VertexArray::initBuffers(Vertex v[])
+void GL::VertexArray::initBuffers(const unsigned long& size)
 {
-    this->use();
-    
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-    GLCheck(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 1000, v, GL_STATIC_DRAW));
+    GLCheck(glBindVertexArray(ID));
+    buffers.push_back(new VertexBuffer(GL_DYNAMIC_DRAW));
+    buffers.front()->init(size);
 
-    GLCheck(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0));
-    GLCheck(glEnableVertexAttribArray(0));
-    GLCheck(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float))));
-    GLCheck(glEnableVertexAttribArray(1));
+    GL::VBOLayout vbl = VBOLayout();
+    vbl.push<float>(3, 0);
+    vbl.push<float>(4, 1);
+    this->setVertexLayout(vbl);
 }
-
 
 void GL::VertexArray::use()
 {
-    GLCheck(glBindVertexArray(VAO));
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-    if (EBO != 0) GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
+    GLCheck(glBindVertexArray(ID));
+    this->bindVBO();
+}
+
+void GL::VertexArray::bindVBO()
+{
+    buffers.front()->bind();
 }

@@ -12,6 +12,7 @@ GL::Texture::Texture(const char* filePath, GLenum _type)
     GLCheck(glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_REPEAT));
     GLCheck(glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     GLCheck(glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    
     int nrChannels;
     stbi_set_flip_vertically_on_load(true);  
     unsigned char *data = stbi_load(filePath, &width, &height, &nrChannels, 0);

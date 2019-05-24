@@ -57,7 +57,7 @@ void PT::App::processInput()
 		glfwSetWindowShouldClose(window->context(), true);
     }
 
-    float cSpeed = 0.05f;
+    float cSpeed = 10.0f;
     if (glfwGetKey(window->context(), GLFW_KEY_W) == GLFW_PRESS)
         CameraManager::get()->getCamera()->addPosition(cSpeed * CameraManager::get()->getCamera()->getFront());
     if (glfwGetKey(window->context(), GLFW_KEY_S) == GLFW_PRESS)

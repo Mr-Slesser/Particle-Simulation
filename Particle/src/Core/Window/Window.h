@@ -3,18 +3,19 @@
 
 #include "../../OpenGL/OpenGL.h"
 
+#include "../Camera/CameraManager.h"
+
 #include <iostream>
 #include <functional>
 #include <cstdio>
 #include <assert.h>
 
-/* NOTE: Class to contain:
-    - wireframe mode: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    - Window size values as vector
-*/
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void glfw_error_callback(int error, const char* description);
+
+/* NOTE: Class to contain:
+    - Window size values as vector
+*/
 
 struct WindowConfig {
     unsigned int width = 1366;
