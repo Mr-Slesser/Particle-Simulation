@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <cstdlib>
+#include <math.h>
 #include <vector>
 
 #include "OpenGL.h"
@@ -17,6 +18,8 @@
 #include "../Core/Camera/CameraManager.h"
 #include "../Primitives/Quad.h"
 
+#include "../Utility/Math.h"
+
 #define VS_POINT "./Particle/Resources/Shaders/point.vertex"
 #define FS_POINT "./Particle/Resources/Shaders/point.fragment"
 
@@ -28,6 +31,7 @@ namespace GL
     {
     private:
         const int MAX_PARTICLES = 1000000;
+        const int total = 50;
         Program* program;
         
         VertexData vd;
@@ -49,6 +53,8 @@ namespace GL
         bool init();
         void clear();
         void draw();
+
+        void update();
 
         void modelMatrix();
         void viewMatrix();

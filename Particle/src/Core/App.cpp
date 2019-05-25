@@ -43,6 +43,7 @@ void PT::App::run()
 	{
         processInput();
         renderer->clear();
+        renderer->update();
         renderer->draw();
 
 		glfwSwapBuffers(window->context());

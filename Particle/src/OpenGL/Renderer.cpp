@@ -15,11 +15,12 @@ GL::Renderer::~Renderer()
     delete va;
     delete pointer;
 
-    for (auto p : v)
+    for (auto p : particles)
     {
         delete p;
-    } 
-    v.clear();
+    }
+
+    particles.clear();
 }
 
 bool GL::Renderer::init()
@@ -35,18 +36,38 @@ bool GL::Renderer::init()
 
     va = new VertexArray();
     va->initBuffers(sizeof(Vertex) * MAX_PARTICLES);
+
+    // pointer->start = pointer->it = va->getBuffer()->getPointer();
+    // for (int i = 0; i < (50 * 50); i++)
+    // {
+    //     pointer->it->position = glm::vec3(
+    //             (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
+    //             (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
+    //             (((float)(rand() % 100) / 100.0f) * 1000));
+    //     pointer->it->colour = Colour::PINK;
+
+    //     pointer->it++;
+    //     pointer->size++;
+    // }
+    // va->getBuffer()->releasePointer();
+
     pointer->start = pointer->it = va->getBuffer()->getPointer();
-
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < total; i++)
     {
-        pointer->it->position = glm::vec3(
-                (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
-                (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
-                (((float)(rand() % 100) / 100.0f) * 100) + 40);
-        pointer->it->colour = Colour::PINK;
+        float lat = PT::map<float>(i, 0, total, -HALF_PI, HALF_PI);
+        for (int j = 0; j < total; j++)
+        {
+            float lon = PT::map<float>(j, 0, total, -PI, PI);
 
-        pointer->it++;
-        pointer->size++;
+            float x = 100 * sin(lon) * cos(lat);
+            float y = 100 * sin(lon) * sin(lat);
+            float z = 100 * cos(lon);
+            
+            pointer->it->position = glm::vec3(x, y, z);
+            pointer->it->colour = Colour::PINK;
+            pointer->it++;
+            pointer->size++;
+        }
     }
     va->getBuffer()->releasePointer();
 
@@ -59,6 +80,30 @@ void GL::Renderer::clear()
 	GLCheck(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
+void GL::Renderer::update()
+{
+    // pointer->start = pointer->it = va->getBuffer()->getPointer();
+    // for (int i = 0; i < 1000; i++)
+    // {
+    //     pointer->it->position = pointer->it->position + glm::vec3(0.2f, 0.3f, 0.1f);
+
+    //     pointer->it++;
+    // }
+    // va->getBuffer()->releasePointer();    
+
+    // pointer->start = pointer->it = va->getBuffer()->getPointer();
+    // for (int i = 0; i < (total * total); i++)
+    // {
+    //     float lat = PT::map<float>(i, 0, total, -HALF_PI, HALF_PI);
+    //     for (int j = 0; j < total; j++)
+    //     {
+    //         pointer->it->position = pointer->it->position + glm::vec3(0.1f, 0.1f, 0.1f);
+    //         pointer->it++;
+    //     }
+    // }
+    // va->getBuffer()->releasePointer();
+}
+
 void GL::Renderer::draw()
 {
     program->use();
@@ -68,16 +113,19 @@ void GL::Renderer::draw()
 
     va->use();
 
-    //GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
+    glm::mat4 model = glm::mat4(1.0f);  
+    model = glm::rotate(model, (float)glfwGetTime() * (float)PI, glm::vec3(1.0f, 0.3f, 0.5f));
+    program->setMat4("model", model);  
+    GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
 
-    for(unsigned int i = 0; i < pointer->size; i++)
-    {
-        glm::mat4 model = glm::mat4(1.0f);
-        float angle = 0.01f * (i); 
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        program->setMat4("model", model);
-        GLCheck(glDrawArrays(GL_POINTS, i, 1));
-    }
+    // for(unsigned int i = 0; i < pointer->size; i++)
+    // {
+    //     glm::mat4 model = glm::mat4(1.0f);
+    //     float angle = 0.01f * (i); 
+    //     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+    //     program->setMat4("model", model);
+    //     GLCheck(glDrawArrays(GL_POINTS, i, 1));
+    // }
 }
 
 void GL::Renderer::modelMatrix()

@@ -91,7 +91,7 @@ public:
     void setProjection(float _fov)
     {
         c.fov = _fov;
-        projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 5000.0f);  
+        projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 100000.0f);  
     }
 };
 
