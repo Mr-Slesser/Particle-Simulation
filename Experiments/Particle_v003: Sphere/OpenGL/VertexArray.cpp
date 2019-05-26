@@ -13,7 +13,7 @@ GL::VertexArray::~VertexArray()
 
 void GL::VertexArray::setVertexLayout(VBOLayout& layout)
 {
-    //this->use();
+    this->use();
 
     const auto& elements = layout.getElements();
     unsigned int offset = 0;
@@ -24,16 +24,6 @@ void GL::VertexArray::setVertexLayout(VBOLayout& layout)
         offset += element.count * VBElement::getSizeOfType(element.type);
         glEnableVertexAttribArray(i);
     }
-}
-
-void GL::VertexArray::init()
-{
-    GLCheck(glBindVertexArray(ID));
-
-    // GL::VBOLayout vbl = VBOLayout();
-    // vbl.push<float>(3, 0);
-    // vbl.push<float>(4, 1);
-    // this->setVertexLayout(vbl);
 }
 
 void GL::VertexArray::initBuffers(const unsigned long& size)
@@ -52,17 +42,6 @@ void GL::VertexArray::use()
 {
     GLCheck(glBindVertexArray(ID));
     this->bindVBO();
-}
-
-void GL::VertexArray::use(int a)
-{
-    GLCheck(glBindVertexArray(ID));
-}
-
-void GL::VertexArray::use(VertexBuffer* vb)
-{
-    GLCheck(glBindVertexArray(ID));
-    vb->bind();
 }
 
 void GL::VertexArray::bindVBO()

@@ -3,7 +3,6 @@
 
 #include "OpenGL.h"
 #include "../Primitives/Vertex.h"
-#include "VertexData.h"
 
 namespace GL
 {
@@ -25,14 +24,11 @@ namespace GL
         ~VertexBuffer();
 
         void init(const unsigned long& _size);
-        void init(const unsigned long& _size, VertexData& vd);
 
         void bind();
 
         Vertex* getPointer();
         void releasePointer();
-
-        unsigned int getID() const { return ID; }
     };
     
 } // namespace GL

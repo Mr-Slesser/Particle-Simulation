@@ -28,30 +28,45 @@ bool GL::Renderer::init()
     program = new Program();
     if (!program->init(VS_POINT, FS_POINT))
     {
-        GL_LOG_CRITICAL("Program failed to init");
+        GL_LOG_CRITICAL("GL::Renderer::init() -> Render Program failed to init");
         return false;
     }
 
-    Print_All(program->getID());
+    update_program = new UpdateProgram();
+    if (!update_program->init())
+    {
+        GL_LOG_CRITICAL("GL::Renderer::init() -> Update Program failed to init");
+        return false;
+    }
 
-    va = new VertexArray();
-    va->initBuffers(sizeof(Vertex) * MAX_PARTICLES);
+    for (int i = 0; i < total; i++)
+    {
+        float lat = PT::map<float>(i, 0, total, -HALF_PI, HALF_PI);
+        for (int j = 0; j < total; j++)
+        {
+            float lon = PT::map<float>(j, 0, total, -PI, PI);
 
-    // pointer->start = pointer->it = va->getBuffer()->getPointer();
-    // for (int i = 0; i < (50 * 50); i++)
-    // {
-    //     pointer->it->position = glm::vec3(
-    //             (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
-    //             (((float)(rand() % 100) / 100.0f) * (rand() % 5000)) - 2500,
-    //             (((float)(rand() % 100) / 100.0f) * 1000));
-    //     pointer->it->colour = Colour::PINK;
+            float x = 100 * sin(lon) * cos(lat);
+            float y = 100 * sin(lon) * sin(lat);
+            float z = 100 * cos(lon);
+            Vertex v;        
+            v.position = glm::vec3(x, y, z);
+            v.colour = Colour::PINK;
+            vd.add(v);
+        }
+    }
 
-    //     pointer->it++;
-    //     pointer->size++;
-    // }
-    // va->getBuffer()->releasePointer();
+    vaU = new VertexArray();
+    vaU->init();
 
-    pointer->start = pointer->it = va->getBuffer()->getPointer();
+    GL::VBOLayout vbl = VBOLayout();
+    vbl.push<float>(3, 0);
+    vbl.push<float>(4, 1);
+
+    vb1 = new VertexBuffer(GL_DYNAMIC_DRAW);
+    vb1->init(sizeof(Vertex) * MAX_PARTICLES);
+
+    pointer->start = pointer->it = vb1->getPointer();
     for (int i = 0; i < total; i++)
     {
         float lat = PT::map<float>(i, 0, total, -HALF_PI, HALF_PI);
@@ -69,7 +84,25 @@ bool GL::Renderer::init()
             pointer->size++;
         }
     }
-    va->getBuffer()->releasePointer();
+    vb1->releasePointer();
+
+    vb2 = new VertexBuffer(GL_DYNAMIC_DRAW);
+    vb2->init(sizeof(Vertex) * MAX_PARTICLES);
+
+    vb1->bind();
+
+    vaU->setVertexLayout(vbl);
+
+    vaR = new VertexArray();
+    vaR->init();
+    vaR->setVertexLayout(vbl);
+
+    vb1->bind();
+ 
+    vaR->setVertexLayout(vbl);
+
+    Print_All(program->getID());
+    Print_All(update_program->getID());
 
     return true;
 }
@@ -82,50 +115,39 @@ void GL::Renderer::clear()
 
 void GL::Renderer::update()
 {
-    // pointer->start = pointer->it = va->getBuffer()->getPointer();
-    // for (int i = 0; i < 1000; i++)
-    // {
-    //     pointer->it->position = pointer->it->position + glm::vec3(0.2f, 0.3f, 0.1f);
+    update_program->use();
+    vaU->use(1);
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vb2->getID());
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, pointer->size - 1);
+    glEndTransformFeedback();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glFlush();
+    
+    glDisable(GL_RASTERIZER_DISCARD);
 
-    //     pointer->it++;
-    // }
-    // va->getBuffer()->releasePointer();    
-
-    // pointer->start = pointer->it = va->getBuffer()->getPointer();
-    // for (int i = 0; i < (total * total); i++)
-    // {
-    //     float lat = PT::map<float>(i, 0, total, -HALF_PI, HALF_PI);
-    //     for (int j = 0; j < total; j++)
-    //     {
-    //         pointer->it->position = pointer->it->position + glm::vec3(0.1f, 0.1f, 0.1f);
-    //         pointer->it++;
-    //     }
-    // }
-    // va->getBuffer()->releasePointer();
+    std::swap(vb1, vb2);
+    glBindVertexArray(0);
 }
 
 void GL::Renderer::draw()
 {
+    
+    this->update();
+
     program->use();
     
     viewMatrix();
     projectionMatrix();
 
-    va->use();
+    vaR->use(1);
 
     glm::mat4 model = glm::mat4(1.0f);  
     model = glm::rotate(model, (float)glfwGetTime() * (float)PI, glm::vec3(1.0f, 0.3f, 0.5f));
-    program->setMat4("model", model);  
-    GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
+    program->setMat4("model", model);
 
-    // for(unsigned int i = 0; i < pointer->size; i++)
-    // {
-    //     glm::mat4 model = glm::mat4(1.0f);
-    //     float angle = 0.01f * (i); 
-    //     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-    //     program->setMat4("model", model);
-    //     GLCheck(glDrawArrays(GL_POINTS, i, 1));
-    // }
+    GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
 }
 
 void GL::Renderer::modelMatrix()

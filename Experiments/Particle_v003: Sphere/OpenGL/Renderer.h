@@ -36,15 +36,9 @@ namespace GL
         Program* program;
         UpdateProgram* update_program;
         
-        VertexBuffer* vb1;
-        VertexBuffer* vb2;
-
         VertexData vd;
-        VertexArray* va;
 
-        VertexArray* vaR;
-        VertexArray* vaU;
-        
+        VertexArray* va;
         VBPointer* pointer;
 
         glm::mat4 model;
@@ -52,6 +46,13 @@ namespace GL
         glm::mat4 projection;
 
         std::vector<PT::Particle*> particles;
+
+        // SECTION: TFO Vars
+        GLuint vao;
+        GLuint vbo;
+        GLuint tbo;
+        GLfloat data[5] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
+        GLint inputAttrib;
 
     public:
         Renderer();

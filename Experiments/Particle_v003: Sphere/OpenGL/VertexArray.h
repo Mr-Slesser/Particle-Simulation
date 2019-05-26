@@ -19,22 +19,20 @@ namespace GL {
         VertexArray();
         virtual ~VertexArray();
 
-        void init();
+
         void initBuffers(const unsigned long& size);
 
         void use();
-        void use(int a); // TODO: Temp!
-        void use(VertexBuffer* vb);
         void bindVBO();
 
         VertexBuffer* getBuffer() { return buffers.front(); }
-        void setVertexLayout(VBOLayout& vbol);
 
     private:
         unsigned int ID;
 
         std::vector<VertexBuffer*> buffers;
 
+        void setVertexLayout(VBOLayout& vbol);
     };
 
 } // namespace GL
