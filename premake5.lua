@@ -27,7 +27,8 @@ project "Particle"
         "vendor/glfw/include",
         "vendor/glad/include",
         "vendor/glm",
-        "vendor/spdlog/include"
+        "vendor/spdlog/include",
+        "vendor/imgui"
     }
 
     libdirs {
@@ -81,37 +82,6 @@ project "Particle"
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On"
-
-project "ImGui"
-    kind "StaticLib"
-    language "C++"
-    location "ImGui"
-    cppdialect "C++17"
-    
-	targetdir ("bin/" .. out .. "/%{prj.name}")
-    objdir ("bin-int/" .. out .. "/%{prj.name}")
-
-	files
-	{
-        "vendor/imgui/imconfig.h",
-        "vendor/imgui/imgui.h",
-        "vendor/imgui/imgui.cpp",
-        "vendor/imgui/imgui_draw.cpp",
-        "vendor/imgui/imgui_internal.h",
-        "vendor/imgui/imgui_widgets.cpp",
-        "vendor/imgui/imstb_rectpack.h",
-        "vendor/imgui/imstb_textedit.h",
-        "vendor/imgui/imstb_truetype.h",
-        "vendor/imgui/imgui_demo.cpp"
-    }
-    
-	filter "system:windows"
-        systemversion "latest"
-        cppdialect "C++17"
-        staticruntime "On"
-        
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
 
 project "GoogleTest"
     kind "StaticLib"
