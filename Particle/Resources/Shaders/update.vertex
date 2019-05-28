@@ -13,5 +13,7 @@ void main()
     //outPosition = aPos + vec3(-0.1, -0.1, 0.0);
     //outColor = aColor + vec4(0.01, -0.01, 0.01, 0.0); 
     outPosition = aPos;
+    //outPosition = vec3(aPos.x + sin(dt), aPos.y + sin(dt), aPos.z + sin(dt));
+
     outColor = aColor;
 } 
