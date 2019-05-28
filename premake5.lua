@@ -130,4 +130,29 @@ project "ParticleTest"
     links { 
         "GoogleTest",
         "Particle"
-    }   
+    }
+
+project "ImGui"
+    kind "StaticLib"
+    language "C++"
+    systemversion "latest"
+    cppdialect "C++17"
+    staticruntime "On"
+    location "ImGui"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "vendor/imgui/imconfig.h",
+        "vendor/imgui/imgui.h",
+        "vendor/imgui/imgui.cpp",
+        "vendor/imgui/imgui_draw.cpp",
+        "vendor/imgui/imgui_internal.h",
+        "vendor/imgui/imgui_widgets.cpp",
+        "vendor/imgui/imstb_rectpack.h",
+        "vendor/imgui/imstb_textedit.h",
+        "vendor/imgui/imstb_truetype.h",
+        "vendor/imgui/imgui_demo.cpp"
+    }

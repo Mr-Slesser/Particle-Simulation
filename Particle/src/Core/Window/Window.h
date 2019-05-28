@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../../OpenGL/OpenGL.h"
+#include "../../OpenGL/OpenGL.h"            
 
 #include "../Camera/CameraManager.h"
 
