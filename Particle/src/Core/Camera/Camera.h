@@ -29,7 +29,7 @@ struct CameraData
 
 static const CameraData DEFAULT_CAMERA = { 
     0.0f, -90.0f, 45.0f, 
-    glm::vec3(0.0f, 0.0f,  3.0f), 
+    glm::vec3(0.0f, 0.0f,  400.0f), 
     glm::vec3(0.0f, 0.0f, -1.0f), 
     glm::vec3(0.0f, 1.0f,  0.0f)
 };
@@ -41,9 +41,9 @@ protected:
     glm::mat4 projection;
     glm::mat4 lookAt;
 
-    CameraData c;
 
 public:
+    CameraData c;
     static Camera* instance;
     Camera(PROJECTION_TYPE t, const CameraData& config = DEFAULT_CAMERA);
     virtual ~Camera();
@@ -62,8 +62,10 @@ public:
     void subtractPosition(glm::vec3 _pos);
 
     glm::vec3& getFront() { return c.front; }
+    void setFront(glm::vec3 _front);
 
     glm::vec3& getUp() { return c.up; }
+    void setUp(glm::vec3 _up);
 
     static Camera* getThis() {
         return instance;

@@ -115,8 +115,10 @@ void GL::Renderer::clear()
 
 void GL::Renderer::update()
 {
+    static float dt = 0.0f;
     update_program->use();
     vaU->use(1);
+    update_program->setFloat("dt", dt);
     glEnable(GL_RASTERIZER_DISCARD);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vb2->getID());
     glBeginTransformFeedback(GL_POINTS);
@@ -129,6 +131,7 @@ void GL::Renderer::update()
 
     std::swap(vb1, vb2);
     glBindVertexArray(0);
+    dt += 0.001;
 }
 
 void GL::Renderer::draw()

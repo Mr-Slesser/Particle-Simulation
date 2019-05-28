@@ -32,7 +32,11 @@ bool PT::App::init()
     }
 
     // InputManager
-    InputManager::get()->registerMouseCallbacks(window);
+    //InputManager::get()->registerMouseCallbacks(window);
+
+    // GUI
+    gui = new GUILayer();
+    gui->init(window->context());
 
     return true;
 }
@@ -44,6 +48,8 @@ void PT::App::run()
         processInput();
         renderer->clear();
         renderer->draw();
+
+        gui->render();
 
 		glfwSwapBuffers(window->context());
 		glfwPollEvents();

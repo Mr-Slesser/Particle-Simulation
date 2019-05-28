@@ -63,6 +63,18 @@ void Camera::setPosition(glm::vec3 _pos)
     setLookAt();
 }
 
+void Camera::setFront(glm::vec3 _front)
+{
+    c.front = _front;
+    setLookAt();
+}
+
+void Camera::setUp(glm::vec3 _up)
+{
+    c.up = _up;
+    setLookAt();
+}
+
 void Camera::addPosition(glm::vec3 _pos)
 {
     c.pos += _pos;

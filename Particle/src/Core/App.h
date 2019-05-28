@@ -15,6 +15,8 @@
 #include "Input/InputManager.h"
 #include "Window/Window.h"
 
+#include "GUI/GUILayer.h"
+
 #include "../OpenGL/Renderer.h"
 
 #include <cstdio>
@@ -26,6 +28,7 @@ namespace PT
     private:
         Window* window;
         GL::Renderer* renderer;
+        GUILayer* gui;
 
     public:
         App();
