@@ -8,6 +8,7 @@ namespace PT
         ImGui::CreateContext();
 
         io = ImGui::GetIO();
+        io.WantCaptureMouse = true;
         (void)io;
     }
     
@@ -18,13 +19,15 @@ namespace PT
         ImGui::DestroyContext();
     }
 
-    void GUILayer::init(GLFWwindow* window)
+    bool GUILayer::init(GLFWwindow* window)
     {
 
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 330");
-        clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        //clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+        return true;
     }
 
     void GUILayer::render()
@@ -33,6 +36,9 @@ namespace PT
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        bool hov = ImGui::IsMouseHoveringAnyWindow();
+        GC::get()->updateBool("GUI_HOVER", hov);
+
         if (show_demo_window) { ImGui::ShowDemoWindow(&show_demo_window); }
 
         {
@@ -40,13 +46,24 @@ namespace PT
             // static glm::vec3 camera_front;
             // static glm::vec3 camera_up;
 
+            static glm::vec4 clear_color;
+
             ImGui::Begin("Debug Variables");
             {
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+                // TODO: Why percentage not showing??
+                ImGui::Text("Fill: %d / %d (%.2f %%)", 
+                    GC::get()->getInt("CURR_NO_PARTICLES"), 
+                    GC::get()->getInt("MAX_PARTICLES"), 
+                    (GC::get()->getInt("CURR_NO_PARTICLES") / GC::get()->getInt("MAX_PARTICLES")) * 100
+                    );
+
                 ImGui::Checkbox("Show Demo Window", &show_demo_window);
 
-                ImGui::ColorEdit3("clear color", (float*)&clear_color);
+                clear_color = GC::get()->getVec4("CLEAR_COLOR");
+                ImGui::ColorEdit3("clear color", &clear_color.r);
+                GC::get()->updateVec4("CLEAR_COLOR", clear_color);
 
                 camera_pos = CameraManager::get()->getCamera()->getPosition();
                 ImGui::SliderFloat3("Camera Pos", &camera_pos.x, -1000.0f, 1000.0f, "%.2f");

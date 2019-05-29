@@ -1,18 +1,18 @@
-#include "UpdateProgram.h"
+#include "Program.h"
 
-GL::UpdateProgram::UpdateProgram()
+GL::Program::Program()
     : ID(0)
 {
 }
 
-GL::UpdateProgram::~UpdateProgram()
+GL::Program::~Program()
 {
     GLCheck(glDeleteProgram(ID));
 }
 
-bool GL::UpdateProgram::init(const char* vertexPath)
+bool GL::Program::init(const char* vertexPath, const char* fragmentPath)
 {
-    GL_LOG_TRACE("Starting update program init.");
+    GL_LOG_TRACE("Starting program creation");
 
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     
@@ -20,20 +20,17 @@ bool GL::UpdateProgram::init(const char* vertexPath)
     {
         return false;
     }
-// GL_LOG_TRACE("A");
+
+	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    if (!compileShader(fragmentPath, fragmentShader))
+    {
+        return false;
+    }
+
 	ID = glCreateProgram();
 	GLCheck(glAttachShader(ID, vertexShader));
-// GL_LOG_TRACE("B");
-
-    // const GLchar* feedbackVaryings[] = { "outValue" };
-    // glTransformFeedbackVaryings(ID, 1, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
-    const GLchar* feedbackVaryings[] = { "outPosition", "outColor" };
-    glTransformFeedbackVaryings(ID, 2, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
-// GL_LOG_TRACE("C");
-
-
+	GLCheck(glAttachShader(ID, fragmentShader));
 	GLCheck(glLinkProgram(ID));
-// GL_LOG_TRACE("D");
 
     int success = 0;
     char* infolog;
@@ -43,21 +40,21 @@ bool GL::UpdateProgram::init(const char* vertexPath)
         GL_LOG_CRITICAL("{}", infolog);
         return false;
 	}
-// GL_LOG_TRACE("E");
-	GLCheck(glDeleteShader(vertexShader));
-// GL_LOG_TRACE("F");
 
-    GL_LOG_TRACE("UpdateProgram created with id: {}", ID);
+	GLCheck(glDeleteShader(vertexShader));
+	GLCheck(glDeleteShader(fragmentShader));
+
+    GL_LOG_TRACE("Program created with id: {}", ID);
 
     return true;
 }
 
-void GL::UpdateProgram::use()
+void GL::Program::use()
 {
     GLCheck(glUseProgram(ID));
 }
 
-int GL::UpdateProgram::getUniformLocation(const char* name)
+int GL::Program::getUniformLocation(const char* name)
 {
     if (uniform_locations.find(name) != uniform_locations.end()) {
         return uniform_locations[name];
@@ -68,13 +65,14 @@ int GL::UpdateProgram::getUniformLocation(const char* name)
     }
 }
 
-bool GL::UpdateProgram::compileShader(const char* filePath, int& id)
+bool GL::Program::compileShader(const char* filePath, int& id)
 {
     std::ifstream shaderFile(filePath);
         
     if (shaderFile.fail())
     {
-        GL_LOG_CRITICAL("[{}]{}: Could not compile file {} ({})", __FILE__, __LINE__, filePath, strerror(errno));
+        // TODO: Add this to all loggin bits.
+        GL_LOG_CRITICAL("[{}]{}: Could not load file {} ({})", __FILE__, __LINE__, filePath, strerror(errno));
         return false;
     }
 
@@ -108,59 +106,59 @@ bool GL::UpdateProgram::compileShader(const char* filePath, int& id)
 }
 
 // SECTION: Uniform Helper Functions
-void GL::UpdateProgram::setBool(const char* name, bool value)
+void GL::Program::setBool(const char* name, bool value)
 {         
     GLCheck(glUniform1i(getUniformLocation(name), (int)value);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setInt(const char* name, int value)
+void GL::Program::setInt(const char* name, int value)
 { 
     GLCheck(glUniform1i(getUniformLocation(name), value);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setFloat(const char* name, float value)
+void GL::Program::setFloat(const char* name, float value)
 { 
     GLCheck(glUniform1f(getUniformLocation(name), value);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setVec2(const char* name, const glm::vec2 &value)
+void GL::Program::setVec2(const char* name, const glm::vec2 &value)
 { 
     GLCheck(glUniform2fv(getUniformLocation(name), 1, &value[0]);) 
 }
-void GL::UpdateProgram::setVec2(const char* name, float x, float y)
+void GL::Program::setVec2(const char* name, float x, float y)
 { 
     GLCheck(glUniform2f(getUniformLocation(name), x, y);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setVec3(const char* name, const glm::vec3 &value)
+void GL::Program::setVec3(const char* name, const glm::vec3 &value)
 { 
     GLCheck(glUniform3fv(getUniformLocation(name), 1, &value[0]);) 
 }
-void GL::UpdateProgram::setVec3(const char* name, float x, float y, float z)
+void GL::Program::setVec3(const char* name, float x, float y, float z)
 { 
     GLCheck(glUniform3f(getUniformLocation(name), x, y, z);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setVec4(const char* name, const glm::vec4 &value)
+void GL::Program::setVec4(const char* name, const glm::vec4 &value)
 { 
     GLCheck(glUniform4fv(getUniformLocation(name), 1, &value[0]);) 
 }
-void GL::UpdateProgram::setVec4(const char* name, float x, float y, float z, float w) 
+void GL::Program::setVec4(const char* name, float x, float y, float z, float w) 
 { 
     GLCheck(glUniform4f(getUniformLocation(name), x, y, z, w);) 
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setMat2(const char* name, const glm::mat2 &mat)
+void GL::Program::setMat2(const char* name, const glm::mat2 &mat)
 {
     GLCheck(glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setMat3(const char* name, const glm::mat3 &mat)
+void GL::Program::setMat3(const char* name, const glm::mat3 &mat)
 {
     GLCheck(glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
 }
 // ------------------------------------------------------------------------
-void GL::UpdateProgram::setMat4(const char* name, const glm::mat4 &mat)
+void GL::Program::setMat4(const char* name, const glm::mat4 &mat)
 {
     GLCheck(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
 }

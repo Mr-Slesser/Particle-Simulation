@@ -7,6 +7,8 @@
 #include "../../Headers/imgui/imgui_impl_glfw.h"
 #include "../../Headers/imgui/imgui_impl_opengl3.h"
 
+#include "../GlobalConfiguration.h"
+
 #include "../Camera/CameraManager.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
@@ -20,13 +22,13 @@ namespace PT
     private:
         ImGuiIO io;
         bool show_demo_window = false;
-        ImVec4 clear_color;
+        //ImVec4 clear_color;
 
     public:
         GUILayer();
         virtual ~GUILayer();
 
-        void init(GLFWwindow* window);
+        bool init(GLFWwindow* window);
         void render();
     };
     

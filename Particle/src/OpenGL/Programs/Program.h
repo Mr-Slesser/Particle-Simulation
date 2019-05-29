@@ -1,7 +1,7 @@
-#ifndef UPDATEPROGRAM_H
-#define UPDATEPROGRAM_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
-#include "OpenGL.h"
+#include "../OpenGL.h"
 
 #include <iostream>
 #include <string>
@@ -13,22 +13,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define VS_UPDATE "./Particle/Resources/Shaders/update.vertex"
+#define VS_BASIC "./Particle/Resources/Shaders/point.vertex"
+#define FS_BASIC "./Particle/Resources/Shaders/point.fragment"
 
 namespace GL
 {
-    class UpdateProgram
+    class Program
     {
-    private:
+    protected:
         unsigned int ID;
         std::map<const char*, int> uniform_locations;
-        bool compileShader(const char* filePath, int& id);
+        virtual bool compileShader(const char* filePath, int& id);
 
     public:
-        UpdateProgram();
-        virtual ~UpdateProgram();
+        Program();
+        virtual ~Program();
 
-        bool init(const char* vertexPath = VS_UPDATE);
+        virtual bool init(const char* vertexPath = VS_BASIC, const char* fragmentPath = FS_BASIC);
 
         void use();
 

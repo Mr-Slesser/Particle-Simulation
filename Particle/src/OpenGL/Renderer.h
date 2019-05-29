@@ -6,23 +6,19 @@
 #include <vector>
 
 #include "OpenGL.h"
-#include "Program.h"
-#include "UpdateProgram.h"
+#include "Programs/ProgramManager.h"
+
 #include "VertexArray.h"
 #include "VertexData.h"
 #include "Texture.h"
 
 #include "../Particle/Particle.h"
 
-#include "../Primitives/Quad.h"
-#include "../Primitives/Cube.h"
+#include "../Core/GlobalConfiguration.h"
+
 #include "../Core/Camera/CameraManager.h"
-#include "../Primitives/Quad.h"
 
 #include "../Utility/Math.h"
-
-#define VS_POINT "./Particle/Resources/Shaders/point.vertex"
-#define FS_POINT "./Particle/Resources/Shaders/point.fragment"
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
@@ -33,8 +29,8 @@ namespace GL
     private:
         const int MAX_PARTICLES = 1000000;
         const int total = 50;
-        Program* program;
-        UpdateProgram* update_program;
+
+        ProgramManager* programs;
         
         VertexBuffer* vb1;
         VertexBuffer* vb2;
@@ -68,6 +64,8 @@ namespace GL
         void projectionMatrix();
 
         void changeShaders(int type);
+
+        void addParticle(int num);
     };
     
 } // namespace GL

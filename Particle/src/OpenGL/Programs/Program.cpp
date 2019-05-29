@@ -71,7 +71,8 @@ bool GL::Program::compileShader(const char* filePath, int& id)
         
     if (shaderFile.fail())
     {
-        GL_LOG_CRITICAL("[{}]{}: Could not compile file {} ({})", __FILE__, __LINE__, filePath, strerror(errno));
+        // TODO: Add this to all loggin bits.
+        GL_LOG_CRITICAL("[{}]{}: Could not load file {} ({})", __FILE__, __LINE__, filePath, strerror(errno));
         return false;
     }
 

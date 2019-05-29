@@ -12,14 +12,14 @@ PT::App::~App()
 bool PT::App::init()
 {
     Log::init();
-    GL_LOG_TRACE("Core Logger Started");
-    GL_LOG_TRACE("GL Logger Started");    
+    CORE_LOG_TRACE("Logger startup: [Core]");
+    GL_LOG_TRACE("Logger startup: [GL  ]");    
 
     // Window
     window = new Window();
     if (window->init() == nullptr)
     {
-        CORE_LOG_TRACE("Exiting: Window initialization failed");
+        CORE_LOG_TRACE("EXIT: Window initialization failed");
         return false;
     }
 
@@ -27,16 +27,20 @@ bool PT::App::init()
     renderer = new GL::Renderer();
     if (!renderer->init())
     {
-        CORE_LOG_TRACE("Exiting: Renderer initialization failed");
+        CORE_LOG_TRACE("EXIT: Renderer initialization failed");
         return false;
     }
 
     // InputManager
-    //InputManager::get()->registerMouseCallbacks(window);
+    InputManager::get()->registerMouseCallbacks(window);
 
     // GUI
     gui = new GUILayer();
-    gui->init(window->context());
+    if(!gui->init(window->context()))
+    {
+        CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
+        return false;
+    }
 
     return true;
 }
@@ -45,17 +49,20 @@ void PT::App::run()
 {
     while (window->isActive())
 	{
+		glfwPollEvents();
         processInput();
+
         renderer->clear();
         renderer->draw();
-
+        
         gui->render();
-
-		glfwSwapBuffers(window->context());
-		glfwPollEvents();
+		
+        glfwSwapBuffers(window->context());
 	}
 }
 
+// TODO: Add this into InputManager?
+// TODO: Make sure no repeat keys unless specified?
 void PT::App::processInput()
 {
 	if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -63,6 +70,7 @@ void PT::App::processInput()
 		glfwSetWindowShouldClose(window->context(), true);
     }
 
+    // TODO: Tidy up, Make movement explicit -- Ie. ad up down left right forward abck etc
     float cSpeed = 10.0f;
     if (glfwGetKey(window->context(), GLFW_KEY_W) == GLFW_PRESS)
         CameraManager::get()->getCamera()->addPosition(cSpeed * CameraManager::get()->getCamera()->getFront());
@@ -72,4 +80,7 @@ void PT::App::processInput()
         CameraManager::get()->getCamera()->subtractPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
     if (glfwGetKey(window->context(), GLFW_KEY_D) == GLFW_PRESS)
         CameraManager::get()->getCamera()->addPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
+
+    if (glfwGetKey(window->context(), GLFW_KEY_Q) == GLFW_PRESS)
+        renderer->addParticle(1000);
 }

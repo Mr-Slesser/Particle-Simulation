@@ -10,6 +10,9 @@
 
 #include "../Window/Window.h"
 #include "../Camera/CameraManager.h"
+
+#include "../GlobalConfiguration.h"
+
 // TODO: Handlers to be created, using an input config singleton as a bridge.
 
 namespace PT
@@ -39,52 +42,61 @@ namespace PT
 
     static void mouseCursorHandler(GLFWwindow* m, double x, double y)
     {
-        static float lX = 400.0f;
-        static float lY = 300.0f;
-
-        if (InputManager::get()->isMouseHeld())
+        static float lX = 0.0f;
+        static float lY = 0.0f;
+        if (!GC::get()->getBool("GUI_HOVER"))
         {
-            static bool firstMouse = true;
-            if (firstMouse)
+            if (InputManager::get()->isMouseHeld())
             {
+                static bool firstMouse = true;
+                if (firstMouse)
+                {
+                    lX = x;
+                    lY = y;
+                    firstMouse = false;
+                }
+
+                float xoffset = x - lX;
+                float yoffset = lY - y;
                 lX = x;
                 lY = y;
-                firstMouse = false;
+
+                xoffset *= InputManager::get()->getSensitivity();
+                yoffset *= InputManager::get()->getSensitivity();
+
+                CameraManager::get()->getCamera()->setPY(xoffset, yoffset);
             }
-
-            float xoffset = x - lX;
-            float yoffset = lY - y;
-            lX = x;
-            lY = y;
-
-            xoffset *= InputManager::get()->getSensitivity();
-            yoffset *= InputManager::get()->getSensitivity();
-
-            CameraManager::get()->getCamera()->setPY(xoffset, yoffset);
         }
+
     }
 
     static void mouseButtonHandler(GLFWwindow* m, int button, int action, int mods)
     {
-        if (button == GLFW_MOUSE_BUTTON_LEFT) {
-            if(GLFW_PRESS == action)
-                InputManager::get()->setMouseHeld(true);
-            else if(GLFW_RELEASE == action)
-                InputManager::get()->setMouseHeld(false);
+        if (!GC::get()->getBool("GUI_HOVER"))
+        {
+            if (button == GLFW_MOUSE_BUTTON_LEFT) {
+                if(GLFW_PRESS == action)
+                    InputManager::get()->setMouseHeld(true);
+                else if(GLFW_RELEASE == action)
+                    InputManager::get()->setMouseHeld(false);
+            }
         }
     }
 
     static void mouseScrollHandler(GLFWwindow* window, double xoffset, double yoffset)
     {
-        float fov = CameraManager::get()->getCamera()->getFOV();
-        if(fov >= 1.0f && fov <= 45.0f)
-            fov -= yoffset;
-        if(fov <= 1.0f)
-            fov = 1.0f;
-        if(fov >= 45.0f)
-            fov = 45.0f;
+        if (!GC::get()->getBool("GUI_HOVER"))
+        {
+            float fov = CameraManager::get()->getCamera()->getFOV();
+            if(fov >= 1.0f && fov <= 45.0f)
+                fov -= yoffset;
+            if(fov <= 1.0f)
+                fov = 1.0f;
+            if(fov >= 45.0f)
+                fov = 45.0f;
 
-        CameraManager::get()->getCamera()->setProjection(fov);
+            CameraManager::get()->getCamera()->setProjection(fov);
+        }
     }
 
 } // namespace Input

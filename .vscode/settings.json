@@ -5,6 +5,7 @@
         "*.fragment": "glsl",
         "*.geometry": "glsl",
         "*.def": "cpp",
+        "*.update": "glsl",
         "iosfwd": "cpp",
         "array": "cpp",
         "*.tcc": "cpp",
@@ -56,7 +57,28 @@
         "condition_variable": "cpp",
         "mutex": "cpp",
         "ratio": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "__bit_reference": "cpp",
+        "__config": "cpp",
+        "__debug": "cpp",
+        "__functional_base": "cpp",
+        "__hash_table": "cpp",
+        "__locale": "cpp",
+        "__mutex_base": "cpp",
+        "__nullptr": "cpp",
+        "__split_buffer": "cpp",
+        "__string": "cpp",
+        "__threading_support": "cpp",
+        "__tree": "cpp",
+        "__tuple": "cpp",
+        "bitset": "cpp",
+        "ios": "cpp",
+        "iterator": "cpp",
+        "locale": "cpp",
+        "map": "cpp",
+        "string": "cpp",
+        "algorithm": "cpp"
     },
-    "todo-tree.showTagsFromOpenFilesOnly": false
+    "todo-tree.showTagsFromOpenFilesOnly": false,
+    "C_Cpp.errorSquiggles": "Enabled"
 }

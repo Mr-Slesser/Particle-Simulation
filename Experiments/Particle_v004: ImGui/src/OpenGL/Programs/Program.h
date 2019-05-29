@@ -1,7 +1,7 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include "OpenGL.h"
+#include "../OpenGL.h"
 
 #include <iostream>
 #include <string>
@@ -20,16 +20,16 @@ namespace GL
 {
     class Program
     {
-    private:
+    protected:
         unsigned int ID;
         std::map<const char*, int> uniform_locations;
-        bool compileShader(const char* filePath, int& id);
+        virtual bool compileShader(const char* filePath, int& id);
 
     public:
         Program();
         virtual ~Program();
 
-        bool init(const char* vertexPath = VS_BASIC, const char* fragmentPath = FS_BASIC);
+        virtual bool init(const char* vertexPath = VS_BASIC, const char* fragmentPath = FS_BASIC);
 
         void use();
 

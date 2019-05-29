@@ -7,11 +7,12 @@ GL::Renderer::Renderer()
     pointer = new VBPointer();
     pointer->start = pointer->it = nullptr;
     pointer->size = 0;
+    PT::GC::get()->init();
 }
 
 GL::Renderer::~Renderer()
 {
-    delete program;
+    delete programs;
     delete va;
     delete pointer;
 
@@ -25,17 +26,10 @@ GL::Renderer::~Renderer()
 
 bool GL::Renderer::init()
 {
-    program = new Program();
-    if (!program->init(VS_POINT, FS_POINT))
+    programs = new ProgramManager();
+    if (!programs->init())
     {
-        GL_LOG_CRITICAL("GL::Renderer::init() -> Render Program failed to init");
-        return false;
-    }
-
-    update_program = new UpdateProgram();
-    if (!update_program->init())
-    {
-        GL_LOG_CRITICAL("GL::Renderer::init() -> Update Program failed to init");
+        GL_LOG_CRITICAL("GL::Renderer::init() -> Program Manager failed to init");
         return false;
     }
 
@@ -85,6 +79,7 @@ bool GL::Renderer::init()
         }
     }
     vb1->releasePointer();
+    PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
 
     vb2 = new VertexBuffer(GL_DYNAMIC_DRAW);
     vb2->init(sizeof(Vertex) * MAX_PARTICLES);
@@ -101,24 +96,23 @@ bool GL::Renderer::init()
  
     vaR->setVertexLayout(vbl);
 
-    Print_All(program->getID());
-    Print_All(update_program->getID());
-
     return true;
 }
 
 void GL::Renderer::clear()
 {
-    GLCheck(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
+    glm::vec4 clear = PT::GC::get()->getVec4("CLEAR_COLOR");
+    GLCheck(glClearColor(clear.r, clear.g, clear.b, clear.a));
 	GLCheck(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void GL::Renderer::update()
 {
     static float dt = 0.0f;
-    update_program->use();
+    programs->use(UPDATE);
     vaU->use(1);
-    update_program->setFloat("dt", dt);
+    programs->get_active(UPDATE)->setFloat("dt", dt);
+
     glEnable(GL_RASTERIZER_DISCARD);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vb2->getID());
     glBeginTransformFeedback(GL_POINTS);
@@ -136,19 +130,15 @@ void GL::Renderer::update()
 
 void GL::Renderer::draw()
 {
-    
     this->update();
 
-    program->use();
+    programs->use(RENDER);
     
+    modelMatrix();
     viewMatrix();
     projectionMatrix();
 
     vaR->use(1);
-
-    glm::mat4 model = glm::mat4(1.0f);  
-    model = glm::rotate(model, (float)glfwGetTime() * (float)PI, glm::vec3(1.0f, 0.3f, 0.5f));
-    program->setMat4("model", model);
 
     GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
 }
@@ -156,16 +146,35 @@ void GL::Renderer::draw()
 void GL::Renderer::modelMatrix()
 {
     model = glm::mat4(1.0f);
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-    program->setMat4("model", model);
+    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+    programs->get_active(RENDER)->setMat4("model", model);
 }
 
 void GL::Renderer::viewMatrix()
 {
-    program->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
+    programs->get_active(RENDER)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
 }
 
 void GL::Renderer::projectionMatrix()
 {
-    program->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
+    programs->get_active(RENDER)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
+}
+
+void GL::Renderer::addParticle(int num)
+{
+    vb1->bind();
+    pointer->it = vb1->getPointer() + pointer->size - 1;
+    for (int i = 0; i < num; ++i)
+    {
+        if (pointer->size >= PT::GC::get()->getInt("MAX_PARTICLES")) break;
+
+        pointer->it->position = glm::vec3(random() % 8000 - 4000, random() % 8000 - 4000, random() % 5000 - 2500);
+        pointer->it->colour = Colour::BLUE;
+        pointer->it++;
+        pointer->size++;
+
+
+    }
+    vb1->releasePointer();
+    PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
 }
