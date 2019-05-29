@@ -13,8 +13,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define VS_BASIC "./Particle/Resources/Shaders/point.vertex"
-#define FS_BASIC "./Particle/Resources/Shaders/point.fragment"
+#ifdef PT_WIN
+    #define VS_BASIC "Resources/Shaders/point.vertex"
+    #define FS_BASIC "Resources/Shaders/point.fragment"
+#else
+    #define VS_BASIC "./Particle/Resources/Shaders/point.vertex"
+    #define FS_BASIC "./Particle/Resources/Shaders/point.fragment"
+#endif
 
 namespace GL
 {

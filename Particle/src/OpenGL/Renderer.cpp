@@ -168,7 +168,7 @@ void GL::Renderer::addParticle(int num)
     {
         if (pointer->size >= PT::GC::get()->getInt("MAX_PARTICLES")) break;
 
-        pointer->it->position = glm::vec3(random() % 8000 - 4000, random() % 8000 - 4000, random() % 5000 - 2500);
+        pointer->it->position = glm::vec3(rand() % 8000 - 4000, rand() % 8000 - 4000, rand() % 5000 - 2500);
         pointer->it->colour = Colour::BLUE;
         pointer->it++;
         pointer->size++;

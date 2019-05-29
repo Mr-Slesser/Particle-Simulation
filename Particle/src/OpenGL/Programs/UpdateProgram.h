@@ -3,8 +3,13 @@
 
 #include "Program.h"
 
-#define VS_UPDATE_PART "./Particle/Resources/Shaders/basic.update"
-#define VS_UPDATE "./Particle/Resources/Shaders/update.vertex"
+#ifdef PT_WIN
+    #define VS_UPDATE_PART "Resources/Shaders/basic.update"
+    #define VS_UPDATE "Resources/Shaders/update.vertex"  
+#else
+    #define VS_UPDATE_PART "./Particle/Resources/Shaders/basic.update"
+    #define VS_UPDATE "./Particle/Resources/Shaders/update.vertex"  
+#endif
 
 namespace GL
 {
