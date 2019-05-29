@@ -16,6 +16,7 @@
 #include "Camera/CameraManager.h"
 #include "Input/InputManager.h"
 
+// TODO: UUID for each system?
 
 namespace PT
 {
@@ -33,7 +34,6 @@ namespace PT
         bool init();
         void run();
 
-        void processInput();
     };
 
 } // namespace PT

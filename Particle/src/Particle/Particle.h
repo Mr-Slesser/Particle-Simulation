@@ -3,6 +3,8 @@
 
 #include "../Primitives/Vertex.h"
 
+// TODO: Queue --> Add available indicies to queue so easy to add new in it's place.
+
 namespace PT
 {
     class Particle

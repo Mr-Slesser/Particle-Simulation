@@ -28,7 +28,7 @@ namespace Error
         // TODO: Make this a bit more elegant
         std::string r = "";
         switch (e) {
-            #define ERROR_DEF(x,y) case y: r = #x;
+            #define ERROR_DEF(x,y) case y: r = #x;break;
             #include ERROR_DEFINITION_FILE
             #undef ERROR_DEF
             default: r = "Unknown";

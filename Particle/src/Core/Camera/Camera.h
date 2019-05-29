@@ -1,100 +1,61 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#ifndef CAMERA_H
+#define CAMERA_H
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-enum PROJECTION_TYPE
-{
-    PERSPECTIVE,
-    ORTHOGRAPHIC
-};
+#include "CameraStructures.h"
 
 // TODO: Default camera values, i.e. implement a reset camera key.
 // TODO: Tidy up the camera!
 
-struct CameraData
+// TODO: Handle 3D & 2D Cases
+
+namespace PT
 {
-    float pitch;
-    float yaw;
-    float fov;
-    glm::vec3 pos;
-    glm::vec3 front;
-    glm::vec3 up;
-};
-
-static const CameraData DEFAULT_CAMERA = { 
-    0.0f, -90.0f, 45.0f, 
-    glm::vec3(0.0f, 0.0f,  400.0f), 
-    glm::vec3(0.0f, 0.0f, -1.0f), 
-    glm::vec3(0.0f, 1.0f,  0.0f)
-};
-
-class Camera
-{
-protected:
-    PROJECTION_TYPE type;
-    glm::mat4 projection;
-    glm::mat4 lookAt;
-
-
-public:
-    CameraData c;
-    static Camera* instance;
-    Camera(PROJECTION_TYPE t, const CameraData& config = DEFAULT_CAMERA);
-    virtual ~Camera();
-
-    void setProjection(float width, float height);
-    glm::mat4& getProjection();
-
-    glm::mat4& setLookAt(float x, float y, float z);
-    glm::mat4& setLookAt(glm::vec3& _pos);
-    glm::mat4& setLookAt();
-    glm::mat4& getLookAt();
-
-    glm::vec3& getPosition() { return c.pos; }
-    void setPosition(glm::vec3 _pos);
-    void addPosition(glm::vec3 _pos);
-    void subtractPosition(glm::vec3 _pos);
-
-    glm::vec3& getFront() { return c.front; }
-    void setFront(glm::vec3 _front);
-
-    glm::vec3& getUp() { return c.up; }
-    void setUp(glm::vec3 _up);
-
-    static Camera* getThis() {
-        return instance;
-    }
-
-    inline float getFOV() { return c.fov; }
-    void setPY(float y, float p) {
-        c.pitch += p;
-        c.yaw += y;
-
-        if(c.pitch > 89.0f)
-            c.pitch =  89.0f;
-        if(c.pitch < -89.0f)
-            c.pitch = -89.0f;
-
-        glm::vec3 f;
-        f.x = cos(glm::radians(c.pitch)) * cos(glm::radians(c.yaw));
-        f.y = sin(glm::radians(c.pitch));
-        f.z = cos(glm::radians(c.pitch)) * sin(glm::radians(c.yaw));
-        c.front = glm::normalize(f);
-
-        setLookAt();
-    }
-
-    void setProjection(float _fov)
+    class Camera
     {
-        c.fov = _fov;
-        projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 100000.0f);  
-    }
-};
+    protected:
+        PROJECTION_TYPE type;
+
+        glm::mat4 projection;
+        glm::mat4 lookAt;
+        CameraData c;
+        float cSpeed;
+
+
+    public:
+        Camera(PROJECTION_TYPE t, const CameraData& config = DEFAULT_CAMERA);
+        virtual ~Camera() {}
+
+
+        // SECTION: Accessors
+        glm::mat4& getProjection()  { return projection; }
+        glm::mat4& getLookAt()      { return lookAt; }
+        glm::vec3& getPosition()    { return c.pos; }
+        glm::vec3& getFront()       { return c.front; }
+        glm::vec3& getUp()          { return c.up; }
+        inline float getFOV()       { return c.fov; }
+
+
+        // SECTION: Mutators
+        void setProjection(float width, float height);
+        void setProjection(float _fov);
+
+        void setLookAt();
+        void setLookAt(float x, float y, float z);
+        void setLookAt(glm::vec3& _pos);
+
+        void setPosition(glm::vec3 _pos);
+        void addPosition(glm::vec3 _pos);
+        void subtractPosition(glm::vec3 _pos);
+        void updatePosition(glm::vec3 update_axis);
+
+        void setFront(glm::vec3 _front);
+        void setUp(glm::vec3 _up);
+
+        void setPY(float y, float p);
+
+        // SECTION: Others
+        virtual void handle_input(CAM_INPUT_MAP action);
+    };
+}
 
 #endif /* CAMERA_HPP */

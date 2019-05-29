@@ -1,6 +1,11 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
+#include <map>
+#include <vector>
+
+#include "InputReceiver.h"
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -11,9 +16,9 @@
 #include "../Window/Window.h"
 #include "../Camera/CameraManager.h"
 
-#include "../GlobalConfiguration.h"
+#include "../../OpenGL/Renderer.h"
 
-// TODO: Handlers to be created, using an input config singleton as a bridge.
+#include "../GlobalConfiguration.h"
 
 namespace PT
 {
@@ -27,10 +32,15 @@ namespace PT
         bool mouseHeld;
         float sensitivity;
 
+        std::map<unsigned int, std::vector<InputReceiver*>> dispatchers;
+
     public:
         static InputManager *get();
         ~InputManager();
 
+        bool register_dispatch(const char* key_name, unsigned int key, InputReceiver* dispatch_to);
+        void dispatch(Window* window);
+        
         // TODO: Configure function.
         void registerMouseCallbacks(Window* window);
 
@@ -38,6 +48,9 @@ namespace PT
 
         const inline bool isMouseHeld() const { return mouseHeld; }
         const inline float getSensitivity() const { return sensitivity; }
+
+        void processInput(Window* window, GL::Renderer* renderer);
+
     };
 
     static void mouseCursorHandler(GLFWwindow* m, double x, double y)

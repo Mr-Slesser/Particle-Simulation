@@ -4,19 +4,17 @@
 #include <map>
 #include <cassert>
 
-#include "../../Utility/Log.h"
+#include "../../OpenGL/OpenGL.h"
 
+#include "../Input/InputReceiver.h"
+
+#include "CameraStructures.h"
 #include "Camera2D.hpp"
 #include "Camera3D.hpp"
 
 namespace PT
 {
-    enum SM_CAM_TYPE {
-        cam2D,
-        cam3D
-    };
-
-    class CameraManager
+    class CameraManager : public InputReceiver
     {
     private:
         static CameraManager* instance;
@@ -30,12 +28,12 @@ namespace PT
         ~CameraManager();
         static CameraManager *get();
 
-
         bool startup();
-
         bool registerCamera(const char* camera_name, SM_CAM_TYPE type, const CameraData& data = {});
-
         Camera* getCamera(const char* camera_name = "DEFAULT");
+        
+        void register_input_dispatch() override;
+        void receive_dispatched_input(unsigned int key) override;
     };
     
 } // namespace PT

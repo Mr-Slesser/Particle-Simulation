@@ -41,7 +41,7 @@ namespace PT
         }
         else
         {
-            throw("getInt -> Name not found");
+            CORE_LOG_ERROR("Global Config::getInt() -> {} not found.", name);
         }
     }
 
@@ -53,7 +53,8 @@ namespace PT
         }
         else
         {
-            throw("getFloat -> Name not found");
+            CORE_LOG_ERROR("Global Config::getFloat() -> {} not found.", name);
+
         }
     }
     
@@ -65,7 +66,8 @@ namespace PT
         }
         else
         {
-            throw("getBool -> Name not found");
+            CORE_LOG_ERROR("Global Config::getBool() -> {} not found.", name);
+
         }
     }
     
@@ -77,7 +79,8 @@ namespace PT
         }
         else
         {
-            throw("getVec4 -> Name not found");
+            CORE_LOG_ERROR("Global Config::getVec4() -> {} not found.", name);
+
         }
     }
 
@@ -90,6 +93,7 @@ namespace PT
         }
         else
         {  
+            CORE_LOG_WARN("Global Config::addInt() -> Unable to add {} (value {})", name, value);
             return false;
         }
     }
@@ -102,7 +106,8 @@ namespace PT
             return true;
         }
         else
-        {  
+        {
+            CORE_LOG_WARN("Global Config::addFloat() -> Unable to add {} (value {})", name, value);
             return false;
         }
     }
@@ -115,7 +120,8 @@ namespace PT
             return true;
         }
         else
-        {  
+        { 
+            CORE_LOG_WARN("Global Config::addBool() -> Unable to add {} (value {})", name, value);
             return false;
         }
     }
@@ -129,6 +135,7 @@ namespace PT
         }
         else
         {  
+            CORE_LOG_WARN("Global Config::addVec4() -> Unable to add {}", name);
             return false;
         }
     }
@@ -142,6 +149,7 @@ namespace PT
         }
         else
         {  
+            CORE_LOG_WARN("Global Config::updateInt() -> Unable to update {} (value {})", name, value);
             return false;
         }
     }
@@ -154,7 +162,8 @@ namespace PT
             return true;
         }
         else
-        {  
+        {
+            CORE_LOG_WARN("Global Config::updateFloat() -> Unable to update {} (value {})", name, value);
             return false;
         }
     }
@@ -168,6 +177,21 @@ namespace PT
         }
         else
         {  
+            CORE_LOG_WARN("Global Config::updateBool() -> Unable to update {} (value {})", name, value);
+            return false;
+        }
+    }
+
+    bool GC::toggleBool(const char* name)
+    {
+        if (bools.find(name) != bools.end())
+        {
+            bools[name] = !bools[name];
+            return true;
+        }
+        else
+        { 
+            CORE_LOG_WARN("Global Config::toggleBool() -> Unable to toggle {}", name);
             return false;
         }
     }
@@ -181,6 +205,7 @@ namespace PT
         }
         else
         {  
+            CORE_LOG_WARN("Global Config::updateVec4() -> Unable to update {}", name);
             return false;
         }
     }

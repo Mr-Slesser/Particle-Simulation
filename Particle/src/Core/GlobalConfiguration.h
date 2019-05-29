@@ -5,8 +5,7 @@
 
 #include <glm/glm.hpp>
 
-// TODO: Add proper warnings etc.
-// TODO: Toggle Bool
+#include "../OpenGL/OpenGL.h"
 
 namespace PT
 {
@@ -21,7 +20,6 @@ namespace PT
         std::map<const char*, bool> bools;
 
         std::map<const char*, glm::vec4> vec4s;
-
 
     public:
         virtual ~GC();
@@ -44,6 +42,7 @@ namespace PT
         bool updateInt(const char* name, int value);
         bool updateFloat(const char* name, float value);
         bool updateBool(const char* name, bool value);
+        bool toggleBool(const char* name);
 
         bool updateVec4(const char* name, glm::vec4& value);
     };
