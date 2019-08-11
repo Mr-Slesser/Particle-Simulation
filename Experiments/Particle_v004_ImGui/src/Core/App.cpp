@@ -13,7 +13,7 @@ bool PT::App::init()
 {
     Log::init();
     GL_LOG_TRACE("Logger startup: [Core]");
-    GL_LOG_TRACE("Logger startup: [GL  ]");    
+    GL_LOG_TRACE("Logger startup: [GL  ]");
 
     // Window
     window = new Window();
@@ -36,7 +36,7 @@ bool PT::App::init()
 
     // GUI
     gui = new GUILayer();
-    if(!gui->init(window->context()))
+    if (!gui->init(window->context()))
     {
         CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
         return false;
@@ -48,26 +48,26 @@ bool PT::App::init()
 void PT::App::run()
 {
     while (window->isActive())
-	{
-		glfwPollEvents();
+    {
+        glfwPollEvents();
         processInput();
 
         renderer->clear();
         renderer->draw();
-        
+
         gui->render();
-		
+
         glfwSwapBuffers(window->context());
-	}
+    }
 }
 
 // TODO: Add this into InputManager?
 // TODO: Make sure no repeat keys unless specified?
 void PT::App::processInput()
 {
-	if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-		glfwSetWindowShouldClose(window->context(), true);
+        glfwSetWindowShouldClose(window->context(), true);
     }
 
     float cSpeed = 10.0f;
@@ -81,5 +81,5 @@ void PT::App::processInput()
         CameraManager::get()->getCamera()->addPosition(glm::normalize(glm::cross(CameraManager::get()->getCamera()->getFront(), CameraManager::get()->getCamera()->getUp())) * cSpeed);
 
     if (glfwGetKey(window->context(), GLFW_KEY_Q) == GLFW_PRESS)
-        renderer->addParticle(1000);
+        renderer->addParticle(10000);
 }

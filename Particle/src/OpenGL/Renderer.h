@@ -13,62 +13,64 @@
 #include "Texture.h"
 
 #include "../Particle/Particle.h"
-
 #include "../Core/GlobalConfiguration.h"
-
 #include "../Core/Camera/CameraManager.h"
-
 #include "../Utility/Math.h"
+#include "../Utility/Profiler.h"
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
+#define RENDERER_FORWARD 1
+
 namespace GL
 {
-    class Renderer
-    {
-    private:
-        const int MAX_PARTICLES = 1000000;
-        const int total = 50;
+class Renderer
+{
+private:
+    const int MAX_PARTICLES = 500000;
+    const int total = 50;
 
-        ProgramManager* programs;
-        
-        VertexBuffer* vb1;
-        VertexBuffer* vb2;
+    ProgramManager *programs;
 
-        VertexData vd;
-        VertexArray* va;
+#if RENDERER_FORWARD
+    VertexBuffer *vb1;
+    VertexBuffer *vb2;
+    VertexArray *vaR;
+    VertexArray *vaU;
+#else
+    VertexBuffer *vb;
+#endif
 
-        VertexArray* vaR;
-        VertexArray* vaU;
-        
-        VBPointer* pointer;
+    VertexData vd;
+    VertexArray *va;
 
-        glm::mat4 model;
-        glm::mat4 view;
-        glm::mat4 projection;
+    VBPointer *pointer;
 
-        std::vector<PT::Particle*> particles;
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 projection;
 
-    public:
-        Renderer();
-        ~Renderer();
+    std::vector<PT::Particle *> particles;
 
-        bool init();
-        void clear();
-        void draw();
+public:
+    Renderer();
+    ~Renderer();
 
-        void update();
+    bool init();
+    void clear();
+    void draw();
 
-        void modelMatrix();
-        void viewMatrix();
-        void projectionMatrix();
+    void update();
 
-        void changeShaders(int type);
+    void modelMatrix();
+    void viewMatrix();
+    void projectionMatrix();
 
-        void addParticle(int num);
-    };
-    
+    void changeShaders(int type);
+
+    void addParticle(int num);
+};
+
 } // namespace GL
-
 
 #endif /* RENDERER_H */

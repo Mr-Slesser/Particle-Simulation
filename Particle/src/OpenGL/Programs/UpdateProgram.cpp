@@ -8,78 +8,78 @@ GL::UpdateProgram::~UpdateProgram()
 {
 }
 
-bool GL::UpdateProgram::init(const char* vertexPath, const char* fragmentPath)
+bool GL::UpdateProgram::init(const char *vertexPath, const char *fragmentPath)
 {
     GL_LOG_TRACE("Starting update program init.");
 
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    
-    if(!compileShader(vertexPath, vertexShader))
+
+    if (!compileShader(vertexPath, vertexShader))
     {
         return false;
     }
-	ID = glCreateProgram();
-	GLCheck(glAttachShader(ID, vertexShader));
+    ID = glCreateProgram();
+    GLCheck(glAttachShader(ID, vertexShader));
 
-    const GLchar* feedbackVaryings[] = { "outPosition", "outColor" };
+    const GLchar *feedbackVaryings[] = {"outPosition", "outColor"};
     glTransformFeedbackVaryings(ID, 2, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
 
-
-	GLCheck(glLinkProgram(ID));
+    GLCheck(glLinkProgram(ID));
 
     int success = 0;
-    char* infolog;
-	GLCheck(glGetProgramiv(ID, GL_LINK_STATUS, &success));
-	if (!success) {
-		glGetProgramInfoLog(ID, 512, NULL, infolog);
+    char *infolog;
+    GLCheck(glGetProgramiv(ID, GL_LINK_STATUS, &success));
+    if (!success)
+    {
+        glGetProgramInfoLog(ID, 512, NULL, infolog);
         GL_LOG_CRITICAL("{}", infolog);
         return false;
-	}
-	GLCheck(glDeleteShader(vertexShader));
+    }
+    GLCheck(glDeleteShader(vertexShader));
 
     GL_LOG_TRACE("UpdateProgram created with id: {}", ID);
 
     return true;
 }
 
-bool GL::UpdateProgram::ainit(const char* vertexPath)
+bool GL::UpdateProgram::ainit(const char *vertexPath)
 {
     GL_LOG_TRACE("Starting update program init.");
 
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    
-    if(!generateShader(vertexPath, vertexShader))
+
+    if (!generateShader(vertexPath, vertexShader))
     {
         return false;
     }
-	ID = glCreateProgram();
-	GLCheck(glAttachShader(ID, vertexShader));
+    ID = glCreateProgram();
+    GLCheck(glAttachShader(ID, vertexShader));
 
-    const GLchar* feedbackVaryings[] = { "outPosition", "outColor" };
+    const GLchar *feedbackVaryings[] = {"outPosition", "outColor"};
     glTransformFeedbackVaryings(ID, 2, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
 
-
-	GLCheck(glLinkProgram(ID));
+    GLCheck(glLinkProgram(ID));
 
     int success = 0;
-    char* infolog;
-	GLCheck(glGetProgramiv(ID, GL_LINK_STATUS, &success));
-	if (!success) {
-		glGetProgramInfoLog(ID, 512, NULL, infolog);
+    char *infolog;
+    GLCheck(glGetProgramiv(ID, GL_LINK_STATUS, &success));
+    if (!success)
+    {
+        glGetProgramInfoLog(ID, 512, NULL, infolog);
         GL_LOG_CRITICAL("{}", infolog);
         return false;
-	}
-	GLCheck(glDeleteShader(vertexShader));
+    }
+    GLCheck(glDeleteShader(vertexShader));
 
     GL_LOG_TRACE("UpdateProgram created with id: {}", ID);
 
     return true;
 }
 
-bool GL::UpdateProgram::generateShader(const char* filePath, int& id)
+bool GL::UpdateProgram::generateShader(const char *filePath, int &id)
 {
     std::ifstream shaderFile(filePath);
-    
+
     if (shaderFile.fail())
     {
         GL_LOG_CRITICAL("[{}]{}: Could not load file {} ({})", __FILE__, __LINE__, filePath, strerror(errno));
@@ -89,16 +89,16 @@ bool GL::UpdateProgram::generateShader(const char* filePath, int& id)
     std::string contents[2];
     std::string line;
     int i;
-    
-    while(std::getline(shaderFile, line))
+
+    while (std::getline(shaderFile, line))
     {
-        if(line.find("##::") != std::string::npos)
+        if (line.find("##::") != std::string::npos)
         {
-            if(line.find("func") != std::string::npos)
+            if (line.find("func") != std::string::npos)
             {
                 i = 0;
             }
-            else if(line.find("main") != std::string::npos)
+            else if (line.find("main") != std::string::npos)
             {
                 i = 1;
             }
@@ -107,7 +107,6 @@ bool GL::UpdateProgram::generateShader(const char* filePath, int& id)
         {
             contents[i] += line + "\n";
         }
-        
     }
 
     shaderFile.close();
@@ -127,21 +126,20 @@ bool GL::UpdateProgram::generateShader(const char* filePath, int& id)
     shaderSource += contents[1];
     shaderSource += "\n}\n";
 
-    const char* contentsPtr = shaderSource.c_str();
+    const char *contentsPtr = shaderSource.c_str();
     GLCheck(glShaderSource(id, 1, &contentsPtr, nullptr));
     GLCheck(glCompileShader(id));
     int success = 0;
     GLCheck(glGetShaderiv(id, GL_COMPILE_STATUS, &success));
-    
-    if(!success)
+
+    if (!success)
     {
         GLint length = 0;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));
+        char *message = (char *)alloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         GL_LOG_CRITICAL("{}", message);
-        GLCheck(glDeleteShader(id);) 
-        return false;
+        GLCheck(glDeleteShader(id);) return false;
     }
 
     return true;
