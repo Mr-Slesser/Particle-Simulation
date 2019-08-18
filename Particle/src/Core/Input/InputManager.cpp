@@ -66,6 +66,7 @@ namespace PT
         dispatchers[key].push_back(dispatch_to);
         CORE_LOG_INFO("InputManager -> Registered {}", key_name);
         // TODO: Robust this up!
+		return true;
     }
 
     void InputManager::dispatch(Window* window)
