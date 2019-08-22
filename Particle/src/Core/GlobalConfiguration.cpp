@@ -24,7 +24,7 @@ GC::~GC()
 void GC::init()
 {
     // Add values..
-    addInt("MAX_PARTICLES", 200000);
+    addInt("MAX_PARTICLES", 1000000);
     addInt("CURR_NO_PARTICLES", 0);
 
     addBool("PAUSED", false);

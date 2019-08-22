@@ -6,49 +6,56 @@
 
 namespace GL
 {
-    class VertexData
+class VertexData
+{
+private:
+    std::vector<Vertex> data;
+
+public:
+    VertexData() {}
+    VertexData(int size)
     {
-    private:
-        std::vector<Vertex> data;
+    }
+    virtual ~VertexData() {}
 
-    public:
-        VertexData(int size) {
-            //data.reserve(size);
+    std::vector<Vertex> &get() { return data; }
+
+    int size()
+    {
+        return sizeof(Vertex) * data.size();
+    }
+
+    void add(Vertex &v)
+    {
+        data.push_back(v);
+    }
+
+    void add(Vertex v[], int num)
+    {
+        for (int i = 0; i < num; ++i)
+        {
+            data.push_back(v[i]);
         }
-        virtual ~VertexData() {}
+    }
 
-        std::vector<Vertex>& get() { return data; }
+    void update(Vertex &v, int i)
+    {
+        data[i] = v;
+    }
 
-        int size() {
-            return sizeof(Vertex) * data.size();
-        }
+    void remove(int i)
+    {
+        // TODO: Test & handle not found case
+        auto it = data.begin() + i;
+        data.erase(it);
+    }
 
-        void add(Vertex& v) {
-            data.push_back(v);
-        }
+    void clear()
+    {
+        data.clear();
+    }
+};
 
-        void add(Vertex v[], int num) {
-            for (int i = 0; i < num; ++i) {
-                data.push_back(v[i]);
-            }
-        }
-
-        void update(Vertex& v, int i) {
-            data[i] = v;
-        }
-
-        void remove(int i) {
-            // TODO: Test & handle not found case
-            auto it = data.begin() + i;
-            data.erase(it);
-        }
-
-        void clear() {
-            data.clear();
-        }
-    };
-    
-} // namespace PT
-
+} // namespace GL
 
 #endif /* VERTEXDATA_H */

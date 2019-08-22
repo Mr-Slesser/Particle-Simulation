@@ -2,14 +2,14 @@
 #include "GLLog.h"
 
 GL::Renderer::Renderer()
-    : vd(VertexData(MAX_PARTICLES))
 {
     PROFILE_FUNCTION;
+    PT::GC::get()->init();
 
+    vd = VertexData(PT::GC::get()->getInt("MAX_PARTICLES"));
     pointer = new VBPointer();
     pointer->start = pointer->it = nullptr;
     pointer->size = 0;
-    PT::GC::get()->init();
 }
 
 GL::Renderer::~Renderer()
@@ -74,14 +74,14 @@ bool GL::Renderer::init()
     vaU->init();
 
     vb1 = new VertexBuffer(GL_DYNAMIC_DRAW);
-    vb1->init(sizeof(Vertex) * MAX_PARTICLES);
+    vb1->init(sizeof(Vertex) * PT::GC::get()->getInt("MAX_PARTICLES"));
     pointer->start = pointer->it = vb1->getPointer();
 #else
     va = new VertexArray();
     va->init();
 
     vb = new VertexBuffer(GL_DYNAMIC_DRAW);
-    vb->init(sizeof(Vertex) * MAX_PARTICLES);
+    vb->init(sizeof(Vertex) * PT::GC::get()->getInt("MAX_PARTICLES"));
     pointer->start = pointer->it = vb->getPointer();
 #endif
 
@@ -109,7 +109,7 @@ bool GL::Renderer::init()
     vb1->releasePointer();
 
     vb2 = new VertexBuffer(GL_DYNAMIC_DRAW);
-    vb2->init(sizeof(Vertex) * MAX_PARTICLES);
+    vb2->init(sizeof(Vertex) * PT::GC::get()->getInt("MAX_PARTICLES"));
 
     vb1->bind();
 
@@ -130,6 +130,8 @@ bool GL::Renderer::init()
 #endif
 
     return true;
+
+    this->addParticle(PT::GC::get()->getInt("MAX_PARTICLES") - PT::GC::get()->getInt("CURR_NO_PARTICLES"));
 }
 
 void GL::Renderer::clear()

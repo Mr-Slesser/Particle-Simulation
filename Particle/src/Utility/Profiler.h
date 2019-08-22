@@ -11,12 +11,22 @@
 #include <fstream>
 #include <sstream>
 
+#include "../Core/GlobalConfiguration.h"
+
 using namespace std;
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER
 #else
 #undef _PROFILER_FILE_LOGGER
 #endif //  _LOG_TO_FILE
+
+#define RENDERER_FORWARD 0
+
+#if RENDERER_FORWARD
+#define OUTPUT "forward-profiler-output-"
+#else
+#define OUTPUT "naive-profiler-output-"
+#endif
 
 struct profiler
 {
@@ -46,7 +56,9 @@ struct profiler
 
 #ifdef _PROFILER_FILE_LOGGER
         ofstream logfile;
-        logfile.open("profile_data.log", ios::app);
+        std::stringstream ss;
+        ss << OUTPUT << PT::GC::get()->getInt("MAX_PARTICLES") << ".csv";
+        logfile.open(ss.str(), ios::app);
         logfile << stream.str();
         logfile.close();
 #else

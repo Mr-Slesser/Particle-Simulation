@@ -20,14 +20,12 @@
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
-#define RENDERER_FORWARD 1
-
 namespace GL
 {
 class Renderer
 {
 private:
-    const int MAX_PARTICLES = 500000;
+    // const int MAX_PARTICLES = 500000;
     const int total = 50;
 
     ProgramManager *programs;
