@@ -130,8 +130,6 @@ bool GL::Renderer::init()
 #endif
 
     return true;
-
-    this->addParticle(PT::GC::get()->getInt("MAX_PARTICLES") - PT::GC::get()->getInt("CURR_NO_PARTICLES"));
 }
 
 void GL::Renderer::clear()

@@ -20,7 +20,7 @@ using namespace std;
 #undef _PROFILER_FILE_LOGGER
 #endif //  _LOG_TO_FILE
 
-#define RENDERER_FORWARD 0
+#define RENDERER_FORWARD 1
 
 #if RENDERER_FORWARD
 #define OUTPUT "forward-profiler-output-"
