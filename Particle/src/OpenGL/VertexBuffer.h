@@ -1,41 +1,40 @@
 #ifndef VERTEXBUFFER_H
 #define VERTEXBUFFER_H
 
-#include "OpenGL.h"
 #include "../Primitives/Vertex.h"
 #include "VertexData.h"
 
 namespace GL
 {
-    struct VBPointer {
-        Vertex* start;
-        Vertex* it;
-        unsigned int size;
-    };
+struct VBPointer
+{
+    Vertex *start;
+    Vertex *it;
+    unsigned int size;
+};
 
-    class VertexBuffer
-    {
-    private:
-        unsigned int ID;
-        unsigned long size;
-        GLenum usage;
-        
-    public:
-        VertexBuffer(GLenum _usage);
-        ~VertexBuffer();
+class VertexBuffer
+{
+private:
+    unsigned int ID;
+    unsigned long size;
+    GLenum usage;
 
-        void init(const unsigned long& _size);
-        void init(const unsigned long& _size, VertexData& vd);
+public:
+    VertexBuffer(GLenum _usage);
+    ~VertexBuffer();
 
-        void bind();
+    void init(const unsigned long &_size);
+    void init(const unsigned long &_size, VertexData &vd);
 
-        Vertex* getPointer();
-        void releasePointer();
+    void bind();
 
-        unsigned int getID() const { return ID; }
-    };
-    
+    Vertex *getPointer();
+    void releasePointer();
+
+    unsigned int getID() const { return ID; }
+};
+
 } // namespace GL
-
 
 #endif /* VERTEXBUFFER_H */

@@ -2,6 +2,7 @@
 #define EMITTERMANAGER_H
 
 #include "../../OpenGL/Renderer.h"
+#include "../../Core/GUI/GUILayer.h"
 #include "./Emitter.h"
 
 #define S_TO_MS(x) x * 1000.0f
@@ -21,7 +22,7 @@ public:
     EmitterManager();
     virtual ~EmitterManager();
 
-    void addEmitter(float intervalMS, glm::vec4 color);
+    void addEmitter(GUILayer *gui, float intervalMS, glm::vec4 color);
     void removeEmitter();
 
     void update();

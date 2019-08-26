@@ -1,11 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <cstdlib>
-#include <math.h>
-#include <vector>
-
-#include "OpenGL.h"
 #include "Programs/ProgramManager.h"
 
 #include "VertexArray.h"

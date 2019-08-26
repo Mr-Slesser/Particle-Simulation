@@ -1,14 +1,6 @@
 #ifndef APP_H
 #define APP_H
 
-#include <cstdio>
-
-#include "../OpenGL/OpenGL.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Window/Window.h"
 #include "../OpenGL/Renderer.h"
 #include "GUI/GUILayer.h"
@@ -22,23 +14,22 @@
 
 namespace PT
 {
-    class App
-    {
-    private:
-        Window* window;
-        GL::Renderer* renderer;
-        GUILayer* gui;
+class App
+{
+private:
+    Window *window;
+    GL::Renderer *renderer;
+    GUILayer *gui;
 
-        EmitterManager* emitters;
+    EmitterManager *emitters;
 
-    public:
-        App();
-        ~App();
+public:
+    App();
+    ~App();
 
-        bool init();
-        void run();
-
-    };
+    bool init();
+    void run();
+};
 
 } // namespace PT
 

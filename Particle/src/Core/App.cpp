@@ -1,3 +1,4 @@
+#include "PCHeader.h"
 #include "App.h"
 
 PT::App::App()
@@ -47,8 +48,8 @@ bool PT::App::init()
     CameraManager::get()->register_input_dispatch();
 
     emitters = new EmitterManager();
-    emitters->addEmitter(S_TO_MS(0.1), Colour::GREEN);
-    emitters->addEmitter(S_TO_MS(0.4), Colour::BLUE);
+    emitters->addEmitter(gui, S_TO_MS(0.1), Colour::GREEN);
+    emitters->addEmitter(gui, S_TO_MS(0.4), Colour::BLUE);
 
     return true;
 }

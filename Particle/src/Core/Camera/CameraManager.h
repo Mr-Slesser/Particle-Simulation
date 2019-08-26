@@ -1,11 +1,6 @@
 #ifndef CAMERAMANAGER_H
 #define CAMERAMANAGER_H
 
-#include <map>
-#include <cassert>
-
-#include "../../OpenGL/OpenGL.h"
-
 #include "../Input/InputReceiver.h"
 
 #include "CameraStructures.h"
@@ -14,28 +9,28 @@
 
 namespace PT
 {
-    class CameraManager : public InputReceiver
-    {
-    private:
-        static CameraManager* instance;
-        std::map<const char*, Camera*> cameras;
+class CameraManager : public InputReceiver
+{
+private:
+    static CameraManager *instance;
+    std::map<const char *, Camera *> cameras;
 
-        CameraManager();
+    CameraManager();
 
-        bool initCameras();
+    bool initCameras();
 
-    public:
-        ~CameraManager();
-        static CameraManager *get();
+public:
+    ~CameraManager();
+    static CameraManager *get();
 
-        bool startup();
-        bool registerCamera(const char* camera_name, SM_CAM_TYPE type, const CameraData& data = {});
-        Camera* getCamera(const char* camera_name = "DEFAULT");
-        
-        void register_input_dispatch() override;
-        void receive_dispatched_input(unsigned int key) override;
-    };
-    
+    bool startup();
+    bool registerCamera(const char *camera_name, SM_CAM_TYPE type, const CameraData &data = {});
+    Camera *getCamera(const char *camera_name = "DEFAULT");
+
+    void register_input_dispatch() override;
+    void receive_dispatched_input(unsigned int key) override;
+};
+
 } // namespace PT
 
 #endif /* CAMERAMANAGER_H */

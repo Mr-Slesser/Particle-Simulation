@@ -3,11 +3,7 @@
 
 #include "Program.h"
 
-#ifdef PT_WIN
-#define VS_UPDATE "Resources/Shaders/update.vertex"
-#else
-#define VS_UPDATE "./Particle/Resources/Shaders/update.vertex"
-#endif
+#define VS_UPDATE PATH("Shaders/update.vertex")
 
 namespace GL
 {

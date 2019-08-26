@@ -1,3 +1,4 @@
+#include "PCHeader.h"
 #include "Timer.h"
 
 namespace Utils

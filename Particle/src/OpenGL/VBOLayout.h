@@ -1,10 +1,6 @@
 #ifndef VBOLAYOUT_H
 #define VBOLAYOUT_H
 
-#include <vector>
-
-#include "OpenGL.h"
-
 namespace GL   
 {
     struct VBElement

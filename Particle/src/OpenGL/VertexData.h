@@ -1,7 +1,6 @@
 #ifndef VERTEXDATA_H
 #define VERTEXDATA_H
 
-#include <vector>
 #include "../Primitives/Vertex.h"
 
 namespace GL

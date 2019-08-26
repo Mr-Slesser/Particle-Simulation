@@ -16,9 +16,12 @@ EmitterManager::~EmitterManager()
     emitters.clear();
 }
 
-void EmitterManager::addEmitter(float intervalMS, glm::vec4 color)
+void EmitterManager::addEmitter(GUILayer *gui, float intervalMS, glm::vec4 color)
 {
-    emitters.push_back(new Emitter(color, intervalMS, glm::vec3(0.0f, 0.0f, 1.0f), 10.0f, glm::vec2(0.3f, 2.0f)));
+    std::stringstream ss;
+    ss << "Emitter " << emitters.size();
+
+    emitters.push_back(new Emitter(gui, ss.str(), color, intervalMS, glm::vec3(0.0f, 0.0f, 1.0f), 10.0f, glm::vec2(0.3f, 2.0f)));
 }
 
 void EmitterManager::removeEmitter()

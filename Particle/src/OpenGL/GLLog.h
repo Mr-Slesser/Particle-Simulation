@@ -1,10 +1,6 @@
 #ifndef GLLOG_H
 #define GLLOG_H
 
-#include <time.h>
-#include <stdarg.h>
-#include <cstdio>
-
 // TODO: Enables / Disabled
 // TODO: Pretty up formatting
 // TODO: Need to incorporate? https://www.khronos.org/opengl/wiki/OpenGL_Context#Context_information_queries

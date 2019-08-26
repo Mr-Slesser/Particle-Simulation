@@ -1,5 +1,5 @@
+#include "PCHeader.h"
 #include "Renderer.h"
-#include "GLLog.h"
 
 GL::Renderer::Renderer()
     : vd(VertexData(MAX_PARTICLES))
@@ -176,5 +176,4 @@ void GL::Renderer::submitData(std::vector<Vertex> &data)
 
         PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
     }
-
 }

@@ -1,3 +1,4 @@
+#include "PCHeader.h"
 #include "VertexArray.h"
 
 GL::VertexArray::VertexArray()
@@ -11,16 +12,16 @@ GL::VertexArray::~VertexArray()
     GLCheck(glDeleteVertexArrays(1, &ID));
 }
 
-void GL::VertexArray::setVertexLayout(VBOLayout& layout)
+void GL::VertexArray::setVertexLayout(VBOLayout &layout)
 {
     //this->use();
 
-    const auto& elements = layout.getElements();
+    const auto &elements = layout.getElements();
     unsigned int offset = 0;
     for (int i = 0; i < elements.size(); ++i)
     {
-        const auto& element = elements[i];
-        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
+        const auto &element = elements[i];
+        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void *)offset);
         offset += element.count * VBElement::getSizeOfType(element.type);
         glEnableVertexAttribArray(i);
     }
@@ -36,7 +37,7 @@ void GL::VertexArray::init()
     // this->setVertexLayout(vbl);
 }
 
-void GL::VertexArray::initBuffers(const unsigned long& size)
+void GL::VertexArray::initBuffers(const unsigned long &size)
 {
     GLCheck(glBindVertexArray(ID));
     buffers.push_back(new VertexBuffer(GL_DYNAMIC_DRAW));
@@ -59,7 +60,7 @@ void GL::VertexArray::use(int a)
     GLCheck(glBindVertexArray(ID));
 }
 
-void GL::VertexArray::use(VertexBuffer* vb)
+void GL::VertexArray::use(VertexBuffer *vb)
 {
     GLCheck(glBindVertexArray(ID));
     vb->bind();

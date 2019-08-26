@@ -1,3 +1,4 @@
+#include "PCHeader.h"
 #include "GlobalConfiguration.h"
 
 namespace PT

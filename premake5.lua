@@ -29,6 +29,7 @@ project "Particle"
         "vendor/glad/include",
         "vendor/glm",
         "vendor/spdlog/include",
+        "%{prj.name}/src"
     }
 
     libdirs {

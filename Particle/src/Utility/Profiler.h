@@ -1,16 +1,6 @@
 #ifndef PROFILER_H
 #define PROFILER_H
 
-//  Enablers from Outside
-//  Use the below settings as a Compile Time Definition if you would like to profile.
-#define _PROFILER_FILE_LOG 1
-
-// Private Impl
-#include <iostream>
-#include <chrono>
-#include <fstream>
-#include <sstream>
-
 using namespace std;
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER
