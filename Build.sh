@@ -4,7 +4,6 @@ echo "[2] Build"
 echo "[3] Generate"
 echo "[4] Clean"
 echo "[5] Commit"
-echo "[6] Test"
 
 read -p "Enter selection :> " sel
 
@@ -24,8 +23,4 @@ case $sel in
     5)
         ./Scripts/Commit.sh
         ;;
-    6)
-        ./Scripts/Test.sh
-        ;;
-    
 esac

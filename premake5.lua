@@ -22,7 +22,7 @@ project "Particle"
         "%{prj.name}/src/**",
     }
     sysincludedirs { "%{prj.name}/src" }
-    
+
     includedirs
     {
         "vendor/glfw/include",
@@ -82,52 +82,3 @@ project "Particle"
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On"
-
--- project "GoogleTest"
---     kind "StaticLib"
---     language "C++"
---     cppdialect "C++17"
---     location "GoogleTest"
-
---     targetdir ("bin/" .. out .. "/%{prj.name}")
---     objdir ("bin-int/" .. out .. "/%{prj.name}")
-
---     files
---     {
---         (gtest .. "/src/gtest-all.cc")
---     }
-
---     includedirs
---     {
---         (gtest .. "include"), 
---         gtest
---     }
-
--- project "ParticleTest"
---     location "ParticleTest"
---     kind "ConsoleApp"
---     language "C++"
---     cppdialect "C++17"
---     targetdir ("bin/" .. out .. "/%{prj.name}")
---     objdir ("bin-int/" .. out .. "/%{prj.name}")
-    
---     files {
---         "%{prj.name}/src/**",
---     }
-
---     includedirs {
---         (gtest .. "include"),
---         "./Particle/src",
---         "vendor/glfw/include",
---         "vendor/glad/include",
---         "vendor/glm",
---     }
-
---     libdirs {
---         "vendor/glfw/lib"
---     }
-
---     links { 
---         "GoogleTest",
---         "Particle"
---     }

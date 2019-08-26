@@ -4,15 +4,15 @@ Particle is an ongoing project with end product to be a GPU based particle simul
 
 ## MacOS
 
-For MacOS the project includes a simple menu driven interface on the command line to handle various aspects of the project, this is in invoked in your terminal with `./Build.sh', with the following supported input:
+For MacOS the project includes a simple menu driven interface on the command line to handle various aspects of the project, this is in invoked in your terminal with `./Build.sh', with the following supported inputs:
 
-| Input | Function | Details                                                            |
-| ----- | -------- | ------------------------------------------------------------------ |
-| 1     | Build    | Generate a gmake project and then build and run the application.   |
-| 2     | Test     | Generates the project and then run the test application.           |
-| 3     | Generate | Generates the project files                                        |
-| 4     | Clean    | Removes platform specific project files                            |
-| 5     | Commit   | Will prompt for a commit message and then push to the remote repo. |
+| Input | Function    | Details                                                            |
+|-------|-------------|--------------------------------------------------------------------|
+| 1     | Build & Run | Generate a gmake project and then builds and runs the application. |
+| 2     | Build       | Generate a gmake project and then builds the application.          |
+| 3     | Generate    | Generates the project files                                        |
+| 4     | Clean       | Removes platform specific project files                            |
+| 5     | Commit      | Will prompt for a commit message and then push to the remote repo. |
 
 ## Windows
 
