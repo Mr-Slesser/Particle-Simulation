@@ -56,7 +56,7 @@ namespace PT
                 ImGui::Text("Fill: %d / %d (%.2f %%)", 
                     GC::get()->getInt("CURR_NO_PARTICLES"), 
                     GC::get()->getInt("MAX_PARTICLES"), 
-                    (GC::get()->getInt("CURR_NO_PARTICLES") / GC::get()->getInt("MAX_PARTICLES")) * 100
+                    static_cast<double>((GC::get()->getInt("CURR_NO_PARTICLES") / GC::get()->getInt("MAX_PARTICLES")) * 100)
                     );
 
                 ImGui::Checkbox("Show Demo Window", &show_demo_window);

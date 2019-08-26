@@ -3,7 +3,6 @@ workspace "Particle"
     configurations
     {
         "Debug", 
-        "Dist",
         "Release"
     }
 
@@ -14,6 +13,7 @@ project "Particle"
     location "Particle"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
     targetdir ("bin/" .. out .. "/%{prj.name}")
     objdir ("bin-int/" .. out .. "/%{prj.name}")
 
@@ -21,7 +21,8 @@ project "Particle"
     {
         "%{prj.name}/src/**",
     }
-
+    sysincludedirs { "%{prj.name}/src" }
+    
     includedirs
     {
         "vendor/glfw/include",
@@ -35,7 +36,6 @@ project "Particle"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
         
         links {
@@ -48,10 +48,15 @@ project "Particle"
             "PT_WIN"
         }
 
+    filter "action:vs*"  -- for Visual Studio actions
+        pchheader "PCHeader.h"
+        pchsource "%{prj.name}/src/PCHeader.cpp"
+
+    filter "action:not vs*"  -- for everything else
+        pchheader "%{prj.name}/src/PCHeader.h"
+
     
     filter "system:macosx"
-        cppdialect "C++17"
-
         links {
             "glfw3",
             "OpenGL.framework",
@@ -74,59 +79,55 @@ project "Particle"
         symbols "On"
         buildoptions {}
 
-    filter "configurations:Dist"
-        defines { "NDEBUG" }
-        optimize "On"
-
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On"
 
-project "GoogleTest"
-    kind "StaticLib"
-    language "C++"
-    cppdialect "C++17"
-    location "GoogleTest"
+-- project "GoogleTest"
+--     kind "StaticLib"
+--     language "C++"
+--     cppdialect "C++17"
+--     location "GoogleTest"
 
-    targetdir ("bin/" .. out .. "/%{prj.name}")
-    objdir ("bin-int/" .. out .. "/%{prj.name}")
+--     targetdir ("bin/" .. out .. "/%{prj.name}")
+--     objdir ("bin-int/" .. out .. "/%{prj.name}")
 
-    files
-    {
-        (gtest .. "/src/gtest-all.cc")
-    }
+--     files
+--     {
+--         (gtest .. "/src/gtest-all.cc")
+--     }
 
-    includedirs
-    {
-        (gtest .. "include"), 
-        gtest
-    }
+--     includedirs
+--     {
+--         (gtest .. "include"), 
+--         gtest
+--     }
 
-project "ParticleTest"
-    location "ParticleTest"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++17"
-    targetdir ("bin/" .. out .. "/%{prj.name}")
-    objdir ("bin-int/" .. out .. "/%{prj.name}")
+-- project "ParticleTest"
+--     location "ParticleTest"
+--     kind "ConsoleApp"
+--     language "C++"
+--     cppdialect "C++17"
+--     targetdir ("bin/" .. out .. "/%{prj.name}")
+--     objdir ("bin-int/" .. out .. "/%{prj.name}")
     
-    files {
-        "%{prj.name}/src/**",
-    }
+--     files {
+--         "%{prj.name}/src/**",
+--     }
 
-    includedirs {
-        (gtest .. "include"),
-        "./Particle/src",
-        "vendor/glfw/include",
-        "vendor/glad/include",
-        "vendor/glm",
-    }
+--     includedirs {
+--         (gtest .. "include"),
+--         "./Particle/src",
+--         "vendor/glfw/include",
+--         "vendor/glad/include",
+--         "vendor/glm",
+--     }
 
-    libdirs {
-        "vendor/glfw/lib"
-    }
+--     libdirs {
+--         "vendor/glfw/lib"
+--     }
 
-    links { 
-        "GoogleTest",
-        "Particle"
-    }
+--     links { 
+--         "GoogleTest",
+--         "Particle"
+--     }

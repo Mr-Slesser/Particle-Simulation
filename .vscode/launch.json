@@ -1,13 +1,13 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"type": "lldb-mi",
-			"request": "launch",
-			"name": "Launch Program",
-			"target": "./bin/Debug-macosx-x86_64/Particle/Particle",
-			"cwd": "${workspaceRoot}",
-			"valuesFormatting": "parseText"
-		}
-	]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb-mi",
+            "request": "launch",
+            "name": "Launch Program",
+            "target": "./bin/Debug-macosx-x86_64/Particle/Particle",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
+        }
+    ]
 }

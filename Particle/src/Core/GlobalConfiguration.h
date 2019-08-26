@@ -26,9 +26,9 @@ namespace PT
         static GC* get();
         void init();
 
-        int& getInt(const char* name);
-        float& getFloat(const char* name);
-        bool& getBool(const char* name);
+        int getInt(const char* name);
+        float getFloat(const char* name);
+        bool getBool(const char* name);
 
         glm::vec4& getVec4(const char* name);
 

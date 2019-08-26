@@ -25,7 +25,7 @@ ProgramManager::~ProgramManager()
 bool ProgramManager::init()
 {
     update_programs.push_back(new UpdateProgram());
-    if (!update_programs.back()->ainit())
+    if (!update_programs.back()->init())
     {
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init default update program.");
         return false;
@@ -65,6 +65,8 @@ Program *ProgramManager::get_active(PROGRAM_TYPE type)
     {
         return render_programs[r_active];
     }
+
+    return nullptr;
 }
 
 void ProgramManager::add_update(const char *file)

@@ -1,9 +1,10 @@
 #!/bin/bash
-echo "[1] Build"
-echo "[2] Test"
+echo "[1] Build & Run"
+echo "[2] Build"
 echo "[3] Generate"
 echo "[4] Clean"
 echo "[5] Commit"
+echo "[6] Test"
 
 read -p "Enter selection :> " sel
 
@@ -12,7 +13,7 @@ case $sel in
         ./Scripts/Build-Run.sh
         ;;
     2)
-        ./Scripts/Test.sh
+        ./Scripts/Build.sh
         ;;
     3)
         ./Scripts/Generate.sh
@@ -23,4 +24,8 @@ case $sel in
     5)
         ./Scripts/Commit.sh
         ;;
+    6)
+        ./Scripts/Test.sh
+        ;;
+    
 esac

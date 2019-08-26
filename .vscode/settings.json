@@ -77,7 +77,15 @@
         "locale": "cpp",
         "map": "cpp",
         "string": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "numeric": "cpp",
+        "queue": "cpp",
+        "random": "cpp",
+        "set": "cpp",
+        "stack": "cpp",
+        "hashtable": "cpp",
+        "bit": "cpp",
+        "memory_resource": "cpp"
     },
     "todo-tree.showTagsFromOpenFilesOnly": false,
     "C_Cpp.errorSquiggles": "Enabled"

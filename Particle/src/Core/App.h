@@ -16,6 +16,8 @@
 #include "Camera/CameraManager.h"
 #include "Input/InputManager.h"
 
+#include "../Particle/Emitter/EmitterManager.h"
+
 // TODO: UUID for each system?
 
 namespace PT
@@ -26,6 +28,8 @@ namespace PT
         Window* window;
         GL::Renderer* renderer;
         GUILayer* gui;
+
+        EmitterManager* emitters;
 
     public:
         App();

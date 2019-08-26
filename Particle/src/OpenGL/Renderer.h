@@ -20,26 +20,20 @@
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
-#define RENDERER_FORWARD 1
-
 namespace GL
 {
 class Renderer
 {
 private:
-    const int MAX_PARTICLES = 500000;
-    const int total = 50;
+    const int MAX_PARTICLES = 5000;
+    const int total = 10;
 
     ProgramManager *programs;
 
-#if RENDERER_FORWARD
     VertexBuffer *vb1;
     VertexBuffer *vb2;
     VertexArray *vaR;
     VertexArray *vaU;
-#else
-    VertexBuffer *vb;
-#endif
 
     VertexData vd;
     VertexArray *va;
@@ -59,16 +53,11 @@ public:
     bool init();
     void clear();
     void draw();
-
     void update();
-
-    void modelMatrix();
-    void viewMatrix();
-    void projectionMatrix();
-
-    void changeShaders(int type);
-
+    void MVP();
     void addParticle(int num);
+
+    void submitData(std::vector<Vertex> &data);
 };
 
 } // namespace GL

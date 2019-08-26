@@ -13,7 +13,7 @@ bool PT::App::init()
 {
     Log::init();
     CORE_LOG_TRACE("Logger startup: [Core]");
-    GL_LOG_TRACE("  Logger startup: [GL  ]");    
+    GL_LOG_TRACE("  Logger startup: [GL  ]");
 
     // SECTION: Window
     window = new Window();
@@ -36,7 +36,7 @@ bool PT::App::init()
 
     // SECTION: GUI
     gui = new GUILayer();
-    if(!gui->init(window->context()))
+    if (!gui->init(window->context()))
     {
         CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
         return false;
@@ -46,21 +46,29 @@ bool PT::App::init()
     CameraManager::get()->getCamera();
     CameraManager::get()->register_input_dispatch();
 
+    emitters = new EmitterManager();
+    emitters->addEmitter(S_TO_MS(0.1), Colour::GREEN);
+    emitters->addEmitter(S_TO_MS(0.4), Colour::BLUE);
+
     return true;
 }
 
 void PT::App::run()
 {
     while (window->isActive())
-	{
-		glfwPollEvents();
+    {
+        glfwPollEvents();
         InputManager::get()->processInput(window, renderer);
 
         renderer->clear();
+
+        emitters->update();
+        emitters->submit(renderer);
+
         renderer->draw();
-        
+
         gui->render();
-		
+
         glfwSwapBuffers(window->context());
-	}
+    }
 }

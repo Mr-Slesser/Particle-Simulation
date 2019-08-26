@@ -24,7 +24,7 @@ GC::~GC()
 void GC::init()
 {
     // Add values..
-    addInt("MAX_PARTICLES", 200000);
+    addInt("MAX_PARTICLES", 5000);
     addInt("CURR_NO_PARTICLES", 0);
 
     addBool("PAUSED", false);
@@ -34,7 +34,7 @@ void GC::init()
     addVec4("CLEAR_COLOR", clear);
 }
 
-int &GC::getInt(const char *name)
+int GC::getInt(const char *name)
 {
     if (ints.find(name) != ints.end())
     {
@@ -43,10 +43,11 @@ int &GC::getInt(const char *name)
     else
     {
         CORE_LOG_ERROR("Global Config::getInt() -> {} not found.", name);
+        return 0;
     }
 }
 
-float &GC::getFloat(const char *name)
+float GC::getFloat(const char *name)
 {
     if (floats.find(name) != floats.end())
     {
@@ -55,10 +56,11 @@ float &GC::getFloat(const char *name)
     else
     {
         CORE_LOG_ERROR("Global Config::getFloat() -> {} not found.", name);
+        return 0;
     }
 }
 
-bool &GC::getBool(const char *name)
+bool GC::getBool(const char *name)
 {
     if (bools.find(name) != bools.end())
     {
@@ -67,6 +69,7 @@ bool &GC::getBool(const char *name)
     else
     {
         CORE_LOG_ERROR("Global Config::getBool() -> {} not found.", name);
+        return 0;
     }
 }
 
@@ -79,6 +82,8 @@ glm::vec4 &GC::getVec4(const char *name)
     else
     {
         CORE_LOG_ERROR("Global Config::getVec4() -> {} not found.", name);
+        auto a = glm::vec4(1.0f);
+        return a;
     }
 }
 

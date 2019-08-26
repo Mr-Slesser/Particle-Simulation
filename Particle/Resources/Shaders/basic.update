@@ -1,9 +1,0 @@
-##:: main
-// outPosition = vec3(aPos.x + 1, aPos.y + 1, aPos.z + 1);
-outPosition = addOne();
-outColor = aColor;
-
-##:: func
-vec3 addOne() {
-    return vec3(aPos.x + sin(dt), aPos.y + sin(dt), aPos.z + sin(dt));
-}
