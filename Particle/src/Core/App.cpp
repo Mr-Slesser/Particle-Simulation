@@ -68,7 +68,10 @@ void PT::App::run()
 
         renderer->draw();
 
+        gui->begin();
+        gui->constantElements();
         gui->render();
+        gui->end(window);
 
         glfwSwapBuffers(window->context());
     }

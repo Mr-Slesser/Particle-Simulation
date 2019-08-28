@@ -32,9 +32,10 @@
 #include <vector>
 
 // Include: ImGUI
-#include "Headers/imgui/imgui.h"
-#include "Headers/imgui/imgui_impl_glfw.h"
-#include "Headers/imgui/imgui_impl_opengl3.h"
+#include "Headers/ImGUI.hpp"
+// #include "Headers/imgui/imgui.h"
+// #include "Headers/imgui/imgui_impl_glfw.h"
+// #include "Headers/imgui/imgui_impl_opengl3.h"
 
 // Includes: OpenGL
 #include "glad/glad.h"

@@ -2,6 +2,7 @@
 #define GUILAYER_H
 
 #include "../Camera/CameraManager.h"
+#include "../Window/Window.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -21,9 +22,13 @@ public:
     GUILayer();
     virtual ~GUILayer();
 
+    void constantElements();
     void addElement(std::function<void()> window);
     bool init(GLFWwindow *window);
     void render();
+
+    void begin();
+    void end(Window *window);
 };
 
 } // namespace PT
