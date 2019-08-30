@@ -3,7 +3,7 @@
 
 #include "Program.h"
 
-#define VS_UPDATE PATH("Shaders/update.vertex")
+#define VS_UPDATE PATH("Shaders/particle_update.vertex")
 
 namespace GL
 {
