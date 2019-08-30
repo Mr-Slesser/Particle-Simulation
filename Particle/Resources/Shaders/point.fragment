@@ -1,7 +1,7 @@
-#version 330 core
-out vec4 FragColor;
+#version 410 core
+in vec4 outColor;
 
-in vec4 ourColor;
+out vec4 FragColor;
 
 void main()
 {
@@ -10,5 +10,5 @@ void main()
     if (f > 0.25)
         discard;
     //FragColor = mix(color1, color2, smoothstep(0.1, 0.25, f));
-    FragColor = ourColor;
+    FragColor = outColor;
 }

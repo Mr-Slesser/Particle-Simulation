@@ -16,10 +16,12 @@ struct WindowConfig
     unsigned int height = 768;
     bool wireframe = false;
     const char *title = "New Window";
-    int major = 3;
-    int minor = 3;
+    int major = 4;
+    int minor = 1;
 
-    WindowConfig() {}
+    WindowConfig()
+    {
+    }
     WindowConfig(unsigned int w, unsigned int h, const char *t, int maj, int min)
         : width(w), height(h), title(t), major(maj), minor(min) {}
 };

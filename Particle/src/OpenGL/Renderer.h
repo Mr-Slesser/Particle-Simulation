@@ -41,6 +41,12 @@ private:
 
     std::vector<PT::Particle *> particles;
 
+    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
+    unsigned int texBufferID;
+    unsigned int texBufferTextureID;
+    std::vector<glm::vec3> texBufferData;
+    /* ------------------------------------------------------------------------ */
+
 public:
     Renderer();
     ~Renderer();
@@ -52,7 +58,7 @@ public:
     void MVP();
     void addParticle(int num);
 
-    void submitData(std::vector<Vertex> &data);
+    void submitData(std::vector<PT::ParticleData> &data);
 };
 
 } // namespace GL

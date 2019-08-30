@@ -1,6 +1,7 @@
 #ifndef VERTEXBUFFER_H
 #define VERTEXBUFFER_H
 
+#include "../Particle/Particle.h"
 #include "../Primitives/Vertex.h"
 #include "VertexData.h"
 
@@ -8,8 +9,8 @@ namespace GL
 {
 struct VBPointer
 {
-    Vertex *start;
-    Vertex *it;
+    PT::ParticleData *start;
+    PT::ParticleData *it;
     unsigned int size;
 };
 
@@ -29,7 +30,7 @@ public:
 
     void bind();
 
-    Vertex *getPointer();
+    PT::ParticleData *getPointer();
     void releasePointer();
 
     unsigned int getID() const { return ID; }

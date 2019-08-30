@@ -3,33 +3,39 @@
 
 #include "../Primitives/Vertex.h"
 
-// TODO: Queue --> Add available indicies to queue so easy to add new in it's place.
-
 namespace PT
 {
-struct ParticleBufferData
+struct ParticleData
 {
     glm::vec3 position;
     glm::vec3 velocity;
     glm::vec4 colour;
+    float lifespan;
+    float mass;
 };
 
 class Particle
 {
 private:
-    Vertex v; // Vertex data in memory linked to this
+    ParticleData data;
 
 public:
-    Particle(Vertex _v);
+    Particle(ParticleData data);
     ~Particle();
 
-    void setPosition(const glm::vec3 &pos);
-    void setColour(const glm::vec4 &col);
+    void setPosition(glm::vec3 &pos) { data.position = pos; }
+    void setVelocity(glm::vec3 &vel) { data.velocity = vel; }
+    void setColour(glm::vec4 &col) { data.colour = col; }
+    void setLifespan(float lifespan) { data.lifespan = lifespan; }
+    void setMass(float mass) { data.mass = mass; }
 
-    glm::vec3 &getPosition();
-    glm::vec4 &getColour();
+    glm::vec3 &getPosition() { return data.position; }
+    glm::vec3 &getVelocity() { return data.velocity; }
+    glm::vec4 &getColour() { return data.colour; }
+    float &getLifespan() { return data.lifespan; }
+    float &getMass() { return data.mass; }
 
-    Vertex &getVertex() { return v; }
+    ParticleData &getData() { return data; }
 };
 } // namespace PT
 

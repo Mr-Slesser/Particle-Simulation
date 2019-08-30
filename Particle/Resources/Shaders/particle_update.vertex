@@ -1,19 +1,32 @@
-#version 330 core
+#version 410 core
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec4 aColor;
+layout (location = 0) in vec3 inPosition;
+layout (location = 1) in vec3 inVelocity;
+layout (location = 2) in vec4 inColor;
+layout (location = 3) in float inLifespan;
+layout (location = 4) in float inMass;
 
 out vec3 outPosition;
+out vec3 outVelocity;
 out vec4 outColor;
+out float outLifespan;
+out float outMass;
 
 uniform float dt;
+uniform samplerBuffer tbo_id;
 
 void main()
 {
-    outPosition = aPos;
-    outColor = aColor;
-}
+    vec4 textureSample;
+    textureSample = texelFetch(tbo_id, int(
+        (inPosition.x / 1000) * 100 + (inPosition.y / 1000)
+    )); // Sample from position...
 
-vec3 sineMovement() {
-    return vec3(aPos.x + sin(dt), aPos.y + sin(dt), aPos.z + sin(dt));
+    outPosition = inPosition + vec3(inVelocity.x + textureSample.x, inVelocity.y + textureSample.y, 0);
+
+    // We simply pass through these values, no need to work on them (at this stage)
+    outVelocity = inVelocity;
+    outColor = inColor;
+    outLifespan = inLifespan;
+    outMass = inMass;
 }

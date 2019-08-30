@@ -16,6 +16,8 @@ GL::Renderer::~Renderer()
     delete va;
     delete pointer;
 
+    glDeleteBuffers(1, &texBufferID);
+
     delete vb1;
     delete vb2;
     delete vaR;
@@ -39,14 +41,32 @@ bool GL::Renderer::init()
     }
 
     GL::VBOLayout vbl = VBOLayout();
-    vbl.push<float>(3, 0);
-    vbl.push<float>(4, 1);
+    vbl.push<float>(3, 0); // Position
+    vbl.push<float>(3, 0); // Velocity
+    vbl.push<float>(4, 1); // Colour
+    vbl.push<float>(1, 1); // Lifespan
+    vbl.push<float>(1, 1); // Mass
 
     vaU = new VertexArray();
     vaU->init();
 
+    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
+    for (int i = 1; i <= 1000; ++i)
+    {
+        texBufferData.push_back(glm::vec3(1 + i / 10, -(1 + i / 10), 1 + i / 100));
+    }
+
+    glGenBuffers(1, &texBufferID); // Texture Buffer
+    glBindBuffer(GL_TEXTURE_BUFFER, texBufferID);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(glm::vec3) * texBufferData.size(), texBufferData.data(), GL_STATIC_DRAW);
+    glGenTextures(1, &texBufferTextureID);
+    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
+    /* ------------------------------------------------------------------------ */
+
     vb1 = new VertexBuffer(GL_DYNAMIC_DRAW);
-    vb1->init(sizeof(Vertex) * MAX_PARTICLES);
+    vb1->init(sizeof(PT::ParticleData) * MAX_PARTICLES);
+    // vb1->init(sizeof(Vertex) * MAX_PARTICLES);
     pointer->start = pointer->it = vb1->getPointer();
 
     for (int i = 0; i < total; i++)
@@ -61,7 +81,10 @@ bool GL::Renderer::init()
             float z = 100 * cos(lon);
 
             pointer->it->position = glm::vec3(x, y, z);
+            pointer->it->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
             pointer->it->colour = Colour::PINK;
+            pointer->it->lifespan = 1.0f;
+            pointer->it->mass = 1.0f;
             pointer->it++;
             pointer->size++;
         }
@@ -72,7 +95,8 @@ bool GL::Renderer::init()
     vb1->releasePointer();
 
     vb2 = new VertexBuffer(GL_DYNAMIC_DRAW);
-    vb2->init(sizeof(Vertex) * MAX_PARTICLES);
+    vb2->init(sizeof(PT::ParticleData) * MAX_PARTICLES);
+    // vb2->init(sizeof(Vertex) * MAX_PARTICLES);
 
     vb1->bind();
 
@@ -102,7 +126,11 @@ void GL::Renderer::update()
 
     programs->use(UPDATE);
     vaU->use(1);
+
+    glActiveTexture(GL_TEXTURE0);
+
     programs->get_active(UPDATE)->setFloat("dt", dt);
+    programs->get_active(UPDATE)->setInt("tbo_id", 0);
 
     glEnable(GL_RASTERIZER_DISCARD);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vb2->getID());
@@ -143,19 +171,22 @@ void GL::Renderer::MVP()
 
 void GL::Renderer::addParticle(int num)
 {
-    std::vector<Vertex> a;
+    std::vector<PT::ParticleData> a;
     for (int i = 0; i < num; ++i)
     {
-        Vertex v;
+        PT::ParticleData v;
         v.position = glm::vec3(rand() % 200 - 100, rand() % 200 - 100, rand() % 20 - 10);
+        v.velocity = glm::vec3(1.0f, 1.0f, 1.0f);
         v.colour = Colour::GREEN;
+        v.lifespan = 1.0f;
+        v.mass = 1.0f;
         a.push_back(v);
     }
 
     submitData(a);
 }
 
-void GL::Renderer::submitData(std::vector<Vertex> &data)
+void GL::Renderer::submitData(std::vector<PT::ParticleData> &data)
 {
     auto maxSize = PT::GC::get()->getInt("MAX_PARTICLES");
     if (pointer->size - 1 + data.size() > maxSize)
@@ -170,7 +201,7 @@ void GL::Renderer::submitData(std::vector<Vertex> &data)
         vb1->bind();
         pointer->it = vb1->getPointer() + pointer->size - 1;
 
-        memcpy(pointer->it, data.data(), data.size() * sizeof(Vertex));
+        memcpy(pointer->it, data.data(), data.size() * sizeof(PT::ParticleData));
         pointer->size += data.size();
         vb1->releasePointer();
 

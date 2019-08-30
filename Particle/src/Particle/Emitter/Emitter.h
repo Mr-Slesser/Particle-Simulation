@@ -1,6 +1,7 @@
 #ifndef EMITTER_H
 #define EMITTER_H
 
+#include "../Particle.h"
 #include "../../Primitives/Vertex.h"
 #include "../../Utility/Timer.h"
 #include "../../Core/GUI/GUILayer.h"
@@ -11,7 +12,7 @@ class Emitter
 {
 private:
     GUILayer *gui;
-    std::vector<Vertex> spawned;
+    std::vector<ParticleData> spawned;
     glm::vec3 position;
     glm::vec4 color;
     float force;
@@ -33,7 +34,7 @@ public:
     virtual ~Emitter();
 
     void spawnParticle();
-    std::vector<Vertex> update();
+    std::vector<ParticleData> update();
     void GUIElement(std::string name);
 };
 } // namespace PT

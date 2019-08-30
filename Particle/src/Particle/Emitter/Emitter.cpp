@@ -26,15 +26,22 @@ Emitter::~Emitter()
 
 void Emitter::spawnParticle()
 {
-    Vertex v;
-    v.position = glm::vec3(position.x + (direction.x * ((rand() % 50) * force)), position.y + (direction.y * ((rand() % 50) * force)), position.z + (rand() % 100 - 50));
+    ParticleData v;
+
+    // v.position = glm::vec3(position.x + (direction.x * ((rand() % 50) * force)), position.y + (direction.y * ((rand() % 50) * force)), position.z + (rand() % 100 - 50));
+    v.position = glm::vec3(position.x, position.y, position.z);
+    v.velocity = glm::vec3(direction.x + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), direction.y + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 1.0f);
+
     v.colour = color;
+    v.lifespan = 1.0f;
+    v.mass = 1.0f;
+
     spawned.push_back(v);
 }
 
-std::vector<Vertex> Emitter::update()
+std::vector<ParticleData> Emitter::update()
 {
-    std::vector<Vertex> toReturn;
+    std::vector<ParticleData> toReturn;
 
     if (spawned.size() > 0)
     {
@@ -51,7 +58,7 @@ void Emitter::GUIElement(std::string name)
         ImGui::ColorEdit4("Color", &color.r);
         ImGui::SliderFloat("Force", &force, 0.0f, 100.0f, "%.2f");
         ImGui::SliderFloat3("Position", &position.x, -10.0f, 10.0f, "%.2f");
-        ImGui::SliderFloat2("Direction", &direction.x, -10.0f, 10.0f, "%.2f");    
+        ImGui::SliderFloat2("Direction", &direction.x, -10.0f, 10.0f, "%.2f");
     }
     ImGui::End();
 }

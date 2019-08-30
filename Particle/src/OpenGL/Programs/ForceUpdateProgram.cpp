@@ -1,17 +1,17 @@
 #include "PCHeader.h"
-#include "UpdateProgram.h"
+#include "ForceUpdateProgram.h"
 
-GL::UpdateProgram::UpdateProgram()
+GL::ForceUpdateProgram::ForceUpdateProgram()
 {
 }
 
-GL::UpdateProgram::~UpdateProgram()
+GL::ForceUpdateProgram::~ForceUpdateProgram()
 {
 }
 
-bool GL::UpdateProgram::init(const char *vertexPath, const char *fragmentPath)
+bool GL::ForceUpdateProgram::init(const char *vertexPath, const char *fragmentPath)
 {
-    GL_LOG_TRACE("Starting update program init.");
+    GL_LOG_TRACE("Starting force update program init.");
 
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -38,12 +38,12 @@ bool GL::UpdateProgram::init(const char *vertexPath, const char *fragmentPath)
     }
     GLCheck(glDeleteShader(vertexShader));
 
-    GL_LOG_TRACE("UpdateProgram created with id: {}", ID);
+    GL_LOG_TRACE("ForceUpdateProgram created with id: {}", ID);
 
     return true;
 }
 
-bool GL::UpdateProgram::generateShader(const char *filePath, int &id)
+bool GL::ForceUpdateProgram::generateShader(const char *filePath, int &id)
 {
     std::ifstream shaderFile(filePath);
 

@@ -14,8 +14,8 @@ namespace PT
 class EmitterManager
 {
 private:
-    std::vector<Emitter*> emitters;
-    std::vector<Vertex> submission;
+    std::vector<Emitter *> emitters;
+    std::vector<ParticleData> submission;
 
 protected:
 public:
@@ -26,8 +26,8 @@ public:
     void removeEmitter();
 
     void update();
-    void submit(GL::Renderer* renderer);
+    void submit(GL::Renderer *renderer);
 };
-} // namespace PT#
+} // namespace PT
 
 #endif /* EMITTERMANAGER_H */

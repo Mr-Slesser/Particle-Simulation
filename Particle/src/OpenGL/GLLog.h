@@ -63,6 +63,7 @@ static void Log_GL_Parameters()
     glGetBooleanv(params[11], &s);
     GL_LOG_INFO("{} {}", names[11], (unsigned int)s);
     GL_LOG_TRACE("---------------------------------");
+    std::cout << "\n\n";
 }
 
 static const char *GL_type_to_string(GLenum type)
@@ -177,6 +178,7 @@ static void Print_All(GLuint program)
     }
 
     Print_program_info_log(program);
+    std::cout << "\n\n";
 }
 
 #endif /* GLLOG_H */

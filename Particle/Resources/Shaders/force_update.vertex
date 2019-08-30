@@ -1,0 +1,12 @@
+#version 410 core
+
+layout (location = 0) in vec3 inPosition;
+
+out vec3 outPosition;
+
+uniform float dt;
+
+void main()
+{
+    outPosition = inPosition;
+}
