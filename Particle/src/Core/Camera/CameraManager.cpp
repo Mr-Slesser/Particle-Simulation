@@ -15,7 +15,6 @@ CameraManager *CameraManager::get()
 
 CameraManager::CameraManager()
 {
-    // REVIEW: Do we want to actually pass params to this, so make it a separate function?
     if (startup())
     {
         CORE_LOG_TRACE("CameraManager::Constructor - Startup completed.");
@@ -64,7 +63,6 @@ bool CameraManager::startup()
 
 bool CameraManager::registerCamera(const char *camera_name, SM_CAM_TYPE type, const CameraData &data)
 {
-    // TODO: Handle data!
     if (cameras.find(camera_name) == cameras.end())
     {
         if (type == cam3D)

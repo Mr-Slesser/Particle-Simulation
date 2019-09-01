@@ -7,7 +7,6 @@ Camera::Camera(PROJECTION_TYPE t, const CameraData &config)
     : c(config), type(t), cSpeed(5.0f)
 {
     lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
-    // TODO: These values need to be from GC!!!
     setProjection(1366.0f, 768.0f);
 }
 

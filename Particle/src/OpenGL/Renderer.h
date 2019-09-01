@@ -12,6 +12,7 @@
 #include "../Core/Camera/CameraManager.h"
 #include "../Utility/Math.h"
 #include "../Utility/Profiler.h"
+#include "../Simulation/ForceGrid.h"
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
@@ -45,6 +46,7 @@ private:
     unsigned int texBufferID;
     unsigned int texBufferTextureID;
     std::vector<glm::vec3> texBufferData;
+    PT::ForceGrid *forces;
     /* ------------------------------------------------------------------------ */
 
 public:

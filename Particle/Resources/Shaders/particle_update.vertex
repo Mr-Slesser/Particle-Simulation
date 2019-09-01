@@ -15,18 +15,26 @@ out float outMass;
 uniform float dt;
 uniform samplerBuffer tbo_id;
 
+// TODO: Min & Max Speeds
+// TODO: Grid Sizing
+
 void main()
 {
     vec4 textureSample;
-    textureSample = texelFetch(tbo_id, int(
-        (inPosition.x / 1000) * 100 + (inPosition.y / 1000)
-    )); // Sample from position...
+    textureSample = texelFetch(tbo_id, int( int(inPosition.x / 100) * 100 + int(inPosition.y / 100) )); // Sample from position...
 
-    outPosition = inPosition + vec3(inVelocity.x + textureSample.x, inVelocity.y + textureSample.y, 0);
+    vec3 dragForce = vec3(0.001, 0.001, 0);
+    vec3 calculatedVelocity = vec3(
+        clamp(inVelocity.x + textureSample.x - dragForce.x, -2, 2), 
+        clamp(inVelocity.y + textureSample.y - dragForce.y, -2, 2),
+        clamp(inVelocity.z + textureSample.z - dragForce.z, -2, 2)
+    );
 
+    outPosition = inPosition + calculatedVelocity;
+    // outPosition = inPosition + vec3(inVelocity.x + textureSample.x, inVelocity.y + textureSample.y, 0);
     // We simply pass through these values, no need to work on them (at this stage)
-    outVelocity = inVelocity;
-    outColor = inColor;
+    outVelocity = calculatedVelocity;
+    outColor = vec4(calculatedVelocity.xyz, 1);
     outLifespan = inLifespan;
     outMass = inMass;
 }

@@ -33,14 +33,6 @@ bool ProgramManager::init()
     }
     Print_All(update_programs.back()->getID());
 
-    update_programs.push_back(new ForceUpdateProgram());
-    if (!update_programs.back()->init())
-    {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init default force update program.");
-        return false;
-    }
-    Print_All(update_programs.back()->getID());
-
     render_programs.push_back(new Program());
     if (!render_programs.back()->init())
     {

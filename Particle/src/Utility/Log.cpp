@@ -1,8 +1,6 @@
 #include "PCHeader.h"
 #include "Log.h"
 
-// TODO: Log to file option.
-
 namespace PT
 {
 std::shared_ptr<spdlog::logger> Log::core;

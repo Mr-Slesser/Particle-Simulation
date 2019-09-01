@@ -16,8 +16,6 @@ GL::Renderer::~Renderer()
     delete va;
     delete pointer;
 
-    glDeleteBuffers(1, &texBufferID);
-
     delete vb1;
     delete vb2;
     delete vaR;
@@ -29,6 +27,8 @@ GL::Renderer::~Renderer()
     }
 
     particles.clear();
+
+    glDeleteBuffers(1, &texBufferID);
 }
 
 bool GL::Renderer::init()
@@ -51,14 +51,11 @@ bool GL::Renderer::init()
     vaU->init();
 
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    for (int i = 1; i <= 1000; ++i)
-    {
-        texBufferData.push_back(glm::vec3(1 + i / 10, -(1 + i / 10), 1 + i / 100));
-    }
+    forces = new PT::ForceGrid(100, 100);
 
     glGenBuffers(1, &texBufferID); // Texture Buffer
     glBindBuffer(GL_TEXTURE_BUFFER, texBufferID);
-    glBufferData(GL_TEXTURE_BUFFER, sizeof(glm::vec3) * texBufferData.size(), texBufferData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_TEXTURE_BUFFER, forces->size(), forces->data().data(), GL_DYNAMIC_DRAW);
     glGenTextures(1, &texBufferTextureID);
     glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
     glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
@@ -127,8 +124,15 @@ void GL::Renderer::update()
     programs->use(UPDATE);
     vaU->use(1);
 
-    glActiveTexture(GL_TEXTURE0);
+    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
+    forces->update();
+    GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID));
+    auto tpointer = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
+    memcpy(tpointer, forces->data().data(), forces->size());
+    GLCheck(glUnmapBuffer(GL_TEXTURE_BUFFER));
+    /* ------------------------------------------------------------------------ */
 
+    glActiveTexture(GL_TEXTURE0);
     programs->get_active(UPDATE)->setFloat("dt", dt);
     programs->get_active(UPDATE)->setInt("tbo_id", 0);
 

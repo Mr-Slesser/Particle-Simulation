@@ -2,7 +2,6 @@
 #define PROGRAMMANAGER_H
 
 #include "UpdateProgram.h"
-#include "ForceUpdateProgram.h"
 
 namespace GL
 {
