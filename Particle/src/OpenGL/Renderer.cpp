@@ -130,6 +130,8 @@ void GL::Renderer::update()
     auto tpointer = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
     memcpy(tpointer, forces->data().data(), forces->size());
     GLCheck(glUnmapBuffer(GL_TEXTURE_BUFFER));
+    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
     /* ------------------------------------------------------------------------ */
 
     glActiveTexture(GL_TEXTURE0);
