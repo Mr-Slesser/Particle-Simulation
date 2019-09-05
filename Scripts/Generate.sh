@@ -1,1 +1,1 @@
-./vendor/bin/premake/mac/premake5 gmake
+./vendor/bin/premake/mac/premake5 gmake2
