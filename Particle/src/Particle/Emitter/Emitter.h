@@ -5,6 +5,7 @@
 #include "../../Primitives/Vertex.h"
 #include "../../Utility/Timer.h"
 #include "../../Core/GUI/GUILayer.h"
+#include "../../OpenGL/Renderers/DebugData.h"
 
 namespace PT
 {
@@ -35,6 +36,8 @@ public:
 
     void spawnParticle();
     std::vector<ParticleData> update();
+    std::vector<ParticleData> update(GL::DebugData *datastore);
+
     void GUIElement(std::string name);
 };
 } // namespace PT

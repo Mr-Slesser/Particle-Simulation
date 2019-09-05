@@ -4,116 +4,68 @@
 namespace GL
 {
 ProgramManager::ProgramManager()
-    : u_active(0), r_active(0)
 {
 }
 
 ProgramManager::~ProgramManager()
 {
-    for (auto p : update_programs)
+    for (auto p : programs)
     {
         delete p;
     }
-    update_programs.clear();
-
-    for (auto p : render_programs)
-    {
-        delete p;
-    }
-    render_programs.clear();
+    programs.clear();
 }
 
 bool ProgramManager::init()
 {
-    update_programs.push_back(new UpdateProgram());
-    if (!update_programs.back()->init())
-    {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init default update program.");
-        return false;
-    }
-    Print_All(update_programs.back()->getID());
+    programs.resize(PROGRAM_TYPE::SIZE, nullptr);
 
-    render_programs.push_back(new Program());
-    if (!render_programs.back()->init())
+    // UPDATE PROGRAM
+    programs[PROGRAM_TYPE::UPDATE] = new UpdateProgram();
+    if (!programs[PROGRAM_TYPE::UPDATE]->init(PATH("Shaders/particle_update.vertex")))
     {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init default render program.");
+        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init UPDATE program.");
         return false;
     }
-    Print_All(render_programs.back()->getID());
+    Print_All(programs[PROGRAM_TYPE::UPDATE]->getID());
+
+    // RENDER PROGRAM
+    programs[PROGRAM_TYPE::RENDER] = new Program();
+    if (!programs[PROGRAM_TYPE::RENDER]->init())
+    {
+        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER program.");
+        return false;
+    }
+    Print_All(programs[PROGRAM_TYPE::RENDER]->getID());
+
+    // DEBUG PROGRAM
+    programs[PROGRAM_TYPE::RENDER_DEBUG] = new DebugProgram();
+    if (!programs[PROGRAM_TYPE::RENDER_DEBUG]->init(PATH("Shaders/Debug/debug.vertex"), PATH("Shaders/Debug/debug.fragment")))
+    {
+        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_DEBUG program.");
+        return false;
+    }
+    Print_All(programs[PROGRAM_TYPE::RENDER_DEBUG]->getID());
 
     return true;
 }
 
 void ProgramManager::use(PROGRAM_TYPE type, unsigned int i)
 {
-    if (type == UPDATE)
+    if (!programs[type])
     {
-        use_update(i);
+
+        GL_LOG_CRITICAL("Use Program Call: Type {} has not been initialized!", type);
     }
-    else if (type == RENDER)
+    else
     {
-        use_render(i);
+        programs[type]->use();
     }
 }
 
 Program *ProgramManager::get_active(PROGRAM_TYPE type)
 {
-    if (type == UPDATE)
-    {
-        return update_programs[u_active];
-    }
-    else if (type == RENDER)
-    {
-        return render_programs[r_active];
-    }
-
-    return nullptr;
-}
-
-void ProgramManager::add_update(const char *file)
-{
-    update_programs.push_back(new UpdateProgram());
-    if (!update_programs.back()->init(file))
-    {
-        GL_LOG_WARN("GL::ProgramManager::add_update() -> Unable to add program.");
-        update_programs.pop_back();
-    }
-}
-
-void ProgramManager::add_render(const char *vertex, const char *fragment)
-{
-    render_programs.push_back(new Program());
-    if (!render_programs.back()->init(vertex, fragment))
-    {
-        GL_LOG_WARN("GL::ProgramManager::add_render() -> Unable to add program.");
-        render_programs.pop_back();
-    }
-}
-
-void ProgramManager::use_update(unsigned int i)
-{
-    if (i >= update_programs.size())
-    {
-        GL_LOG_ERROR("Use Update Program Call: Index {} is invalid, maximum index is: {}, using index 0.", i, update_programs.size() - 1);
-        update_programs[0]->use();
-        u_active = 0;
-    }
-
-    update_programs[i]->use();
-    u_active = i;
-}
-
-void ProgramManager::use_render(unsigned int i)
-{
-    if (i >= render_programs.size())
-    {
-        GL_LOG_ERROR("Use Render Program Call: Index {} is invalid, maximum index is: {}, using index 0.", i, render_programs.size() - 1);
-        render_programs[0]->use();
-        r_active = 0;
-    }
-
-    render_programs[i]->use();
-    r_active = i;
+    return programs[type];
 }
 
 } // namespace GL

@@ -4,6 +4,7 @@
 #include "../../OpenGL/Renderer.h"
 #include "../../Core/GUI/GUILayer.h"
 #include "./Emitter.h"
+#include "../../OpenGL/Renderers/DebugData.h"
 
 #define S_TO_MS(x) x * 1000.0f
 
@@ -26,6 +27,7 @@ public:
     void removeEmitter();
 
     void update();
+    void update(GL::DebugData *datastore);
     void submit(GL::Renderer *renderer);
 };
 } // namespace PT

@@ -14,27 +14,47 @@ out float outMass;
 
 uniform float dt;
 uniform samplerBuffer tbo_id;
+uniform vec2 speed_limit; // x: Min Speed, y: Max Speed
+uniform vec4 grid_data; // x: Rows, y: Columns, z: Size X, w: Size Y
+uniform vec3 drag;
 
-// TODO: Min & Max Speeds
-// TODO: Grid Sizing
+#define GD grid_data
+#define ROWS GD.x
+#define COLS GD.y
+#define SIZE_ROW GD.z
+#define SIZE_COL GD.w
+
+#define SL speed_limit
+#define MIN_SPEED SL.x
+#define MAX_SPEED SL.y
+
+vec4 SampleForceTexture();
 
 void main()
 {
-    vec4 textureSample;
-    textureSample = texelFetch(tbo_id, int( int(inPosition.x / 100) * 100 + int(inPosition.y / 100) )); // Sample from position...
+    // Sample from position...
+    vec4 textureSample = SampleForceTexture();
 
-    vec3 dragForce = vec3(0.001, 0.001, 0);
     vec3 calculatedVelocity = vec3(
-        clamp(inVelocity.x + textureSample.x - dragForce.x, -2, 2), 
-        clamp(inVelocity.y + textureSample.y - dragForce.y, -2, 2),
-        clamp(inVelocity.z + textureSample.z - dragForce.z, -2, 2)
+        clamp(inVelocity.x + textureSample.x - drag.x, MIN_SPEED, MAX_SPEED),
+        clamp(inVelocity.y + textureSample.y - drag.y, MIN_SPEED, MAX_SPEED),
+        clamp(inVelocity.z + textureSample.z - drag.z, MIN_SPEED, MAX_SPEED)
     );
 
     outPosition = inPosition + calculatedVelocity;
-    // outPosition = inPosition + vec3(inVelocity.x + textureSample.x, inVelocity.y + textureSample.y, 0);
-    // We simply pass through these values, no need to work on them (at this stage)
-    outVelocity = calculatedVelocity;
-    outColor = vec4(calculatedVelocity.xyz, 1);
+    // outColor = vec4(calculatedVelocity.xyz, 1);
+    outColor = inColor;
+
+
+    // These values are simply passed through... 
+    outVelocity = calculatedVelocity * 0.8;
     outLifespan = inLifespan;
     outMass = inMass;
+}
+
+vec4 SampleForceTexture()
+{
+    vec4 textureSample;
+    textureSample = texelFetch(tbo_id, int( int(inPosition.x / SIZE_ROW) * COLS + int(inPosition.y / SIZE_COL) )); 
+    return textureSample;
 }

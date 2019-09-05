@@ -3,8 +3,6 @@
 
 #include "Program.h"
 
-#define VS_UPDATE PATH("Shaders/particle_update.vertex")
-
 namespace GL
 {
 class UpdateProgram : public Program
@@ -13,10 +11,10 @@ public:
     UpdateProgram();
     virtual ~UpdateProgram();
 
-    bool init(const char *vertexPath = VS_UPDATE, const char *fragmentPath = "") override;
+    virtual bool init(const char *vertexPath, const char *fragmentPath = "") override;
 
 protected:
-    bool generateShader(const char *filePath, int &id);
+    virtual bool generateShader(const char *filePath, int &id);
 };
 } // namespace GL
 

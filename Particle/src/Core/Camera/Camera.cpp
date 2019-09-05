@@ -4,7 +4,7 @@
 namespace PT
 {
 Camera::Camera(PROJECTION_TYPE t, const CameraData &config)
-    : c(config), type(t), cSpeed(5.0f)
+    : c(config), type(t), cSpeed(2.0f)
 {
     lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     setProjection(1366.0f, 768.0f);

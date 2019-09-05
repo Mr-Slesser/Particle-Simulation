@@ -2,7 +2,13 @@
 #define APP_H
 
 #include "Window/Window.h"
+
+#include "../OpenGL/Programs/ProgramManager.h"
 #include "../OpenGL/Renderer.h"
+#include "../OpenGL/Renderers/DebugRenderer.h"
+#include "../OpenGL/Renderers/DebugData.h"
+
+#include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
 
 #include "Camera/CameraManager.h"
@@ -18,8 +24,15 @@ class App
 {
 private:
     Window *window;
+
+    GL::ProgramManager *programs;
     GL::Renderer *renderer;
+    GL::DebugRenderer *debugRenderer;
+    GL::DebugData *debugData;
+    
     GUILayer *gui;
+
+    ForceGrid* forces;
 
     EmitterManager *emitters;
 

@@ -1,5 +1,10 @@
 # To-Do
 
+* Forces = Noise
+* Forces = Circular Angle as direction
+* Fix the seg fault on exit
+* Fix the crash on add objs
+
 Next: 
 
 * [ ] -> Force Update Program Impl.
@@ -13,12 +18,15 @@ Next:
     - [ ] -> Change Interval?
 * [ ] -> Noise In Shader
 
-
 * [ ] -> Particle
 * [ ] -> Wind
 * [ ] -> Vortex
 * [ ] -> Particle Cache
+
     
+    
+    
+
 # Profile:
 
 * Naive: Put into Buffer Directly

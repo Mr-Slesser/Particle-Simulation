@@ -24,6 +24,7 @@ public:
     void use(int a); // TODO: Temp!
     void use(VertexBuffer *vb);
     void bindVBO();
+    void unbind() { glBindVertexArray(0);}
 
     VertexBuffer *getBuffer() { return buffers.front(); }
     void setVertexLayout(VBOLayout &vbol);

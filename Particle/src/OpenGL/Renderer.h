@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include "Programs/ProgramManager.h"
+#include "../Simulation/ForceGrid.h"
 
 #include "VertexArray.h"
 #include "VertexData.h"
@@ -12,7 +13,6 @@
 #include "../Core/Camera/CameraManager.h"
 #include "../Utility/Math.h"
 #include "../Utility/Profiler.h"
-#include "../Simulation/ForceGrid.h"
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
@@ -40,8 +40,6 @@ private:
     glm::mat4 view;
     glm::mat4 projection;
 
-    std::vector<PT::Particle *> particles;
-
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
     unsigned int texBufferID;
     unsigned int texBufferTextureID;
@@ -53,7 +51,7 @@ public:
     Renderer();
     ~Renderer();
 
-    bool init();
+    bool init(ProgramManager *_programs, PT::ForceGrid *_forces);
     void clear();
     void draw();
     void update();

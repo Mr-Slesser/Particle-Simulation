@@ -30,11 +30,6 @@ void GL::VertexArray::setVertexLayout(VBOLayout &layout)
 void GL::VertexArray::init()
 {
     GLCheck(glBindVertexArray(ID));
-
-    // GL::VBOLayout vbl = VBOLayout();
-    // vbl.push<float>(3, 0);
-    // vbl.push<float>(4, 1);
-    // this->setVertexLayout(vbl);
 }
 
 void GL::VertexArray::initBuffers(const unsigned long &size)

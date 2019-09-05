@@ -21,7 +21,7 @@ void EmitterManager::addEmitter(GUILayer *gui, float intervalMS, glm::vec4 color
     std::stringstream ss;
     ss << "Emitter " << emitters.size();
 
-    emitters.push_back(new Emitter(gui, ss.str(), color, intervalMS, glm::vec3(0.0f, 0.0f, 1.0f), 10.0f, glm::vec2(0.3f, 2.0f)));
+    emitters.push_back(new Emitter(gui, ss.str(), color, intervalMS, glm::vec3(100.0f, -100.0f, 0.0f), 10.0f, glm::vec2(rand(), -rand())));
 }
 
 void EmitterManager::removeEmitter()
@@ -35,6 +35,18 @@ void EmitterManager::update()
     for (auto &e : emitters)
     {
         auto newElements = e->update();
+        if (newElements.size() > 0)
+        {
+            submission.insert(end(submission), begin(newElements), end(newElements));
+        }
+    }
+}
+
+void EmitterManager::update(GL::DebugData *datastore)
+{
+    for (auto &e : emitters)
+    {
+        auto newElements = e->update(datastore);
         if (newElements.size() > 0)
         {
             submission.insert(end(submission), begin(newElements), end(newElements));

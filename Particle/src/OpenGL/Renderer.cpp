@@ -12,7 +12,9 @@ GL::Renderer::Renderer()
 
 GL::Renderer::~Renderer()
 {
-    delete programs;
+    programs = nullptr;
+    forces = nullptr;
+
     delete va;
     delete pointer;
 
@@ -21,24 +23,13 @@ GL::Renderer::~Renderer()
     delete vaR;
     delete vaU;
 
-    for (auto p : particles)
-    {
-        delete p;
-    }
-
-    particles.clear();
-
     glDeleteBuffers(1, &texBufferID);
 }
 
-bool GL::Renderer::init()
+bool GL::Renderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
 {
-    programs = new ProgramManager();
-    if (!programs->init())
-    {
-        GL_LOG_CRITICAL("GL::Renderer::init() -> Program Manager failed to init");
-        return false;
-    }
+    programs = _programs;
+    forces = _forces;
 
     GL::VBOLayout vbl = VBOLayout();
     vbl.push<float>(3, 0); // Position
@@ -51,8 +42,6 @@ bool GL::Renderer::init()
     vaU->init();
 
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    forces = new PT::ForceGrid(100, 100);
-
     glGenBuffers(1, &texBufferID); // Texture Buffer
     glBindBuffer(GL_TEXTURE_BUFFER, texBufferID);
     glBufferData(GL_TEXTURE_BUFFER, forces->size(), forces->data().data(), GL_DYNAMIC_DRAW);
@@ -107,6 +96,9 @@ bool GL::Renderer::init()
 
     vaR->setVertexLayout(vbl);
 
+    
+    vaR->unbind();
+
     return true;
 }
 
@@ -125,7 +117,6 @@ void GL::Renderer::update()
     vaU->use(1);
 
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    forces->update();
     GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID));
     auto tpointer = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
     memcpy(tpointer, forces->data().data(), forces->size());
@@ -137,6 +128,7 @@ void GL::Renderer::update()
     glActiveTexture(GL_TEXTURE0);
     programs->get_active(UPDATE)->setFloat("dt", dt);
     programs->get_active(UPDATE)->setInt("tbo_id", 0);
+    forces->setGridData(programs->get_active(UPDATE));
 
     glEnable(GL_RASTERIZER_DISCARD);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vb2->getID());
@@ -150,7 +142,7 @@ void GL::Renderer::update()
 
     std::swap(vb1, vb2);
 
-    glBindVertexArray(0);
+    vaU->unbind();
     dt += 0.001;
 }
 
@@ -164,6 +156,8 @@ void GL::Renderer::draw()
     vaR->use(1);
 
     GLCheck(glDrawArrays(GL_POINTS, 0, pointer->size - 1));
+
+    vaR->unbind();
 }
 
 void GL::Renderer::MVP()

@@ -2,26 +2,22 @@
 #define PROGRAMMANAGER_H
 
 #include "UpdateProgram.h"
+#include "DebugProgram.h"
 
 namespace GL
 {
 enum PROGRAM_TYPE
 {
     UPDATE = 0,
-    RENDER = 1
+    RENDER = 1,
+    RENDER_DEBUG = 2,
+    SIZE = 3
 };
 
 class ProgramManager
 {
 private:
-    std::vector<UpdateProgram *> update_programs;
-    std::vector<Program *> render_programs;
-
-    unsigned int u_active;
-    unsigned int r_active;
-
-    void use_update(unsigned int i);
-    void use_render(unsigned int i);
+    std::vector<Program *> programs;
 
 public:
     ProgramManager();
@@ -32,9 +28,6 @@ public:
     void use(PROGRAM_TYPE type, unsigned int i = 0);
 
     Program *get_active(PROGRAM_TYPE type);
-
-    void add_update(const char *file);
-    void add_render(const char *vertex, const char *fragment);
 };
 
 } // namespace GL

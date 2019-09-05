@@ -11,7 +11,7 @@ Emitter::Emitter(
     glm::vec3 position,
     float force,
     glm::vec2 direction)
-    : position(position), color(color), force(force), direction(direction), gui(gui)
+    : position(position), color(color), force(force), direction(glm::normalize(direction)), gui(gui)
 {
     timer.setInterval([this]() { this->spawnParticle(); }, intervalMS);
     gui->addElement([this, name]() {
@@ -30,7 +30,8 @@ void Emitter::spawnParticle()
 
     // v.position = glm::vec3(position.x + (direction.x * ((rand() % 50) * force)), position.y + (direction.y * ((rand() % 50) * force)), position.z + (rand() % 100 - 50));
     v.position = glm::vec3(position.x, position.y, position.z);
-    v.velocity = glm::vec3(direction.x + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), direction.y + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 1.0f);
+    // v.velocity = glm::vec3(direction.x + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), direction.y + static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 0.0f);
+    v.velocity = glm::vec3(direction.x * force, direction.y * force, 0.0f);
 
     v.colour = color;
     v.lifespan = 1.0f;
@@ -51,6 +52,21 @@ std::vector<ParticleData> Emitter::update()
     return toReturn;
 }
 
+std::vector<ParticleData> Emitter::update(GL::DebugData *datastore)
+{
+    auto data = update();
+
+    datastore->addElement({position, Colour::RED});
+    auto secondVertexPosition = glm::vec3(
+        position.x + (direction.x * force),
+        position.y + (direction.y * force),
+        position.z
+    );
+    datastore->addElement({secondVertexPosition, Colour::RED});
+
+    return data;
+}
+
 void Emitter::GUIElement(std::string name)
 {
     ImGui::Begin(name.c_str());
@@ -58,7 +74,7 @@ void Emitter::GUIElement(std::string name)
         ImGui::ColorEdit4("Color", &color.r);
         ImGui::SliderFloat("Force", &force, 0.0f, 100.0f, "%.2f");
         ImGui::SliderFloat3("Position", &position.x, -10.0f, 10.0f, "%.2f");
-        ImGui::SliderFloat2("Direction", &direction.x, -10.0f, 10.0f, "%.2f");
+        ImGui::SliderFloat2("Direction", &direction.x, -1.0f, 1.0f, "%.2f");
     }
     ImGui::End();
 }
