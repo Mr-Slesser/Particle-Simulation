@@ -1,10 +1,11 @@
 #ifndef EMITTERMANAGER_H
 #define EMITTERMANAGER_H
 
-#include "../../OpenGL/Renderer.h"
-#include "../../Core/GUI/GUILayer.h"
 #include "./Emitter.h"
-#include "../../OpenGL/Renderers/DebugData.h"
+
+#include "../../Core/GUI/GUILayer.h"
+#include "../../OpenGL/Datastores/DebugDatastore.h"
+#include "../../OpenGL/Datastores/Datastore.h"
 
 #define S_TO_MS(x) x * 1000.0f
 
@@ -16,19 +17,16 @@ class EmitterManager
 {
 private:
     std::vector<Emitter *> emitters;
-    std::vector<ParticleData> submission;
 
 protected:
 public:
     EmitterManager();
     virtual ~EmitterManager();
 
-    void addEmitter(GUILayer *gui, float intervalMS, glm::vec4 color);
+    void addEmitter(GL::Datastore *datastore, GUILayer *gui, float intervalMS, glm::vec4 color);
     void removeEmitter();
 
-    void update();
-    void update(GL::DebugData *datastore);
-    void submit(GL::Renderer *renderer);
+    void update(GL::DebugDatastore *debugdatastore);
 };
 } // namespace PT
 

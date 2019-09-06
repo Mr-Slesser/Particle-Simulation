@@ -30,8 +30,9 @@ bool PT::App::init()
         return false;
     }
 
-    // Debug Data
-    debugData = new GL::DebugData();
+    // Datastores
+    datastore = new GL::Datastore();
+    debugDatastore = new GL::DebugDatastore();
 
     // Programs
     programs = new GL::ProgramManager();
@@ -42,12 +43,12 @@ bool PT::App::init()
     }
 
     // Renderes & Forces
-    forces = new PT::ForceGrid(100, 100, 5, 5, debugData);
+    forces = new PT::ForceGrid(100, 100, 5, 5, debugDatastore);
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
 
     // Renderer
-    if (!renderer->init(programs, forces))
+    if (!renderer->init(programs, datastore, forces))
     {
         CORE_LOG_TRACE("EXIT: Renderer initialization failed");
         return false;
@@ -71,14 +72,13 @@ bool PT::App::init()
         return false;
     }
 
-    // TODO: Robust!
     CameraManager::get()->getCamera();
     CameraManager::get()->register_input_dispatch();
 
     // Emitters
     emitters = new EmitterManager();
-    emitters->addEmitter(gui, S_TO_MS(0.1), Colour::GREEN);
-    // emitters->addEmitter(gui, S_TO_MS(0.4), Colour::BLUE);
+    emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
+    emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
 
     return true;
 }
@@ -87,20 +87,20 @@ void PT::App::run()
 {
     while (window->isActive())
     {
-        debugData->beginDebug();
         glfwPollEvents();
         InputManager::get()->processInput(window, renderer);
 
         renderer->clear();
 
-        emitters->update(debugData);
-        emitters->submit(renderer);
+        this->debugDatastore->beginDebug();
 
         forces->update();
+        emitters->update(debugDatastore);
+        datastore->Update();
 
         renderer->draw();
 
-        debugRenderer->draw(debugData);
+        debugRenderer->draw(debugDatastore);
 
         gui->begin();
         gui->constantElements();

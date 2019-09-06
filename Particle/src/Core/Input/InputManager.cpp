@@ -15,7 +15,6 @@ InputManager *InputManager::get()
 InputManager::InputManager()
     : mouseHeld(false), sensitivity(0.0f)
 {
-    // TODO: Set this in config / init function
     sensitivity = 0.1f;
 }
 
@@ -39,7 +38,6 @@ void InputManager::setMouseHeld(bool torf)
     mouseHeld = torf;
 }
 
-// TODO: Make sure no repeat keys unless specified?
 void InputManager::processInput(Window *window, GL::Renderer *renderer)
 {
     if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -57,7 +55,6 @@ void InputManager::processInput(Window *window, GL::Renderer *renderer)
 
 bool InputManager::register_dispatch(const char *key_name, unsigned int key, InputReceiver *dispatch_to)
 {
-    // Check if exists, if not add a new vector...
     if (dispatchers.find(key) == dispatchers.end())
     {
         std::vector<InputReceiver *> a;
@@ -67,7 +64,6 @@ bool InputManager::register_dispatch(const char *key_name, unsigned int key, Inp
 
     dispatchers[key].push_back(dispatch_to);
     CORE_LOG_INFO("InputManager -> Registered {}", key_name);
-    // TODO: Robust this up!
     return true;
 }
 

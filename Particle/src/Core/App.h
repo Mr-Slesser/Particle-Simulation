@@ -4,9 +4,10 @@
 #include "Window/Window.h"
 
 #include "../OpenGL/Programs/ProgramManager.h"
-#include "../OpenGL/Renderer.h"
+#include "../OpenGL/Renderers/Renderer.h"
 #include "../OpenGL/Renderers/DebugRenderer.h"
-#include "../OpenGL/Renderers/DebugData.h"
+#include "../OpenGL/Datastores/DebugDatastore.h"
+#include "../OpenGL/Datastores/Datastore.h"
 
 #include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
@@ -14,9 +15,9 @@
 #include "Camera/CameraManager.h"
 #include "Input/InputManager.h"
 
-#include "../Particle/Emitter/EmitterManager.h"
+#include "../Utility/Timer.h"
 
-// TODO: UUID for each system?
+#include "../Particle/Emitter/EmitterManager.h"
 
 namespace PT
 {
@@ -28,11 +29,12 @@ private:
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
     GL::DebugRenderer *debugRenderer;
-    GL::DebugData *debugData;
-    
+    GL::Datastore *datastore;
+    GL::DebugDatastore *debugDatastore;
+
     GUILayer *gui;
 
-    ForceGrid* forces;
+    ForceGrid *forces;
 
     EmitterManager *emitters;
 

@@ -1,9 +1,8 @@
 #ifndef VERTEXBUFFER_H
 #define VERTEXBUFFER_H
 
-#include "../Particle/Particle.h"
+#include "../../Particle/Particle.h"
 #include "../Primitives/Vertex.h"
-#include "VertexData.h"
 
 namespace GL
 {
@@ -26,9 +25,9 @@ public:
     ~VertexBuffer();
 
     void init(const unsigned long &_size);
-    void init(const unsigned long &_size, VertexData &vd);
 
     void bind();
+    void unbind();
 
     PT::ParticleData *getPointer();
     void releasePointer();

@@ -22,17 +22,14 @@ void VertexBuffer::init(const unsigned long &_size)
     GLCheck(glBufferData(GL_ARRAY_BUFFER, size, NULL, usage));
 }
 
-void VertexBuffer::init(const unsigned long &_size, VertexData &vd)
-{
-    GL_LOG_TRACE("VertexBuffer::init (data): Size: {}", _size);
-    size = _size;
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
-    GLCheck(glBufferData(GL_ARRAY_BUFFER, size, vd.get().data(), usage));
-}
-
 void VertexBuffer::bind()
 {
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
+    glBindBuffer(GL_ARRAY_BUFFER, ID);
+}
+
+void VertexBuffer::unbind()
+{
+    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
 PT::ParticleData *VertexBuffer::getPointer()

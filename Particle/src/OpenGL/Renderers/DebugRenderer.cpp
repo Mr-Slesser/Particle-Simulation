@@ -29,7 +29,7 @@ bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
     VA->init();
 
     VB = new VertexBuffer(GL_DYNAMIC_DRAW);
-    VB->init(sizeof(DebugDataElement) * 100000);
+    VB->init(sizeof(DebugDatastoreElement) * 100000);
 
     VA->setVertexLayout(vbl);
 
@@ -38,15 +38,15 @@ bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
     return true;
 }
 
-void DebugRenderer::draw(DebugData *datastore)
+void DebugRenderer::draw(DebugDatastore *datastore)
 {
     auto data = datastore->getElements();
     programs->use(RENDER_DEBUG);
 
-    VA->use(1);
+    VA->bind();
     VB->bind();
-    auto datapointer = (DebugDataElement*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    memcpy(datapointer, data.data(), data.size() * sizeof(DebugDataElement));
+    auto datapointer = (DebugDatastoreElement*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    memcpy(datapointer, data.data(), data.size() * sizeof(DebugDatastoreElement));
     VB->releasePointer();
 
     programs->get_active(RENDER_DEBUG)->setMat4("model", glm::mat4(1.0f));
@@ -55,7 +55,7 @@ void DebugRenderer::draw(DebugData *datastore)
 
     GLCheck(glDrawArrays(GL_LINES, 0, data.size()));
 
-    GLCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    VB->unbind();
     VA->unbind();
 }
 

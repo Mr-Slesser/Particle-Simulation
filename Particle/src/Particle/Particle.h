@@ -1,7 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "../Primitives/Vertex.h"
+#include "../OpenGL/Primitives/Vertex.h"
 
 namespace PT
 {

@@ -4,9 +4,9 @@
 #include "../Programs/ProgramManager.h"
 #include "../../Simulation/ForceGrid.h"
 #include "../../Core/Camera/CameraManager.h"
-#include "./DebugData.h"
+#include "../Datastores/DebugDatastore.h"
 
-#include "../VertexArray.h"
+#include "../Buffers/VertexArray.h"
 
 namespace GL
 {
@@ -26,7 +26,7 @@ public:
     virtual ~DebugRenderer();
 
     bool init(ProgramManager* _programs, PT::ForceGrid *_forces);
-    void draw(DebugData* datastore);
+    void draw(DebugDatastore* datastore);
 };
 
 } // namespace GL

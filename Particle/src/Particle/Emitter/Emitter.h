@@ -2,10 +2,11 @@
 #define EMITTER_H
 
 #include "../Particle.h"
-#include "../../Primitives/Vertex.h"
+#include "../../OpenGL/Primitives/Vertex.h"
 #include "../../Utility/Timer.h"
 #include "../../Core/GUI/GUILayer.h"
-#include "../../OpenGL/Renderers/DebugData.h"
+#include "../../OpenGL/Datastores/DebugDatastore.h"
+#include "../../OpenGL/Datastores/Datastore.h"
 
 namespace PT
 {
@@ -13,17 +14,18 @@ class Emitter
 {
 private:
     GUILayer *gui;
-    std::vector<ParticleData> spawned;
     glm::vec3 position;
     glm::vec4 color;
     float force;
     glm::vec2 direction;
-
     Utils::Timer timer;
+
+    GL::Datastore *datastore;
 
 protected:
 public:
     Emitter(
+        GL::Datastore *_datastore,
         GUILayer *gui,
         std::string name,
         glm::vec4 color,
@@ -35,8 +37,7 @@ public:
     virtual ~Emitter();
 
     void spawnParticle();
-    std::vector<ParticleData> update();
-    std::vector<ParticleData> update(GL::DebugData *datastore);
+    void update(GL::DebugDatastore *debugdatastore);
 
     void GUIElement(std::string name);
 };

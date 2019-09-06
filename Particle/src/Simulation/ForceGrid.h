@@ -2,7 +2,7 @@
 #define FORCEGRID_H
 
 #include "../OpenGL/Programs/Program.h"
-#include "../OpenGL/Renderers/DebugData.h"
+#include "../OpenGL/Datastores/DebugDatastore.h"
 
 namespace PT
 {
@@ -23,10 +23,10 @@ private:
     int rows;
     int columns;
 
-    GL::DebugData *debugData;
+    GL::DebugDatastore *debugData;
 
 public:
-    ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugData *_debugData);
+    ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData);
     ~ForceGrid();
 
     void update();
@@ -39,6 +39,7 @@ public:
 
     void setGridData(GL::Program *program);
     void updateDebugLines(int index);
+    inline glm::vec4 getGridData() { return grid_data; }
     inline std::vector<glm::vec3> getDebugData() { return debugVertices; }
 };
 

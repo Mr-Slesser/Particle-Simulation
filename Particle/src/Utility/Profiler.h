@@ -1,12 +1,16 @@
 #ifndef PROFILER_H
 #define PROFILER_H
 
+#define _PROFILER_FILE_LOG 1
+
 using namespace std;
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER
 #else
 #undef _PROFILER_FILE_LOGGER
 #endif //  _LOG_TO_FILE
+
+#define OUTPUT "profiler-output-single-thread"
 
 struct profiler
 {
@@ -36,7 +40,9 @@ struct profiler
 
 #ifdef _PROFILER_FILE_LOGGER
         ofstream logfile;
-        logfile.open("profile_data.log", ios::app);
+        std::stringstream ss;
+        ss << OUTPUT << ".csv";
+        logfile.open(ss.str(), ios::app);
         logfile << stream.str();
         logfile.close();
 #else

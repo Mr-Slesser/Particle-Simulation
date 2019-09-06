@@ -70,11 +70,9 @@ void GUILayer::render()
         {
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-            // DEBUG: Why percentage not showing??
-            ImGui::Text("Fill: %d / %d (%.2f %%)",
+            ImGui::Text("Fill: %d / %d",
                         GC::get()->getInt("CURR_NO_PARTICLES"),
-                        GC::get()->getInt("MAX_PARTICLES"),
-                        static_cast<double>((GC::get()->getInt("CURR_NO_PARTICLES") / GC::get()->getInt("MAX_PARTICLES")) * 100));
+                        GC::get()->getInt("MAX_PARTICLES"));
 
             ImGui::Checkbox("Show Demo Window", &show_demo_window);
 

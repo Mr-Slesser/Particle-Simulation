@@ -3,10 +3,6 @@
 
 #include "CameraStructures.h"
 
-// TODO: Default camera values, i.e. implement a reset camera key.
-// TODO: Tidy up the camera!
-// TODO: Handle 3D & 2D Cases
-
 namespace PT
 {
 class Camera

@@ -4,26 +4,22 @@
 namespace PT
 {
 
-ForceGrid::ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugData *_debugData)
+ForceGrid::ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData)
     : rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData)
 {
-    speed_limit = glm::vec2(-1.0f, 1.0f);
+    speed_limit = glm::vec2(0.0f, 1.0f);
 
     grid_data = glm::vec4(rows, columns, sizeX, sizeY);
 
-    constantForces["drag"] = glm::vec3(0.001f, 0.001f, 0.0f);
+    constantForces["drag"] = glm::vec3(0.01f, 0.01f, 0.0f);
 
     for (int i = 0; i < (rows * columns); ++i)
     {
-        // TODO: Limit to size 1 & multiply by a force
-        // forces.push_back(glm::vec3((rand() % 5 - 1) / 10.0f, -(rand() % 5 - 1) / 10.0f, 0.0f));
-        glm::vec3 vector = glm::vec3(
-            ((float)rand() / (RAND_MAX)),
-            ((float)rand() / (RAND_MAX)), 0.0f);
+        glm::vec2 dir = glm::circularRand(1.0f);
+        glm::vec3 vector = glm::vec3(dir.x, dir.y, 0.0f);
         forces.push_back(vector);
     }
-
-} // namespace PT
+}
 
 ForceGrid::~ForceGrid()
 {
@@ -34,20 +30,10 @@ void ForceGrid::update()
 {
     for (int i = 0; i < (rows * columns); ++i)
     {
-        // TODO: Limit to size 1 & multiply by a force
-        glm::vec3 curr = forces[i];
-        // forces[i] = glm::vec3(curr.x + ((float)rand() / (RAND_MAX)) * ((float)rand() / (RAND_MAX)), curr.y - ((float)rand() / (RAND_MAX)) * ((float)rand() / (RAND_MAX)), curr.z);
-
-        glm::vec2 random = glm::circularRand(1.0f);
-
-        forces[i] = glm::vec3(
-            random.x,
-            random.y,
-            0.0f);
+        forces[i] = Utils::Mathf::LerpToRandomDirection2D(forces[i], 0.01f);
     }
-    // #if _DEBUG_DRAW
+
     updateDebugLines(1);
-    // #endif
 }
 
 void ForceGrid::setGridData(GL::Program *program)
@@ -63,6 +49,10 @@ void ForceGrid::setGridData(GL::Program *program)
 
 void ForceGrid::updateDebugLines(int index)
 {
+
+    // debugData->addElement({glm::vec3(0.0f, 0.0f, 0.0f), Colour::GREEN});
+    // debugData->addElement({glm::vec3(-10.0f, 10.0f, 0.0f), Colour::GREEN});
+
     int sizeX = grid_data.z;
     int sizeY = grid_data.w;
 

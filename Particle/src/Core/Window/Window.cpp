@@ -8,7 +8,7 @@ Window::Window(const WindowConfig _config)
 
 Window::~Window()
 {
-    // TODO: Handle clean up
+    delete ctx;
 }
 
 GLFWwindow *Window::init()

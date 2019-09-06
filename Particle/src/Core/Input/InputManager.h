@@ -4,8 +4,7 @@
 #include "InputReceiver.h"
 #include "../Window/Window.h"
 #include "../Camera/CameraManager.h"
-#include "../../OpenGL/Renderer.h"
-
+#include "../../OpenGL/Renderers/Renderer.h"
 
 namespace PT
 {
@@ -28,7 +27,6 @@ public:
     bool register_dispatch(const char *key_name, unsigned int key, InputReceiver *dispatch_to);
     void dispatch(Window *window);
 
-    // TODO: Configure function.
     void registerMouseCallbacks(Window *window);
 
     void setMouseHeld(bool torf);

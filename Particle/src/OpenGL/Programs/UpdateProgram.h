@@ -12,9 +12,6 @@ public:
     virtual ~UpdateProgram();
 
     virtual bool init(const char *vertexPath, const char *fragmentPath = "") override;
-
-protected:
-    virtual bool generateShader(const char *filePath, int &id);
 };
 } // namespace GL
 

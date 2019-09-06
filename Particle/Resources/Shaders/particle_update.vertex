@@ -29,16 +29,17 @@ uniform vec3 drag;
 #define MAX_SPEED SL.y
 
 vec4 SampleForceTexture();
+int SampleIndex(int modX, int modY);
 
 void main()
 {
-    // Sample from position...
     vec4 textureSample = SampleForceTexture();
 
     vec3 calculatedVelocity = vec3(
         clamp(inVelocity.x + textureSample.x - drag.x, MIN_SPEED, MAX_SPEED),
         clamp(inVelocity.y + textureSample.y - drag.y, MIN_SPEED, MAX_SPEED),
-        clamp(inVelocity.z + textureSample.z - drag.z, MIN_SPEED, MAX_SPEED)
+        // clamp(inVelocity.z + textureSample.z - drag.z, MIN_SPEED, MAX_SPEED)
+        0
     );
 
     outPosition = inPosition + calculatedVelocity;
@@ -47,7 +48,7 @@ void main()
 
 
     // These values are simply passed through... 
-    outVelocity = calculatedVelocity * 0.8;
+    outVelocity = calculatedVelocity;
     outLifespan = inLifespan;
     outMass = inMass;
 }
@@ -55,6 +56,33 @@ void main()
 vec4 SampleForceTexture()
 {
     vec4 textureSample;
-    textureSample = texelFetch(tbo_id, int( int(inPosition.x / SIZE_ROW) * COLS + int(inPosition.y / SIZE_COL) )); 
+    float sampleStrength = 0.5;
+    float samples = 3;
+
+    // Sample of current cell - Strength 100%.
+    textureSample = texelFetch(tbo_id, SampleIndex(0, 0));
+
+
+    // Immediate Samples (+/- 1 step, at 50% strength of previous sample level)
+    for(int i = 1; i <= samples; ++i)
+    {
+        textureSample += (texelFetch(tbo_id, SampleIndex( 0,  i)) * samples); // Top
+        textureSample += (texelFetch(tbo_id, SampleIndex(-i,  0)) * samples); // Left
+        textureSample += (texelFetch(tbo_id, SampleIndex( i,  0)) * samples); // Right
+        textureSample += (texelFetch(tbo_id, SampleIndex( 0, -i)) * samples); // Bottom
+
+        textureSample += (texelFetch(tbo_id, SampleIndex(-i,  i)) * samples); // Top Left
+        textureSample += (texelFetch(tbo_id, SampleIndex( i,  i)) * samples); // Top Right
+        textureSample += (texelFetch(tbo_id, SampleIndex(-i, -i)) * samples); // Bottom Left
+        textureSample += (texelFetch(tbo_id, SampleIndex( i, -i)) * samples); // Bottom Right
+
+        sampleStrength *= 0.5;
+    }
+
     return textureSample;
+}
+
+int SampleIndex(int modX, int modY)
+{
+    return int( int(    (inPosition.x + modX) / SIZE_ROW) * COLS + int( (inPosition.y + modY) / SIZE_COL) );
 }
