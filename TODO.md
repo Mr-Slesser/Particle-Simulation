@@ -7,7 +7,7 @@
 * [ ] -> Culling / Bounds Checking
 * [ ] -> Multithreading
 
-* [ ] -> Profile Singlethreaded
+* [ ] -> Profile Singlethreaded the Multithreaded!
 * [ ] -> Why no spawn unless press q?
 
 Next: 
