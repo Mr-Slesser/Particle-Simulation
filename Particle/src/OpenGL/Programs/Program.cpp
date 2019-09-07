@@ -124,6 +124,11 @@ void GL::Program::setFloat(const char *name, float value)
     GLCheck(glUniform1f(getUniformLocation(name), value);)
 }
 // ------------------------------------------------------------------------
+void GL::Program::setDouble(const char *name, double value)
+{
+    GLCheck(glUniform1d(getUniformLocation(name), value);)
+}
+// ------------------------------------------------------------------------
 void GL::Program::setVec2(const char *name, const glm::vec2 &value)
 {
     GLCheck(glUniform2fv(getUniformLocation(name), 1, &value[0]);)

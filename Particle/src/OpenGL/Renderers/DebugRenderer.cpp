@@ -18,6 +18,8 @@ DebugRenderer::~DebugRenderer()
 
 bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
 {
+    PROFILE("DebugRenderer::init");
+
     programs = _programs;
     forces = _forces;
 
@@ -40,12 +42,14 @@ bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
 
 void DebugRenderer::draw(DebugDatastore *datastore)
 {
+    PROFILE("DebugRenderer::draw");
+
     auto data = datastore->getElements();
     programs->use(RENDER_DEBUG);
 
     VA->bind();
     VB->bind();
-    auto datapointer = (DebugDatastoreElement*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    auto datapointer = (DebugDatastoreElement *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     memcpy(datapointer, data.data(), data.size() * sizeof(DebugDatastoreElement));
     VB->releasePointer();
 

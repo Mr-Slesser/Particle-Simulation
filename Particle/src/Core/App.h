@@ -37,6 +37,7 @@ private:
     ForceGrid *forces;
 
     EmitterManager *emitters;
+    double dt;
 
 public:
     App();

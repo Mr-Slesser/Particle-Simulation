@@ -25,6 +25,7 @@ public:
     void setBool(const char *name, bool value);
     void setInt(const char *name, int value);
     void setFloat(const char *name, float value);
+    void setDouble(const char *name, double value);
     void setVec2(const char *name, const glm::vec2 &value);
     void setVec2(const char *name, float x, float y);
     void setVec3(const char *name, const glm::vec3 &value);

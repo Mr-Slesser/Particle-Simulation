@@ -52,8 +52,10 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render()
+void GUILayer::render(ForceGrid *forcegrid)
 {
+    PROFILE("GUILayer::render");
+
     bool hov = ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow);
     GC::get()->updateBool("GUI_HOVER", hov);
 
@@ -68,21 +70,45 @@ void GUILayer::render()
     {
         ImGui::Begin("Debug Variables");
         {
+            // Framerate / time
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+            // Fill
             ImGui::Text("Fill: %d / %d",
                         GC::get()->getInt("CURR_NO_PARTICLES"),
                         GC::get()->getInt("MAX_PARTICLES"));
 
-            ImGui::Checkbox("Show Demo Window", &show_demo_window);
+            // Demo Window
+            // ImGui::Checkbox("Show Demo Window", &show_demo_window);
 
-            clear_color = GC::get()->getVec4("CLEAR_COLOR");
-            ImGui::ColorEdit3("clear color", &clear_color.r);
-            GC::get()->updateVec4("CLEAR_COLOR", clear_color);
+            // Clear Colour
+            // clear_color = GC::get()->getVec4("CLEAR_COLOR");
+            // ImGui::ColorEdit3("clear color", &clear_color.r);
+            // GC::get()->updateVec4("CLEAR_COLOR", clear_color);
 
-            camera_pos = CameraManager::get()->getCamera()->getPosition();
-            ImGui::SliderFloat3("Camera Pos", &camera_pos.x, -1000.0f, 1000.0f, "%.2f");
-            CameraManager::get()->getCamera()->setPosition(camera_pos);
+            // Camera
+            // camera_pos = CameraManager::get()->getCamera()->getPosition();
+            // ImGui::SliderFloat3("Camera Pos", &camera_pos.x, -1000.0f, 1000.0f, "%.2f");
+            // CameraManager::get()->getCamera()->setPosition(camera_pos);
+
+            // Forcegrid: Drag coefficient
+            float dragCoeff = forcegrid->getDragCoeff();
+            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, -1.0f, 2.0f, "%.2f");
+            forcegrid->setDragCoeff(dragCoeff);
+
+            // Forcegrid: Speed.
+            glm::vec2 speed = forcegrid->getSpeed();
+            ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");
+            ImGui::SliderFloat("Max Speed", &speed.y, 0.0f, 10.0f, "%.2f");
+            forcegrid->setSpeed(speed);
+
+            // Forcegrid: Noise
+            int octaves = forcegrid->getOctaves();
+            float per = forcegrid->getPersistance();
+            ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
+            ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
+            forcegrid->setOctaves(octaves);
+            forcegrid->setPersistance(per);
         }
         ImGui::End();
     }

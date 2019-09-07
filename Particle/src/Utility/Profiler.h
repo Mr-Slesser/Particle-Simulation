@@ -1,16 +1,25 @@
 #ifndef PROFILER_H
 #define PROFILER_H
 
-#define _PROFILER_FILE_LOG 1
-
 using namespace std;
+#define _PROFILER_FILE_LOG 1
+#define _PROFILER_ON 0
+
+#define OUTPUT "profiler-output-multi-thread"
+
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER
 #else
 #undef _PROFILER_FILE_LOGGER
 #endif //  _LOG_TO_FILE
 
-#define OUTPUT "profiler-output-single-thread"
+#if _PROFILER_ON
+#define PROFILE(comments) profiler _pfinstance(comments)
+#define PROFILE_FUNCTION profiler _pfinstance(__FUNCTION__)
+#else
+#define PROFILE(comments)
+#define PROFILE_FUNCTION
+#endif
 
 struct profiler
 {
@@ -51,18 +60,4 @@ struct profiler
     }
 };
 
-//  Profiler Macros
-//  Use this Macro to add CustomComments
-#define PROFILE_FUNCTION_WITHCOMMENTS(comments) profiler _pfinstance(comments)
-// By Default this macro will print the function name.
-#define PROFILE_FUNCTION profiler _pfinstance(__FUNCTION__) //  GETS CALLING FN NAME, __LINE__ and __FILE__ also available.
-
-// Example Usage
-/*
-int main()
-{
-    PROFILE_FUNCTION_WITHCOMMENTS("Main Function");
-    PROFILE_FUNCTION;
-}
-*/
 #endif /* PROFILER_H */

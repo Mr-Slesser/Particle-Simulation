@@ -2,15 +2,11 @@
 
 # Priority:
 
-* [ ] -> Direction as a 2D vector
-* [ ] -> Impl. Perlin Noise
 * [ ] -> Culling / Bounds Checking
-* [ ] -> Multithreading
-
-* [ ] -> Profile Singlethreaded the Multithreaded!
-* [ ] -> Why no spawn unless press q?
 
 Next: 
+
+* [ ] -> Pause, Step Through
 
 * Forces = Noise
 * Forces = Circular Angle as direction
@@ -29,11 +25,6 @@ Next:
 * [ ] -> Wind
 * [ ] -> Vortex
 * [ ] -> Particle Cache
-
-# Profile:
-
-* Naive: Put into Buffer Directly
-* 2D vs 3D
 
 # Possible
 

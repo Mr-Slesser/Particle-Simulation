@@ -5,18 +5,20 @@ namespace PT
 {
 
 ForceGrid::ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData)
-    : rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData)
+    : rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData), dragCoefficient(0.2), octaves(5), persistance(0.1)
 {
-    speed_limit = glm::vec2(0.0f, 1.0f);
+    PROFILE("ForceGrid::ForceGrid");
 
-    grid_data = glm::vec4(rows, columns, sizeX, sizeY);
-
-    constantForces["drag"] = glm::vec3(0.01f, 0.01f, 0.0f);
+    speed_limit = glm::vec2(-0.1f, 2.0f);
+    grid_data = glm::vec3(rows, columns, sizeX, sizeY);
 
     for (int i = 0; i < (rows * columns); ++i)
     {
-        glm::vec2 dir = glm::circularRand(1.0f);
-        glm::vec3 vector = glm::vec3(dir.x, dir.y, 0.0f);
+        double angle = perlin.Noise(octaves, persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
+        float x = 1.0f * cos(angle);
+        float y = 1.0f * sin(angle);
+        glm::vec3 vector = glm::vec3(x, y, 0.0f);
+
         forces.push_back(vector);
     }
 }
@@ -26,32 +28,41 @@ ForceGrid::~ForceGrid()
     forces.clear();
 }
 
-void ForceGrid::update()
+void ForceGrid::update(double &dt)
 {
-    for (int i = 0; i < (rows * columns); ++i)
-    {
-        forces[i] = Utils::Mathf::LerpToRandomDirection2D(forces[i], 0.01f);
-    }
+    PROFILE("ForceGrid::update");
 
-    updateDebugLines(1);
+    std::lock_guard<std::mutex> lockGuard(mutex);
+    double xoff = 0;
+    for (int y = 0; y < rows; y++)
+    {
+        double yoff = 0;
+        for (int x = 0; x < columns; x++)
+        {
+            double angle = perlin.Noise(octaves, persistance, xoff, yoff, dt) * TWO_PI * 4;
+            int index = x + y * columns;
+            float xp = 1.0f * cos(angle);
+            float yp = -1.0f * sin(angle);
+            forces[index] = glm::vec3(xp, yp, 0.0f);
+
+            xoff += 0.01;
+        }
+        yoff += 0.01;
+    }
 }
 
 void ForceGrid::setGridData(GL::Program *program)
 {
+    PROFILE("ForceGrid::setGridData");
+
     program->setVec2("speed_limit", speed_limit);
     program->setVec4("grid_data", grid_data);
-
-    for (const auto &f : constantForces)
-    {
-        program->setVec3(f.first.c_str(), f.second);
-    }
+    program->setFloat("dragCoefficient", dragCoefficient);
 }
 
-void ForceGrid::updateDebugLines(int index)
+void ForceGrid::updateDebugLines()
 {
-
-    // debugData->addElement({glm::vec3(0.0f, 0.0f, 0.0f), Colour::GREEN});
-    // debugData->addElement({glm::vec3(-10.0f, 10.0f, 0.0f), Colour::GREEN});
+    PROFILE("ForceGrid::updateDebugLines");
 
     int sizeX = grid_data.z;
     int sizeY = grid_data.w;

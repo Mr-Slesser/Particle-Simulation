@@ -21,7 +21,7 @@ public:
 
     void addElement(DebugDatastoreElement element);
     inline std::vector<DebugDatastoreElement> getElements() { return elements; }
-    inline void beginDebug() { elements.clear(); }
+    void beginDebug();
 };
 
 } // namespace GL

@@ -2,6 +2,7 @@
 #include "App.h"
 
 PT::App::App()
+    : dt(0.0)
 {
 }
 
@@ -18,6 +19,8 @@ PT::App::~App()
 
 bool PT::App::init()
 {
+    PROFILE("App::init");
+
     Log::init();
     CORE_LOG_TRACE("Logger startup: [Core]");
     GL_LOG_TRACE("  Logger startup: [GL  ]");
@@ -87,26 +90,37 @@ void PT::App::run()
 {
     while (window->isActive())
     {
+        PROFILE("App::run");
+
         glfwPollEvents();
+
+        std::thread forcesThread([this] {
+            forces->update(this->dt);
+        });
+
         InputManager::get()->processInput(window, renderer);
-
         renderer->clear();
-
         this->debugDatastore->beginDebug();
-
-        forces->update();
         emitters->update(debugDatastore);
         datastore->Update();
 
-        renderer->draw();
-
-        debugRenderer->draw(debugDatastore);
+        forcesThread.join();
 
         gui->begin();
-        gui->constantElements();
-        gui->render();
+        std::thread guiThread([this] {
+            gui->constantElements();
+            gui->render(forces);
+        });
+
+        forces->updateDebugLines();
+
+        renderer->draw(dt);
+        debugRenderer->draw(debugDatastore);
+
+        guiThread.join();
         gui->end(window);
 
         glfwSwapBuffers(window->context());
+        dt += 0.001;
     }
 }

@@ -15,6 +15,8 @@ GL::Renderer::~Renderer()
 
 bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces)
 {
+    PROFILE("Renderer::init");
+
     programs = _programs;
     forces = _forces;
     datastore = _datastore;
@@ -33,14 +35,16 @@ bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Fo
 
 void GL::Renderer::clear()
 {
+    PROFILE("Renderer::clear");
+
     glm::vec4 clear = PT::GC::get()->getVec4("CLEAR_COLOR");
     GLCheck(glClearColor(clear.r, clear.g, clear.b, clear.a));
     GLCheck(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-void GL::Renderer::update()
+void GL::Renderer::update(double dt)
 {
-    static float dt = 0.0f;
+    PROFILE("Renderer::update");
 
     programs->use(UPDATE);
     datastore->bindUpdateArray();
@@ -71,15 +75,15 @@ void GL::Renderer::update()
 
     datastore->swapBuffers();
     datastore->unbindUpdateArray();
-
-    dt += 0.001;
 }
 
-void GL::Renderer::draw()
+void GL::Renderer::draw(double dt)
 {
+    PROFILE("Renderer::draw");
+
     if (datastore->getPointerSize() > 0)
     {
-        this->update();
+        this->update(dt);
         programs->use(RENDER);
         MVP();
         datastore->bindRenderArray();
@@ -93,6 +97,8 @@ void GL::Renderer::draw()
 
 void GL::Renderer::MVP()
 {
+    PROFILE("Renderer::MVP");
+
     model = glm::mat4(1.0f);
     programs->get_active(RENDER)->setMat4("model", model);
     programs->get_active(RENDER)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
@@ -102,6 +108,8 @@ void GL::Renderer::MVP()
 // TODO: Move this elsewhere.
 void GL::Renderer::addParticle(int num)
 {
+    PROFILE("Renderer::addParticle");
+
     std::vector<PT::ParticleData> a;
 
     auto grid = forces->getGridData();

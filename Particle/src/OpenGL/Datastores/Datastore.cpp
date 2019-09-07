@@ -21,6 +21,8 @@ Datastore::~Datastore()
 
 void Datastore::Init()
 {
+    PROFILE("Datastore::Init");
+
     // Setup Pointer
     pointer = new VBPointer();
     pointer->start = pointer->it = nullptr;
@@ -95,6 +97,8 @@ void Datastore::Init()
 
 void Datastore::Update()
 {
+    PROFILE("Datastore::Update");
+
     if (!waitingToSpawn.empty())
     {
         submitData(waitingToSpawn.front());
@@ -104,6 +108,8 @@ void Datastore::Update()
 
 void Datastore::submitData(std::vector<PT::ParticleData> &data)
 {
+    PROFILE("Datastore::submitData");
+
     auto maxSize = PT::GC::get()->getInt("MAX_PARTICLES");
     if (getPointerSize() + data.size() > maxSize)
         data.resize(maxSize - getPointerSize());
@@ -116,6 +122,8 @@ void Datastore::submitData(std::vector<PT::ParticleData> &data)
 
 void Datastore::copyData(std::vector<PT::ParticleData> &data)
 {
+    PROFILE("Datastore::copyData");
+
     bindVertexBuffer();
     pointer->it = vb1->getPointer() + pointer->size - 1;
     memcpy(pointer->it, data.data(), data.size() * sizeof(PT::ParticleData));
@@ -126,6 +134,8 @@ void Datastore::copyData(std::vector<PT::ParticleData> &data)
 
 void Datastore::submitData(PT::ParticleData &data)
 {
+    PROFILE("Datastore::submitData (single)");
+
     auto maxSize = PT::GC::get()->getInt("MAX_PARTICLES");
     if (!(getPointerSize() + 1 > maxSize))
         copyData(data);
@@ -133,6 +143,8 @@ void Datastore::submitData(PT::ParticleData &data)
 
 void Datastore::copyData(PT::ParticleData &data)
 {
+    PROFILE("Datastore::copyData (single)");
+
     bindVertexBuffer();
     pointer->it = vb1->getPointer() + pointer->size - 1;
     memcpy(pointer->it, &data, sizeof(PT::ParticleData));

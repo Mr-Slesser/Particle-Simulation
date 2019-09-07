@@ -32,6 +32,8 @@ void EmitterManager::removeEmitter()
 
 void EmitterManager::update(GL::DebugDatastore *debugdatastore)
 {
+    PROFILE("EmitterManager::update");
+
     for (auto &e : emitters)
     {
         e->update(debugdatastore);

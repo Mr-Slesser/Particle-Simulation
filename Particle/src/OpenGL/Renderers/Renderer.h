@@ -36,8 +36,8 @@ public:
 
     bool init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces);
     void clear();
-    void draw();
-    void update();
+    void draw(double dt);
+    void update(double dt);
     void MVP();
     void addParticle(int num);
 };
