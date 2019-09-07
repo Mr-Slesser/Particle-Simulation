@@ -4,15 +4,18 @@
 namespace PT
 {
 Camera::Camera(PROJECTION_TYPE t, const CameraData &config)
-    : c(config), type(t), cSpeed(2.0f)
+    : c(config), type(t), cSpeed(2.0f), width(1366.0f), height(768.0f)
 {
     lookAt = glm::lookAt(c.pos, c.pos + c.front, c.up);
     setProjection(1366.0f, 768.0f);
 }
 
 // SECTION: Mutators
-void Camera::setProjection(float width, float height)
+void Camera::setProjection(float _width, float _height)
 {
+    width = _width;
+    height = _height;
+
     if (type == PROJECTION_TYPE::PERSPECTIVE)
     {
         projection = glm::perspective(glm::radians(45.0f), (width / height), 0.1f, 100000.0f);
@@ -26,7 +29,7 @@ void Camera::setProjection(float width, float height)
 void Camera::setProjection(float _fov)
 {
     c.fov = _fov;
-    projection = glm::perspective(glm::radians(c.fov), 800.0f / 600.0f, 0.1f, 100000.0f);
+    projection = glm::perspective(glm::radians(c.fov), width / height, 0.1f, 100000.0f);
 }
 
 void Camera::setLookAt()

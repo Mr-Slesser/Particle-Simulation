@@ -21,7 +21,7 @@ void EmitterManager::addEmitter(GL::Datastore *datastore, GUILayer *gui, float i
     std::stringstream ss;
     ss << "Emitter " << emitters.size();
 
-    emitters.push_back(new Emitter(datastore, gui, ss.str(), color, intervalMS, glm::vec3(100.0f, -100.0f, 0.0f), 10.0f, glm::circularRand(1.0f)));
+    emitters.push_back(new Emitter(datastore, gui, ss.str(), color, intervalMS, glm::vec3(100.0f, 0.0f, 100.0f), 10.0f, glm::circularRand(1.0f)));
 }
 
 void EmitterManager::removeEmitter()

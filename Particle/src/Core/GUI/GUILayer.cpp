@@ -96,6 +96,11 @@ void GUILayer::render(ForceGrid *forcegrid)
             ImGui::SliderFloat("Drag Coefficient", &dragCoeff, -1.0f, 2.0f, "%.2f");
             forcegrid->setDragCoeff(dragCoeff);
 
+            // Forcegrid: Gravity
+            float gravity = forcegrid->getGravity();
+            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 1.0f, "%.3f");
+            forcegrid->setGravity(gravity);
+
             // Forcegrid: Speed.
             glm::vec2 speed = forcegrid->getSpeed();
             ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");

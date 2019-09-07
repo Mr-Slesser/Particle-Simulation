@@ -11,7 +11,7 @@ class ForceGrid
 {
 private:
     std::mutex mutex;
-    Utils::Perlin perlin;
+    Utils::Perlin *perlin;
     std::vector<glm::vec3> debugVertices;
     int debugVerticesOffset;
 
@@ -22,13 +22,14 @@ private:
     int rows;
     int columns;
     float dragCoefficient;
+    float gravity;
     int octaves;
     float persistance;
 
     GL::DebugDatastore *debugData;
 
 public:
-    ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData);
+    ForceGrid(Utils::Perlin *perlin, int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData);
     ~ForceGrid();
 
     void update(double &dt);
@@ -42,6 +43,8 @@ public:
     void setOctaves(int o) { octaves = o; }
     float getPersistance() { return persistance; }
     void setPersistance(float p) { persistance = p; }
+    float getGravity() { return gravity; }
+    void setGravity(float g) { gravity = g; }
 
     inline int index(int row, int column) { return (row * rows) + column; };
     inline int elements() { return forces.size(); }

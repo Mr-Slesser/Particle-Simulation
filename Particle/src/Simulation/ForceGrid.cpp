@@ -4,20 +4,22 @@
 namespace PT
 {
 
-ForceGrid::ForceGrid(int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData)
-    : rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData), dragCoefficient(0.2), octaves(5), persistance(0.1)
+ForceGrid::ForceGrid(Utils::Perlin *perlin, int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData)
+    : perlin(perlin), rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData), dragCoefficient(0.2), octaves(5), persistance(0.1), gravity(0.1)
 {
     PROFILE("ForceGrid::ForceGrid");
 
-    speed_limit = glm::vec2(-0.1f, 2.0f);
-    grid_data = glm::vec3(rows, columns, sizeX, sizeY);
+    speed_limit = glm::vec2(-1.0f, 1.0f);
+    grid_data = glm::vec4(rows, columns, sizeX, sizeY);
 
     for (int i = 0; i < (rows * columns); ++i)
     {
-        double angle = perlin.Noise(octaves, persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
+        double angle = perlin->Noise(octaves, persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
         float x = 1.0f * cos(angle);
-        float y = 1.0f * sin(angle);
-        glm::vec3 vector = glm::vec3(x, y, 0.0f);
+        // float y = 1.0f * sin(angle);
+        float y = 0.0f;
+        float z = 1.0f * sin(angle);
+        glm::vec3 vector = glm::vec3(x, y, z);
 
         forces.push_back(vector);
     }
@@ -39,11 +41,13 @@ void ForceGrid::update(double &dt)
         double yoff = 0;
         for (int x = 0; x < columns; x++)
         {
-            double angle = perlin.Noise(octaves, persistance, xoff, yoff, dt) * TWO_PI * 4;
+            double angle = perlin->Noise(octaves, persistance, xoff, dt, yoff) * TWO_PI * 4;
             int index = x + y * columns;
             float xp = 1.0f * cos(angle);
-            float yp = -1.0f * sin(angle);
-            forces[index] = glm::vec3(xp, yp, 0.0f);
+            float zp = 1.0f * sin(angle);
+            // float yp = Utils::Random::RandomRange(-1.0f, 1.0f);
+            float yp = 0.0f;
+            forces[index] = glm::vec3(xp, yp, zp);
 
             xoff += 0.01;
         }
@@ -58,6 +62,7 @@ void ForceGrid::setGridData(GL::Program *program)
     program->setVec2("speed_limit", speed_limit);
     program->setVec4("grid_data", grid_data);
     program->setFloat("dragCoefficient", dragCoefficient);
+    program->setFloat("gravity", gravity);
 }
 
 void ForceGrid::updateDebugLines()
@@ -66,7 +71,7 @@ void ForceGrid::updateDebugLines()
 
     int sizeX = grid_data.z;
     int sizeY = grid_data.w;
-
+    int sizeZ = grid_data.z;
     {
         // debugVertices.clear();
         // for (int y = 0; y < rows - 1; ++y)
@@ -99,6 +104,7 @@ void ForceGrid::updateDebugLines()
 
     float sX = (sizeX * 0.5f) / 2.0f;
     float sY = (sizeY * 0.5f) / 2.0f;
+    float sZ = (sizeZ * 0.5f) / 2.0f;
 
     for (int i = 0; i < rows - 1; ++i)
     {
@@ -106,11 +112,13 @@ void ForceGrid::updateDebugLines()
         {
             glm::vec3 normalized = glm::normalize(forces[i + j]);
 
-            float x = (j)*sizeX + (sizeX / 2.0f);
-            float y = (i)*sizeY + (sizeY / 2.0f);
+            float x = j * sizeX + (sizeX / 2.0f);
+            // float y = i * sizeY + (sizeY / 2.0f);
+            float y = 0.0f;
+            float z = i * sizeZ + (sizeZ / 2.0f);
 
-            debugData->addElement({glm::vec3(x, -y, 0.0f)});
-            debugData->addElement({glm::vec3((x + sX / 2.0f) + (normalized.x * sX), (-y + sX / 2.0f) + (normalized.y * sY), 0.0f)});
+            debugData->addElement({glm::vec3(x, y, z)});
+            debugData->addElement({glm::vec3((x + sX / 2.0f) + (normalized.x * sX), 0.0f, (z + sZ / 2.0f) + (normalized.z * sZ))});
         }
     }
 }

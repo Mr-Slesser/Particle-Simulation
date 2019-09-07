@@ -34,6 +34,8 @@ private:
 
     GUILayer *gui;
 
+    Utils::Perlin *perlin;
+
     ForceGrid *forces;
 
     EmitterManager *emitters;

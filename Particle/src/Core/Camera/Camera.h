@@ -14,6 +14,8 @@ protected:
     glm::mat4 lookAt;
     CameraData c;
     float cSpeed;
+    float width;
+    float height;
 
 public:
     Camera(PROJECTION_TYPE t, const CameraData &config = DEFAULT_CAMERA);
@@ -28,7 +30,7 @@ public:
     inline float getFOV() { return c.fov; }
 
     // SECTION: Mutators
-    void setProjection(float width, float height);
+    void setProjection(float _width, float _height);
     void setProjection(float _fov);
 
     void setLookAt();

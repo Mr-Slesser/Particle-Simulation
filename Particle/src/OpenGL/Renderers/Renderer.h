@@ -24,10 +24,10 @@ private:
     glm::mat4 projection;
 
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
+    PT::ForceGrid *forces;
+
     unsigned int texBufferID;
     unsigned int texBufferTextureID;
-    std::vector<glm::vec3> texBufferData;
-    PT::ForceGrid *forces;
     /* ------------------------------------------------------------------------ */
 
 public:

@@ -17,6 +17,7 @@ uniform samplerBuffer tbo_id;
 uniform vec2 speed_limit; // x: Min Speed, y: Max Speed
 uniform vec4 grid_data; // x: Rows, y: Columns, z: Size X, w: Size Y
 uniform float dragCoefficient;
+uniform float gravity;
 
 #define GD grid_data
 #define ROWS GD.x
@@ -29,28 +30,30 @@ uniform float dragCoefficient;
 #define MAX_SPEED SL.y
 
 vec3 CalculateDrag();
-vec4 SampleForceTexture();
+vec4 SampleForceTexture(samplerBuffer sampler);
 int  SampleIndex(int modX, int modY);
 void CheckBounds();
 
 void main()
 {
-    vec4 textureSample = SampleForceTexture();
+    vec4 textureSample;
+
+    textureSample = SampleForceTexture(tbo_id);
+
     vec3 drag = CalculateDrag();
     //vec3 drag = vec3(0, 0, 0);
     vec3 calculatedVelocity = vec3(
         clamp(inVelocity.x + textureSample.x - drag.x, MIN_SPEED, MAX_SPEED),
-        clamp(inVelocity.y + textureSample.y - drag.y, MIN_SPEED, MAX_SPEED),
+        clamp(inVelocity.y + (textureSample.y * 0.09) - (gravity * inMass), MIN_SPEED, MAX_SPEED),
         clamp(inVelocity.z + textureSample.z - drag.z, MIN_SPEED, MAX_SPEED)
     );
 
     outPosition = inPosition + calculatedVelocity;
     CheckBounds();
 
-    // float alpha = ( (inPosition.x < 0 || inPosition.x > COLS * SIZE_COL) || (inPosition.y > 0 || inPosition.y < -ROWS * SIZE_ROW)  ) ? 0 : 1;
-    // outColor = vec4(calculatedVelocity.xyz, 1);
+    outColor = vec4(calculatedVelocity.xyz, 1);
     // outColor = vec4(inColor.xyz, alpha);
-    outColor = inColor;
+    // outColor = inColor;
 
 
     // These values are simply passed through... 
@@ -65,31 +68,27 @@ vec3 CalculateDrag()
     float dragSpeed = dragCoefficient * speed * speed;
     vec3 drag = inVelocity.xyz * -1;
     drag = normalize(drag) * (dragCoefficient * speed * speed);
-    return vec3(drag.x, drag.y, 0);
+    return vec3(drag.x, drag.y, drag.z);
 }
 
-vec4 SampleForceTexture()
+vec4 SampleForceTexture(samplerBuffer sampler)
 {
     vec4 textureSample;
-    float sampleStrength = 0.5;
-    float samples = 3;
-
-    // Sample of current cell - Strength 100%.
-    textureSample = texelFetch(tbo_id, SampleIndex(0, 0));
-
+    float sampleStrength = 1.0;
+    float samples = 1;
 
     // Immediate Samples (+/- 1 step, at 50% strength of previous sample level)
     for(int i = 1; i <= samples; ++i)
     {
-        textureSample += (texelFetch(tbo_id, SampleIndex( 0,  i)) * samples); // Top
-        textureSample += (texelFetch(tbo_id, SampleIndex(-i,  0)) * samples); // Left
-        textureSample += (texelFetch(tbo_id, SampleIndex( i,  0)) * samples); // Right
-        textureSample += (texelFetch(tbo_id, SampleIndex( 0, -i)) * samples); // Bottom
+        textureSample += (texelFetch(sampler, SampleIndex( 0,  i)) * samples); // Top
+        textureSample += (texelFetch(sampler, SampleIndex(-i,  0)) * samples); // Left
+        textureSample += (texelFetch(sampler, SampleIndex( i,  0)) * samples); // Right
+        textureSample += (texelFetch(sampler, SampleIndex( 0, -i)) * samples); // Bottom
 
-        textureSample += (texelFetch(tbo_id, SampleIndex(-i,  i)) * samples); // Top Left
-        textureSample += (texelFetch(tbo_id, SampleIndex( i,  i)) * samples); // Top Right
-        textureSample += (texelFetch(tbo_id, SampleIndex(-i, -i)) * samples); // Bottom Left
-        textureSample += (texelFetch(tbo_id, SampleIndex( i, -i)) * samples); // Bottom Right
+        textureSample += (texelFetch(sampler, SampleIndex(-i,  i)) * samples); // Top Left
+        textureSample += (texelFetch(sampler, SampleIndex( i,  i)) * samples); // Top Right
+        textureSample += (texelFetch(sampler, SampleIndex(-i, -i)) * samples); // Bottom Left
+        textureSample += (texelFetch(sampler, SampleIndex( i, -i)) * samples); // Bottom Right
 
         sampleStrength *= 0.5;
     }
@@ -97,16 +96,20 @@ vec4 SampleForceTexture()
     return textureSample;
 }
 
-int SampleIndex(int modX, int modY)
+int SampleIndex(int modX, int modZ)
 {
-    return int( int(    (inPosition.x + modX) / SIZE_ROW) * COLS + int( (inPosition.y + modY) / SIZE_COL) );
+    return int( int(    (inPosition.x + modX) / SIZE_ROW) * COLS + int( (inPosition.z + modZ) / SIZE_COL) );
 }
 
 void CheckBounds()
 {
-    if (outPosition.x > COLS * SIZE_COL) outPosition.x = 0;
-    if (outPosition.y < -ROWS * SIZE_ROW) outPosition.y = 0;
+    float cellSize = ROWS * SIZE_ROW;
 
-    if (outPosition.x < 0 ) outPosition.x = COLS * SIZE_COL;
-    if (outPosition.y > 0) outPosition.y = -ROWS * SIZE_ROW;
+    if (outPosition.x > cellSize) outPosition.x = 0;
+    if (outPosition.x < 0) outPosition.x = cellSize;
+
+    if (outPosition.z > cellSize) outPosition.z = 0;
+    if (outPosition.z < 0) outPosition.z = cellSize;
+
+    if (outPosition.y < 0) outPosition.y = 0;
 }

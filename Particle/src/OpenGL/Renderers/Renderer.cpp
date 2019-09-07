@@ -119,12 +119,13 @@ void GL::Renderer::addParticle(int num)
     for (int i = 0; i < num; ++i)
     {
         PT::ParticleData v;
-        v.position = glm::vec3(Utils::Random::ZeroToOne() * sizeX, -Utils::Random::ZeroToOne() * sizeY, 0.0f);
-        v.velocity = glm::vec3(Utils::Random::ZeroToOne(), -Utils::Random::ZeroToOne(), 0.0f);
+        v.position = glm::vec3(Utils::Random::ZeroToOne() * sizeX, 0.0f, Utils::Random::ZeroToOne() * sizeY);
+        v.velocity = glm::vec3(Utils::Random::ZeroToOne(), 0.0f, Utils::Random::ZeroToOne());
         v.colour = Colour::RED;
 
         v.lifespan = 1.0f;
-        v.mass = 1.0f;
+        // v.mass = 1.0f;
+        v.mass = Utils::Random::RandomRange(0.5f, 1.5f);
         a.push_back(v);
     }
 
