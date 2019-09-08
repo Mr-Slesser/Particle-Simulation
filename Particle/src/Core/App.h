@@ -25,6 +25,8 @@ class App
 {
 private:
     Window *window;
+    double lastFrameTime = 0.0f;
+    double dt;
 
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
@@ -39,7 +41,6 @@ private:
     ForceGrid *forces;
 
     EmitterManager *emitters;
-    double dt;
 
 public:
     App();

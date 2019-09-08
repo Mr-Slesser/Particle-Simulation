@@ -59,7 +59,7 @@ void GL::Renderer::update(double dt)
     /* ------------------------------------------------------------------------ */
 
     glActiveTexture(GL_TEXTURE0);
-    programs->get_active(UPDATE)->setFloat("dt", dt);
+    programs->get_active(UPDATE)->setFloat("dt", (float)dt);
     programs->get_active(UPDATE)->setInt("tbo_id", 0);
     forces->setGridData(programs->get_active(UPDATE));
 

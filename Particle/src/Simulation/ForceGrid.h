@@ -25,6 +25,10 @@ private:
     float gravity;
     int octaves;
     float persistance;
+    // TODO: Add a struct to update all this gui data
+    float sampleStrength = 1.0f;
+    float sampleStengthDegradation = 0.5f;
+    int samples = 5;
 
     GL::DebugDatastore *debugData;
 
@@ -45,6 +49,16 @@ public:
     void setPersistance(float p) { persistance = p; }
     float getGravity() { return gravity; }
     void setGravity(float g) { gravity = g; }
+
+    glm::vec4 getGridDataTMP() { return grid_data; }
+    void setGridDataTMP(glm::vec4 data) { grid_data = data; }
+
+    int getSamples() { return samples; }
+    float getSampleStrength() { return sampleStrength; }
+    float getSampleStengthDegradation() { return sampleStengthDegradation; }
+    void setSampleStrength(float s) { sampleStrength = s; }
+    void setSampleStengthDegradation(float s) { sampleStengthDegradation = s; }
+    void setSamples(int s) { samples = s; }
 
     inline int index(int row, int column) { return (row * rows) + column; };
     inline int elements() { return forces.size(); }

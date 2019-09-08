@@ -12,12 +12,16 @@ out vec4 outColor;
 out float outLifespan;
 out float outMass;
 
-uniform double dt;
+uniform float dt;
 uniform samplerBuffer tbo_id;
 uniform vec2 speed_limit; // x: Min Speed, y: Max Speed
 uniform vec4 grid_data; // x: Rows, y: Columns, z: Size X, w: Size Y
 uniform float dragCoefficient;
 uniform float gravity;
+
+uniform int samples;
+uniform float sampleStrength;
+uniform float sampleStengthDegradation;
 
 #define GD grid_data
 #define ROWS GD.x
@@ -30,6 +34,7 @@ uniform float gravity;
 #define MAX_SPEED SL.y
 
 vec3 CalculateDrag();
+vec3 ApplyDrag(vec3 _drag, vec3 _velocity);
 vec4 SampleForceTexture(samplerBuffer sampler);
 int  SampleIndex(int modX, int modY);
 void CheckBounds();
@@ -39,21 +44,20 @@ void main()
     vec4 textureSample;
 
     textureSample = SampleForceTexture(tbo_id);
-
     vec3 drag = CalculateDrag();
-    //vec3 drag = vec3(0, 0, 0);
     vec3 calculatedVelocity = vec3(
-        clamp(inVelocity.x + textureSample.x - drag.x, MIN_SPEED, MAX_SPEED),
-        clamp(inVelocity.y + (textureSample.y * 0.09) - (gravity * inMass), MIN_SPEED, MAX_SPEED),
-        clamp(inVelocity.z + textureSample.z - drag.z, MIN_SPEED, MAX_SPEED)
+        clamp(inVelocity.x + textureSample.x, MIN_SPEED, MAX_SPEED) * dt,
+        clamp(inVelocity.y + textureSample.y, MIN_SPEED, MAX_SPEED) * dt,
+        clamp(inVelocity.z + textureSample.z, MIN_SPEED, MAX_SPEED) * dt
     );
+    calculatedVelocity = ApplyDrag(drag, calculatedVelocity);
+
 
     outPosition = inPosition + calculatedVelocity;
     CheckBounds();
 
-    outColor = vec4(calculatedVelocity.xyz, 1);
-    // outColor = vec4(inColor.xyz, alpha);
-    // outColor = inColor;
+    // outColor = vec4(calculatedVelocity.xyz, 1);
+    outColor = inColor;
 
 
     // These values are simply passed through... 
@@ -71,26 +75,44 @@ vec3 CalculateDrag()
     return vec3(drag.x, drag.y, drag.z);
 }
 
+vec3 ApplyDrag(vec3 _drag, vec3 _velocity)
+{
+    vec3 newVelocity = _velocity;
+
+    if (newVelocity.x - _drag.x < 0.0) newVelocity.x = 0.0;
+    else newVelocity.x -= _drag.x;
+
+    if (newVelocity.y - _drag.y < 0.0) newVelocity.y = 0.0;
+    else newVelocity.y -= _drag.y;
+
+    if (newVelocity.z - _drag.z < 0.0) newVelocity.z = 0.0;
+    else newVelocity.z -= _drag.z;
+
+    return newVelocity;
+
+}
+
 vec4 SampleForceTexture(samplerBuffer sampler)
 {
     vec4 textureSample;
-    float sampleStrength = 1.0;
-    float samples = 1;
+    float ss = sampleStrength;
 
-    // Immediate Samples (+/- 1 step, at 50% strength of previous sample level)
+    textureSample += (texelFetch(sampler, SampleIndex(0,  0))); // Top
+    ss * sampleStengthDegradation;
+
     for(int i = 1; i <= samples; ++i)
     {
-        textureSample += (texelFetch(sampler, SampleIndex( 0,  i)) * samples); // Top
-        textureSample += (texelFetch(sampler, SampleIndex(-i,  0)) * samples); // Left
-        textureSample += (texelFetch(sampler, SampleIndex( i,  0)) * samples); // Right
-        textureSample += (texelFetch(sampler, SampleIndex( 0, -i)) * samples); // Bottom
+        textureSample += (texelFetch(sampler, SampleIndex( 0,  i))); // Top
+        textureSample += (texelFetch(sampler, SampleIndex(-i,  0))); // Left
+        textureSample += (texelFetch(sampler, SampleIndex( i,  0))); // Right
+        textureSample += (texelFetch(sampler, SampleIndex( 0, -i))); // Bottom
 
-        textureSample += (texelFetch(sampler, SampleIndex(-i,  i)) * samples); // Top Left
-        textureSample += (texelFetch(sampler, SampleIndex( i,  i)) * samples); // Top Right
-        textureSample += (texelFetch(sampler, SampleIndex(-i, -i)) * samples); // Bottom Left
-        textureSample += (texelFetch(sampler, SampleIndex( i, -i)) * samples); // Bottom Right
+        textureSample += (texelFetch(sampler, SampleIndex(-i,  i))); // Top Left
+        textureSample += (texelFetch(sampler, SampleIndex( i,  i))); // Top Right
+        textureSample += (texelFetch(sampler, SampleIndex(-i, -i))); // Bottom Left
+        textureSample += (texelFetch(sampler, SampleIndex( i, -i))); // Bottom Right
 
-        sampleStrength *= 0.5;
+        ss *= sampleStengthDegradation;
     }
 
     return textureSample;

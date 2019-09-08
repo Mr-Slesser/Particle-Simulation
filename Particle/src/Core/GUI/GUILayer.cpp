@@ -114,6 +114,26 @@ void GUILayer::render(ForceGrid *forcegrid)
             ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
             forcegrid->setOctaves(octaves);
             forcegrid->setPersistance(per);
+
+            // Forcegrid: Grid Resolution
+            // glm::vec4 gridData = forcegrid->getGridDataTMP();
+            // ImGui::SliderFloat2("Grid Resolution", &gridData.z, 0.0f, 10.0f, "%.2f");
+            // forcegrid->setGridDataTMP(gridData);
+
+            // Forcegrid: Samples
+            int samples = forcegrid->getSamples();
+            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
+            forcegrid->setSamples(samples);
+
+            // Forcegrid: Sample Strength
+            float ss = forcegrid->getSampleStrength();
+            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
+            forcegrid->setSampleStrength(ss);
+
+            // Forcegrid: Sample Strength Degredation
+            float ssd = forcegrid->getSampleStengthDegradation();
+            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
+            forcegrid->setSampleStengthDegradation(ssd);
         }
         ImGui::End();
     }

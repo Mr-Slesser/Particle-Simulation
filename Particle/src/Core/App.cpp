@@ -47,7 +47,7 @@ bool PT::App::init()
 
     // Renderes & Forces
     perlin = new Utils::Perlin();
-    forces = new PT::ForceGrid(perlin, 25, 25, 5, 5, debugDatastore);
+    forces = new PT::ForceGrid(perlin, 100, 100, 5, 5, debugDatastore);
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
 
@@ -92,6 +92,9 @@ void PT::App::run()
     while (window->isActive())
     {
         PROFILE("App::run");
+        double time = glfwGetTime();
+        dt = time - lastFrameTime;
+        lastFrameTime = time;
 
         glfwPollEvents();
 
@@ -122,6 +125,6 @@ void PT::App::run()
         gui->end(window);
 
         glfwSwapBuffers(window->context());
-        dt += 0.001;
+        // dt += 0.001;
     }
 }
