@@ -10,27 +10,22 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
     PROFILE("ForceGrid::ForceGrid");
     data = new ForceGridData(perlin, dimensions, resolution);
 
+    int ys = 0, xs = 0, zs = 0;
     for (int y = 0; y < data->Dimensions.y; y++)
     {
+        ys++;
         for (int z = 0; z < data->Dimensions.z; z++)
         {
+            zs++;
             for (int x = 0; x < data->Dimensions.x; x++)
             {
+                xs++;
+                forces.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
             }
         }
     }
 
-    for (int i = 0; i < (data->Dimensions.x * data->Dimensions.z); ++i)
-    {
-        double angle = data->Perlin->Noise(data->Octaves, data->Persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
-        float x = 1.0f * cos(angle);
-        // float y = 1.0f * sin(angle);
-        float y = 0.0f;
-        float z = 1.0f * sin(angle);
-        glm::vec3 vector = glm::vec3(x, y, z);
-
-        forces.push_back(vector);
-    }
+    std::cout << "X: " << xs << ", Y: " << ys << ", Z: " << zs << std::endl;
 }
 
 ForceGrid::~ForceGrid()
@@ -43,7 +38,6 @@ ForceGrid::~ForceGrid()
 int ForceGrid::index(int x, int y, int z)
 {
     auto dim = data->Dimensions;
-    // int SX = (int)dim.x * data->Resolution;
     int SY = (int)dim.y * data->Resolution;
     int SZ = (int)dim.z * data->Resolution;
 
@@ -55,37 +49,31 @@ void ForceGrid::update(double &dt)
     PROFILE("ForceGrid::update");
 
     std::lock_guard<std::mutex> lockGuard(mutex);
-    static float zoff = 0.0f;
-    double xoff = 0;
-    for (int y = 0; y < data->Dimensions.x; y++)
-    {
-        double yoff = 0;
-        for (int x = 0; x < data->Dimensions.z; x++)
-        {
-            double angle = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
-            int index = x + y * data->Dimensions.z;
-            float xp = cos(angle) * angle;
-            float zp = sin(angle) * angle;
-            // float xp = -1.0f;
-            // float zp = -1.0f;
-            // float yp = Utils::Random::RandomRange(-1.0f, 1.0f);
-            float yp = 0.0f;
-            forces[index] = glm::vec3(xp, yp, zp);
-
-            xoff += 0.01;
-        }
-        yoff += 0.01;
-    }
-    zoff += 0.001;
-
+    static double yoff = 0.0;
     for (int y = 0; y < data->Dimensions.y; y++)
     {
+        double zoff = 0.0;
         for (int z = 0; z < data->Dimensions.z; z++)
         {
+            double xoff = 0.0;
+            // float lat = Utils::Mathf::Map(z, 0, total, -HALF_PI, HALF_PI);
+            double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
             for (int x = 0; x < data->Dimensions.x; x++)
             {
+                // float lon = Utils::Mathf::Map(x, 0, total, -PI, PI);
+                double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
+
+                float xp = 1.0f * sin(lon) * cos(lat);
+                float yp = 1.0f * sin(lon) * sin(lat) * 0.25f;
+                float zp = 1.0f * cos(lon);
+
+                int i = index(x, y, z);
+                forces[i] = glm::vec3(xp, yp, zp);
+                xoff += 0.001;
             }
+            zoff += 0.001;
         }
+        yoff += 0.001;
     }
 }
 
@@ -107,66 +95,26 @@ void ForceGrid::updateDebugLines()
 {
     PROFILE("ForceGrid::updateDebugLines");
 
-    int sizeX = data->Resolution;
-    int sizeY = data->Resolution;
-    int sizeZ = data->Resolution;
-    {
-        // debugVertices.clear();
-        // for (int y = 0; y < rows - 1; ++y)
-        // {
-        //     for (int x = 0; x < columns - 1; ++x)
-        //     {
-        //         // Top
-        //         debugVertices.push_back(glm::vec3(x * sizeX, -y * sizeY, 0.0f));
-        //         debugVertices.push_back(glm::vec3((x + 1) * sizeX, -y * sizeY, 0.0f));
-
-        //         // Left
-        //         debugVertices.push_back(glm::vec3(x * sizeX, -y * sizeY, 0.0f));
-        //         debugVertices.push_back(glm::vec3(x * sizeX, -(y + 1) * sizeY, 0.0f));
-
-        //         // Bottom
-        //         debugVertices.push_back(glm::vec3(x * sizeX, -(y + 1) * sizeY, 0.0f));
-        //         debugVertices.push_back(glm::vec3((x + 1) * sizeX, -(y + 1) * sizeY, 0.0f));
-
-        //         // Right
-        //         debugVertices.push_back(glm::vec3((x + 1) * sizeX, -y * sizeY, 0.0f));
-        //         debugVertices.push_back(glm::vec3((x + 1) * sizeX, -(y + 1) * sizeY, 0.0f));
-
-        //         debugVerticesOffset += 8;
-        //     }
-        // }
-
-        //     debugVertices.push_back(glm::vec3(1, 1, 0));
-        // }
-    }
-
+    float cellSize = (data->Resolution * 0.5f) / 2.0f;
     for (int y = 0; y < data->Dimensions.y; y++)
     {
         for (int z = 0; z < data->Dimensions.z; z++)
         {
             for (int x = 0; x < data->Dimensions.x; x++)
             {
+                glm::vec3 n = glm::normalize(forces[y + z + x]);
+
+                float xp = x * data->Resolution + (data->Resolution * 0.5f);
+                float yp = y * data->Resolution + (data->Resolution * 0.5f);
+                float zp = z * data->Resolution + (data->Resolution * 0.5f);
+
+                float dirx = xp + (n.x * cellSize);
+                float diry = yp + (n.y * cellSize);
+                float dirz = zp + (n.z * cellSize);
+
+                debugData->addElement({glm::vec3(xp, yp, zp)});
+                debugData->addElement({glm::vec3(dirx, diry, dirz)});
             }
-        }
-    }
-
-    float sX = (sizeX * 0.5f) / 2.0f;
-    float sY = (sizeY * 0.5f) / 2.0f;
-    float sZ = (sizeZ * 0.5f) / 2.0f;
-
-    for (int i = 0; i < data->Dimensions.x - 1; ++i)
-    {
-        for (int j = 0; j < data->Dimensions.z - 1; ++j)
-        {
-            glm::vec3 normalized = glm::normalize(forces[i + j]);
-
-            float x = j * sizeX + (sizeX / 2.0f);
-            // float y = i * sizeY + (sizeY / 2.0f);
-            float y = 0.0f;
-            float z = i * sizeZ + (sizeZ / 2.0f);
-
-            debugData->addElement({glm::vec3(x, y, z)});
-            debugData->addElement({glm::vec3((x + sX / 2.0f) + (normalized.x * sX), 0.0f, (z + sZ / 2.0f) + (normalized.z * sZ))});
         }
     }
 }

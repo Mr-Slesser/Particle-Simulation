@@ -98,7 +98,7 @@ void GUILayer::render(ForceGrid *forcegrid)
 
             // Forcegrid: Gravity
             float gravity = forcegrid->getGravity();
-            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 1.0f, "%.3f");
+            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
             forcegrid->setGravity(gravity);
 
             // Forcegrid: Speed.

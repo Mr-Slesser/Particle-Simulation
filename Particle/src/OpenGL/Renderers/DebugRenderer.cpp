@@ -31,7 +31,7 @@ bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
     VA->init();
 
     VB = new VertexBuffer(GL_DYNAMIC_DRAW);
-    VB->init(sizeof(DebugDatastoreElement) * 100000);
+    VB->init(sizeof(DebugDatastoreElement) * 1000000);
 
     VA->setVertexLayout(vbl);
 

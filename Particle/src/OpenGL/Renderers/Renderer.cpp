@@ -113,14 +113,15 @@ void GL::Renderer::addParticle(int num)
     std::vector<PT::ParticleData> a;
 
     auto grid = forces->getDimensions();
-    float sizeX = grid.x * forces->getResolution();
-    float sizeZ = grid.z * forces->getResolution();
+    float X = grid.x * forces->getResolution();
+    float Y = grid.y * forces->getResolution();
+    float Z = grid.z * forces->getResolution();
 
     for (int i = 0; i < num; ++i)
     {
         PT::ParticleData v;
-        v.position = glm::vec3(Utils::Random::ZeroToOne() * sizeX, 0.0f, Utils::Random::ZeroToOne() * sizeZ);
-        v.velocity = glm::vec3(Utils::Random::ZeroToOne(), 0.0f, Utils::Random::ZeroToOne());
+        v.position = glm::vec3(Utils::Random::ZeroToOne() * X, 0.0f, Utils::Random::ZeroToOne() * Z);
+        v.velocity = glm::vec3(Utils::Random::ZeroToOne(), Utils::Random::ZeroToOne(), Utils::Random::ZeroToOne());
         v.colour = Colour::RED;
 
         v.lifespan = 1.0f;

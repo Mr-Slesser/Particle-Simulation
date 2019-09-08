@@ -5838,7 +5838,7 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
 
     // Docking
     // (NB: during the frame dock nodes are created, it is possible that (window->DockIsActive == false) even though (window->DockNode->Windows.Size > 1)
-    IM_ASSERT(window->DockNode == NULL || window->DockNodeAsHost == NULL); // Cannot be both
+    //IM_ASSERT(window->DockNode == NULL || window->DockNodeAsHost == NULL); // Cannot be both
     if (g.NextWindowData.Flags & ImGuiNextWindowDataFlags_HasDock)
         SetWindowDock(window, g.NextWindowData.DockId, g.NextWindowData.DockCond);
     if (first_begin_of_the_frame)

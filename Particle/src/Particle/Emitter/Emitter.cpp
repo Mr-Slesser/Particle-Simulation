@@ -29,7 +29,7 @@ void Emitter::spawnParticle()
 {
     ParticleData v;
     v.position = glm::vec3(position.x, position.y, position.z);
-    v.velocity = glm::vec3(direction.x * force, 0.0f, direction.y * force);
+    v.velocity = glm::vec3(direction.x * force, direction.y * force, direction.y * force);
 
     v.colour = color;
     v.lifespan = 1.0f;
