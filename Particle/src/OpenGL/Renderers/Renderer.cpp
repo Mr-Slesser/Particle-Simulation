@@ -24,7 +24,7 @@ bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Fo
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
     glGenBuffers(1, &texBufferID); // Texture Buffer
     glBindBuffer(GL_TEXTURE_BUFFER, texBufferID);
-    glBufferData(GL_TEXTURE_BUFFER, forces->size(), forces->data().data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_TEXTURE_BUFFER, forces->size(), forces->getDataPointer(), GL_DYNAMIC_DRAW);
     glGenTextures(1, &texBufferTextureID);
     glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
     glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
@@ -52,7 +52,7 @@ void GL::Renderer::update(double dt)
     /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
     GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID));
     auto tpointer = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
-    memcpy(tpointer, forces->data().data(), forces->size());
+    memcpy(tpointer, forces->getDataPointer(), forces->size());
     GLCheck(glUnmapBuffer(GL_TEXTURE_BUFFER));
     glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
     glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
@@ -112,14 +112,14 @@ void GL::Renderer::addParticle(int num)
 
     std::vector<PT::ParticleData> a;
 
-    auto grid = forces->getGridData();
-    float sizeX = grid.x * grid.z;
-    float sizeY = grid.y * grid.w;
+    auto grid = forces->getDimensions();
+    float sizeX = grid.x * forces->getResolution();
+    float sizeZ = grid.z * forces->getResolution();
 
     for (int i = 0; i < num; ++i)
     {
         PT::ParticleData v;
-        v.position = glm::vec3(Utils::Random::ZeroToOne() * sizeX, 0.0f, Utils::Random::ZeroToOne() * sizeY);
+        v.position = glm::vec3(Utils::Random::ZeroToOne() * sizeX, 0.0f, Utils::Random::ZeroToOne() * sizeZ);
         v.velocity = glm::vec3(Utils::Random::ZeroToOne(), 0.0f, Utils::Random::ZeroToOne());
         v.colour = Colour::RED;
 

@@ -4,17 +4,25 @@
 namespace PT
 {
 
-ForceGrid::ForceGrid(Utils::Perlin *perlin, int _rows, int _columns, int sizeX, int sizeY, GL::DebugDatastore *_debugData)
-    : perlin(perlin), rows(_rows), columns(_columns), debugVerticesOffset(0), debugData(_debugData), dragCoefficient(0.6), octaves(5), persistance(0.6), gravity(0.1)
+ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, GL::DebugDatastore *_debugData)
+    : debugData(_debugData)
 {
     PROFILE("ForceGrid::ForceGrid");
+    data = new ForceGridData(perlin, dimensions, resolution);
 
-    speed_limit = glm::vec2(-10.0f, 10.0f);
-    grid_data = glm::vec4(rows, columns, sizeX, sizeY);
-
-    for (int i = 0; i < (rows * columns); ++i)
+    for (int y = 0; y < data->Dimensions.y; y++)
     {
-        double angle = perlin->Noise(octaves, persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
+        for (int z = 0; z < data->Dimensions.z; z++)
+        {
+            for (int x = 0; x < data->Dimensions.x; x++)
+            {
+            }
+        }
+    }
+
+    for (int i = 0; i < (data->Dimensions.x * data->Dimensions.z); ++i)
+    {
+        double angle = data->Perlin->Noise(data->Octaves, data->Persistance, 0.0, 0.0, 0.0) * TWO_PI * 4;
         float x = 1.0f * cos(angle);
         // float y = 1.0f * sin(angle);
         float y = 0.0f;
@@ -28,6 +36,18 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, int _rows, int _columns, int sizeX, 
 ForceGrid::~ForceGrid()
 {
     forces.clear();
+    debugVertices.clear();
+    delete data;
+}
+
+int ForceGrid::index(int x, int y, int z)
+{
+    auto dim = data->Dimensions;
+    // int SX = (int)dim.x * data->Resolution;
+    int SY = (int)dim.y * data->Resolution;
+    int SZ = (int)dim.z * data->Resolution;
+
+    return (y * SY) + (z * SZ) + x;
 }
 
 void ForceGrid::update(double &dt)
@@ -37,15 +57,17 @@ void ForceGrid::update(double &dt)
     std::lock_guard<std::mutex> lockGuard(mutex);
     static float zoff = 0.0f;
     double xoff = 0;
-    for (int y = 0; y < rows; y++)
+    for (int y = 0; y < data->Dimensions.x; y++)
     {
         double yoff = 0;
-        for (int x = 0; x < columns; x++)
+        for (int x = 0; x < data->Dimensions.z; x++)
         {
-            double angle = perlin->Noise(octaves, persistance, xoff, zoff, yoff) * TWO_PI * 4;
-            int index = x + y * columns;
+            double angle = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
+            int index = x + y * data->Dimensions.z;
             float xp = cos(angle) * angle;
             float zp = sin(angle) * angle;
+            // float xp = -1.0f;
+            // float zp = -1.0f;
             // float yp = Utils::Random::RandomRange(-1.0f, 1.0f);
             float yp = 0.0f;
             forces[index] = glm::vec3(xp, yp, zp);
@@ -55,28 +77,39 @@ void ForceGrid::update(double &dt)
         yoff += 0.01;
     }
     zoff += 0.001;
+
+    for (int y = 0; y < data->Dimensions.y; y++)
+    {
+        for (int z = 0; z < data->Dimensions.z; z++)
+        {
+            for (int x = 0; x < data->Dimensions.x; x++)
+            {
+            }
+        }
+    }
 }
 
 void ForceGrid::setGridData(GL::Program *program)
 {
     PROFILE("ForceGrid::setGridData");
 
-    program->setVec2("speed_limit", speed_limit);
-    program->setVec4("grid_data", grid_data);
-    program->setFloat("dragCoefficient", dragCoefficient);
-    program->setFloat("gravity", gravity);
-    program->setInt("samples", samples);
-    program->setFloat("sampleStrength", sampleStrength);
-    program->setFloat("sampleStengthDegradation", sampleStengthDegradation);
+    program->setVec2("minMaxSpeed", data->MinMaxSpeed);
+    program->setVec3("dimensions", data->Dimensions);
+    program->setInt("resolution", data->Resolution);
+    program->setFloat("dragCoefficient", data->DragCoefficient);
+    program->setFloat("gravity", data->Gravity);
+    program->setInt("samples", data->Samples);
+    program->setFloat("sampleStrength", data->SampleStrength);
+    program->setFloat("sampleStengthDegradation", data->SampleStengthDegradation);
 }
 
 void ForceGrid::updateDebugLines()
 {
     PROFILE("ForceGrid::updateDebugLines");
 
-    int sizeX = grid_data.z;
-    int sizeY = grid_data.w;
-    int sizeZ = grid_data.z;
+    int sizeX = data->Resolution;
+    int sizeY = data->Resolution;
+    int sizeZ = data->Resolution;
     {
         // debugVertices.clear();
         // for (int y = 0; y < rows - 1; ++y)
@@ -107,13 +140,23 @@ void ForceGrid::updateDebugLines()
         // }
     }
 
+    for (int y = 0; y < data->Dimensions.y; y++)
+    {
+        for (int z = 0; z < data->Dimensions.z; z++)
+        {
+            for (int x = 0; x < data->Dimensions.x; x++)
+            {
+            }
+        }
+    }
+
     float sX = (sizeX * 0.5f) / 2.0f;
     float sY = (sizeY * 0.5f) / 2.0f;
     float sZ = (sizeZ * 0.5f) / 2.0f;
 
-    for (int i = 0; i < rows - 1; ++i)
+    for (int i = 0; i < data->Dimensions.x - 1; ++i)
     {
-        for (int j = 0; j < columns - 1; ++j)
+        for (int j = 0; j < data->Dimensions.z - 1; ++j)
         {
             glm::vec3 normalized = glm::normalize(forces[i + j]);
 

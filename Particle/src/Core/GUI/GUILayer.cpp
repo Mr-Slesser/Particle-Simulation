@@ -116,9 +116,9 @@ void GUILayer::render(ForceGrid *forcegrid)
             forcegrid->setPersistance(per);
 
             // Forcegrid: Grid Resolution
-            // glm::vec4 gridData = forcegrid->getGridDataTMP();
+            // glm::vec4 gridData = forcegrid->getDimensions();
             // ImGui::SliderFloat2("Grid Resolution", &gridData.z, 0.0f, 10.0f, "%.2f");
-            // forcegrid->setGridDataTMP(gridData);
+            // forcegrid->setDimensions(gridData);
 
             // Forcegrid: Samples
             int samples = forcegrid->getSamples();

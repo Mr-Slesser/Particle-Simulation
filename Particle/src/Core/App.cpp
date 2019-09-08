@@ -47,7 +47,7 @@ bool PT::App::init()
 
     // Renderes & Forces
     perlin = new Utils::Perlin();
-    forces = new PT::ForceGrid(perlin, 100, 100, 5, 5, debugDatastore);
+    forces = new PT::ForceGrid(perlin, glm::vec3(100, 10, 100), 5, debugDatastore);
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
 
