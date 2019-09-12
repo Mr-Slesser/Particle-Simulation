@@ -39,9 +39,6 @@
 #include <time.h>
 #include <vector>
 
-// Include: ImGUI
-#include "Headers/ImGUI.hpp"
-
 // Includes: OpenGL
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"

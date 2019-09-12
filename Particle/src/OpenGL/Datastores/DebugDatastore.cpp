@@ -16,7 +16,15 @@ DebugDatastore::~DebugDatastore()
 
 void DebugDatastore::addElement(DebugDatastoreElement element)
 {
+    std::lock_guard<std::mutex> lockGuard(mutex);
     elements.push_back(element);
+}
+
+void DebugDatastore::addElement(DebugDatastoreElement element0, DebugDatastoreElement element1)
+{
+    std::lock_guard<std::mutex> lockGuard(mutex);
+    elements.push_back(element0);
+    elements.push_back(element1);
 }
 
 void DebugDatastore::beginDebug()

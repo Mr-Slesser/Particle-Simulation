@@ -18,7 +18,7 @@ private:
     std::vector<glm::vec3> forces; // Layout: X-Dir, Y-Dir, Z-Dir, Strength
 
 public:
-    ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, GL::DebugDatastore *_debugData);
+    ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, int yOffset, GL::DebugDatastore *_debugData);
     virtual ~ForceGrid();
 
     virtual void update(double &dt);

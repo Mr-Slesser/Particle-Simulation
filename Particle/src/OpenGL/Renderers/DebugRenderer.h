@@ -14,7 +14,8 @@ namespace GL
 class DebugRenderer
 {
 protected:
-    PT::ForceGrid *forces;
+    PT::ForceGrid *forces0;
+    PT::ForceGrid *forces1;
     ProgramManager *programs;
 
     VertexBuffer *VB;
@@ -25,11 +26,10 @@ public:
     DebugRenderer();
     virtual ~DebugRenderer();
 
-    bool init(ProgramManager* _programs, PT::ForceGrid *_forces);
-    void draw(DebugDatastore* datastore);
+    bool init(ProgramManager *_programs, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1);
+    void draw(DebugDatastore *datastore);
 };
 
 } // namespace GL
-
 
 #endif /* DEBUGRENDERER_H */

@@ -3,6 +3,8 @@
 # Priority:
 
 * [ ] -> Culling / Bounds Checking
+* [ ] -> Forces Class (Drag & Gravity)
+* [ ] -> Impl. Second noise grid in shaders (add 3rd?)
 
 Next: 
 

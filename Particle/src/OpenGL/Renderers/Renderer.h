@@ -23,18 +23,25 @@ private:
     glm::mat4 view;
     glm::mat4 projection;
 
-    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    PT::ForceGrid *forces;
+    /* -------------------- TEXTURE BUFFER OBJECT 0----------------------------- */
+    PT::ForceGrid *forces0;
 
-    unsigned int texBufferID;
-    unsigned int texBufferTextureID;
+    unsigned int texBufferID0;
+    unsigned int texBufferTextureID0;
+    /* ------------------------------------------------------------------------ */
+
+    /* -------------------- TEXTURE BUFFER OBJECT 1----------------------------- */
+    PT::ForceGrid *forces1;
+
+    unsigned int texBufferID1;
+    unsigned int texBufferTextureID1;
     /* ------------------------------------------------------------------------ */
 
 public:
     Renderer();
     ~Renderer();
 
-    bool init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces);
+    bool init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1);
     void clear();
     void draw(double dt);
     void update(double dt);

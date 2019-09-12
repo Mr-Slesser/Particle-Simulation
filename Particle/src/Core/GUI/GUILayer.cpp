@@ -14,27 +14,26 @@ GUILayer::~GUILayer()
     ImGui::DestroyContext();
 }
 
-bool GUILayer::init(GLFWwindow *window)
+bool GUILayer::init(GLFWwindow *_window)
 {
+    window = _window;
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
+    io = &ImGui::GetIO();
     (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    //io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
+    io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+    //io->ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
+    //io->ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle &style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -52,7 +51,7 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render(ForceGrid *forcegrid)
+void GUILayer::render(ForceGrid *forcegrid0, ForceGrid *forcegrid1)
 {
     PROFILE("GUILayer::render");
 
@@ -92,58 +91,86 @@ void GUILayer::render(ForceGrid *forcegrid)
             // CameraManager::get()->getCamera()->setPosition(camera_pos);
 
             // Forcegrid: Drag coefficient
-            float dragCoeff = forcegrid->getDragCoeff();
+            float dragCoeff = forcegrid0->getDragCoeff();
             ImGui::SliderFloat("Drag Coefficient", &dragCoeff, -1.0f, 2.0f, "%.2f");
-            forcegrid->setDragCoeff(dragCoeff);
+            forcegrid0->setDragCoeff(dragCoeff);
 
             // Forcegrid: Gravity
-            float gravity = forcegrid->getGravity();
+            float gravity = forcegrid0->getGravity();
             ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
-            forcegrid->setGravity(gravity);
+            forcegrid0->setGravity(gravity);
+
+            ImGui::Text("Forcegrid 0");
 
             // Forcegrid: Speed.
-            glm::vec2 speed = forcegrid->getSpeed();
+            glm::vec2 speed = forcegrid0->getSpeed();
             ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");
             ImGui::SliderFloat("Max Speed", &speed.y, 0.0f, 10.0f, "%.2f");
-            forcegrid->setSpeed(speed);
+            forcegrid0->setSpeed(speed);
 
             // Forcegrid: Noise
-            int octaves = forcegrid->getOctaves();
-            float per = forcegrid->getPersistance();
+            int octaves = forcegrid0->getOctaves();
+            float per = forcegrid0->getPersistance();
             ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
             ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
-            forcegrid->setOctaves(octaves);
-            forcegrid->setPersistance(per);
+            forcegrid0->setOctaves(octaves);
+            forcegrid0->setPersistance(per);
 
-            // Forcegrid: Grid Resolution
-            // glm::vec4 gridData = forcegrid->getDimensions();
-            // ImGui::SliderFloat2("Grid Resolution", &gridData.z, 0.0f, 10.0f, "%.2f");
-            // forcegrid->setDimensions(gridData);
+            // // Forcegrid: Samples
+            int samples = forcegrid0->getSamples();
+            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
+            forcegrid0->setSamples(samples);
+
+            // // Forcegrid: Sample Strength
+            float ss = forcegrid0->getSampleStrength();
+            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
+            forcegrid0->setSampleStrength(ss);
+
+            // // Forcegrid: Sample Strength Degredation
+            float ssd = forcegrid0->getSampleStengthDegradation();
+            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
+            forcegrid0->setSampleStengthDegradation(ssd);
+
+            ImGui::Text("Forcegrid 1");
+
+            // // Forcegrid: Speed.
+            glm::vec2 speed1 = forcegrid1->getSpeed();
+            ImGui::SliderFloat("Min Speed", &speed1.x, -10.0f, 0.0f, "%.2f");
+            ImGui::SliderFloat("Max Speed", &speed1.y, 0.0f, 10.0f, "%.2f");
+            forcegrid1->setSpeed(speed1);
+
+            // Forcegrid: Noise
+            int octaves1 = forcegrid1->getOctaves();
+            float per1 = forcegrid1->getPersistance();
+            ImGui::SliderInt("Octaves", &octaves1, 1.0f, 8.0f, "%d");
+            ImGui::SliderFloat("Persistance", &per1, 0.0f, 1.0f, "%.2f");
+            forcegrid1->setOctaves(octaves1);
+            forcegrid1->setPersistance(per1);
 
             // Forcegrid: Samples
-            int samples = forcegrid->getSamples();
-            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
-            forcegrid->setSamples(samples);
+            int samples1 = forcegrid1->getSamples();
+            ImGui::SliderInt("Samples", &samples1, 0.0f, 10.0f, "%d");
+            forcegrid1->setSamples(samples1);
 
             // Forcegrid: Sample Strength
-            float ss = forcegrid->getSampleStrength();
-            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
-            forcegrid->setSampleStrength(ss);
+            float ss1 = forcegrid1->getSampleStrength();
+            ImGui::SliderFloat("Sample Str.", &ss1, 0.0f, 2.0f, "%.2f");
+            forcegrid1->setSampleStrength(ss1);
 
             // Forcegrid: Sample Strength Degredation
-            float ssd = forcegrid->getSampleStengthDegradation();
-            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
-            forcegrid->setSampleStengthDegradation(ssd);
+            float ssd1 = forcegrid1->getSampleStengthDegradation();
+            ImGui::SliderFloat("Sample Str Deg.", &ssd1, 0.0f, 1.0f, "%.2f");
+            forcegrid1->setSampleStengthDegradation(ssd1);
         }
         ImGui::End();
     }
 
-    for (auto w : windows)
-    {
-        {
-            w();
-        }
-    }
+    // for (auto w : windows)
+    // {
+    //     {
+    //         w();
+    //     }
+    // }
 }
 
 void GUILayer::begin()
@@ -153,16 +180,15 @@ void GUILayer::begin()
     ImGui::NewFrame();
 }
 
-void GUILayer::end(Window *window)
+void GUILayer::end()
 {
-    ImGuiIO &io = ImGui::GetIO();
-    io.DisplaySize = ImVec2((float)window->getWidth(), (float)window->getHeight());
+    // io->DisplaySize = ImVec2((float)window->getWidth(), (float)window->getHeight());
 
     // Rendering
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         GLFWwindow *backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
@@ -211,8 +237,7 @@ void GUILayer::constantElements()
         ImGui::PopStyleVar(2);
 
     // DockSpace
-    ImGuiIO &io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+    if (io->ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);

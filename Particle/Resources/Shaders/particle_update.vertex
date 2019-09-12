@@ -13,7 +13,9 @@ out float outLifespan;
 out float outMass;
 
 uniform float dt;
-uniform samplerBuffer tbo_id;
+uniform samplerBuffer tbo_id0;
+uniform samplerBuffer tbo_id1;
+
 uniform vec2 minMaxSpeed; // x: Min, y: Max
 uniform int resolution;
 uniform vec3 dimensions;
@@ -52,7 +54,7 @@ void main()
 {
     vec4 textureSample;
 
-    textureSample = SampleForceTexture(tbo_id);
+    textureSample = SampleForceTexture(tbo_id0);
     vec3 drag = CalculateDrag();
     float gravityModifier = 1.0 * map(inPosition.y, 0.0, (SIZE_Y + SIZE), 0.0, 1.0); // Want gravity to pull harder the higher it is!
     vec3 calculatedVelocity = vec3(

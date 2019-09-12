@@ -4,11 +4,11 @@
 namespace PT
 {
 
-ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, GL::DebugDatastore *_debugData)
+ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, int yOffset, GL::DebugDatastore *_debugData)
     : debugData(_debugData)
 {
     PROFILE("ForceGrid::ForceGrid");
-    data = new ForceGridData(perlin, dimensions, resolution);
+    data = new ForceGridData(perlin, dimensions, resolution, yOffset);
 
     int ys = 0, xs = 0, zs = 0;
     for (int y = 0; y < data->Dimensions.y; y++)
@@ -64,7 +64,7 @@ void ForceGrid::update(double &dt)
                 double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
 
                 float xp = 1.0f * sin(lon) * cos(lat);
-                float yp = 1.0f * sin(lon) * sin(lat) * 0.25f;
+                float yp = 1.0f * sin(lon) * sin(lat);
                 float zp = 1.0f * cos(lon);
 
                 int i = index(x, y, z);
@@ -105,15 +105,14 @@ void ForceGrid::updateDebugLines()
                 glm::vec3 n = glm::normalize(forces[y + z + x]);
 
                 float xp = x * data->Resolution + (data->Resolution * 0.5f);
-                float yp = y * data->Resolution + (data->Resolution * 0.5f);
+                float yp = y * data->Resolution + (data->Resolution * 0.5f) + data->yOffset;
                 float zp = z * data->Resolution + (data->Resolution * 0.5f);
 
                 float dirx = xp + (n.x * cellSize);
                 float diry = yp + (n.y * cellSize);
                 float dirz = zp + (n.z * cellSize);
 
-                debugData->addElement({glm::vec3(xp, yp, zp)});
-                debugData->addElement({glm::vec3(dirx, diry, dirz)});
+                debugData->addElement({glm::vec3(xp, yp, zp)}, {glm::vec3(dirx, diry, dirz)});
             }
         }
     }

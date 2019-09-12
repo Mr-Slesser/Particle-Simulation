@@ -1,7 +1,7 @@
 // dear imgui: Platform Binding for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan..)
 // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
-// (Requires: GLFW 3.1+)
+// (Requires: GLFW 3.1+. Prefer GLFW 3.3+ for full feature support.)
 
 // Implemented features:
 //  [X] Platform: Clipboard support.
@@ -40,7 +40,7 @@
 #include "imgui_impl_glfw.h"
 
 // GLFW
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #ifdef _WIN32
 #undef APIENTRY
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -406,8 +406,9 @@ struct ImGuiViewportDataGlfw
 {
     GLFWwindow* Window;
     bool        WindowOwned;
+    int         IgnoreWindowSizeEventFrame;
 
-    ImGuiViewportDataGlfw() { Window = NULL; WindowOwned = false; }
+    ImGuiViewportDataGlfw()  { Window = NULL; WindowOwned = false; IgnoreWindowSizeEventFrame = -1; }
     ~ImGuiViewportDataGlfw() { IM_ASSERT(Window == NULL); }
 };
 
@@ -426,7 +427,22 @@ static void ImGui_ImplGlfw_WindowPosCallback(GLFWwindow* window, int, int)
 static void ImGui_ImplGlfw_WindowSizeCallback(GLFWwindow* window, int, int)
 {
     if (ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle(window))
+    {
+        if (ImGuiViewportDataGlfw* data = (ImGuiViewportDataGlfw*)viewport->PlatformUserData)
+        {
+            // GLFW may dispatch window size event after calling glfwSetWindowSize().
+            // However depending on the platform the callback may be invoked at different time: on Windows it
+            // appears to be called within the glfwSetWindowSize() call whereas on Linux it is queued and invoked
+            // during glfwPollEvents(). 
+            // Because the event doesn't always fire on glfwSetWindowSize() we use a frame counter tag to only 
+            // ignore recent glfwSetWindowSize() calls.
+            bool ignore_event = (ImGui::GetFrameCount() <= data->IgnoreWindowSizeEventFrame + 1);
+            data->IgnoreWindowSizeEventFrame = -1;
+            if (ignore_event)
+                return;
+        }
         viewport->PlatformRequestResize = true;
+    }
 }
 
 static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
@@ -570,6 +586,17 @@ static ImVec2 ImGui_ImplGlfw_GetWindowSize(ImGuiViewport* viewport)
 static void ImGui_ImplGlfw_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 {
     ImGuiViewportDataGlfw* data = (ImGuiViewportDataGlfw*)viewport->PlatformUserData;
+#if __APPLE__
+    // Native OS windows are positioned from the bottom-left corner on macOS, whereas on other platforms they are
+    // positioned from the upper-left corner. GLFW makes an effort to convert macOS style coordinates, however it
+    // doesn't handle it when changing size. We are manually moving the window in order for changes of size to be based
+    // on the upper-left corner.
+    int x, y, width, height;
+    glfwGetWindowPos(data->Window, &x, &y);
+    glfwGetWindowSize(data->Window, &width, &height);
+    glfwSetWindowPos(data->Window, x, y - height + size.y);
+#endif
+    data->IgnoreWindowSizeEventFrame = ImGui::GetFrameCount();
     glfwSetWindowSize(data->Window, (int)size.x, (int)size.y);
 }
 
@@ -620,7 +647,7 @@ static void ImGui_ImplGlfw_RenderWindow(ImGuiViewport* viewport, void*)
 static void ImGui_ImplGlfw_SwapBuffers(ImGuiViewport* viewport, void*)
 {
     ImGuiViewportDataGlfw* data = (ImGuiViewportDataGlfw*)viewport->PlatformUserData;
-    if (g_ClientApi == GlfwClientApi_OpenGL) 
+    if (g_ClientApi == GlfwClientApi_OpenGL)
     {
         glfwMakeContextCurrent(data->Window);
         glfwSwapBuffers(data->Window);

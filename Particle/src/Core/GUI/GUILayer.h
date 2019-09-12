@@ -1,6 +1,9 @@
 #ifndef GUILAYER_H
 #define GUILAYER_H
 
+// Include: ImGUI
+#include "Headers/ImGUI.hpp"
+
 #include "../Camera/CameraManager.h"
 #include "../Window/Window.h"
 #include "../../Simulation/ForceGrid.h"
@@ -15,9 +18,10 @@ class GUILayer
 {
 private:
     std::vector<std::function<void()>> windows;
-    ImGuiIO io;
     bool show_demo_window = false;
+    ImGuiIO *io;
     //ImVec4 clear_color;
+    GLFWwindow *window;
 
 public:
     GUILayer();
@@ -25,11 +29,11 @@ public:
 
     void constantElements();
     void addElement(std::function<void()> window);
-    bool init(GLFWwindow *window);
-    void render(ForceGrid *forcegrid);
+    bool init(GLFWwindow *_window);
+    void render(ForceGrid *forcegrid0, ForceGrid *forcegrid1);
 
     void begin();
-    void end(Window *window);
+    void end();
 };
 
 } // namespace PT

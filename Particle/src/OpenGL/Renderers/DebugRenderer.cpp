@@ -16,12 +16,13 @@ DebugRenderer::~DebugRenderer()
     delete VB;
 }
 
-bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces)
+bool DebugRenderer::init(ProgramManager *_programs, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1)
 {
     PROFILE("DebugRenderer::init");
 
     programs = _programs;
-    forces = _forces;
+    forces0 = _forces0;
+    forces1 = _forces1;
 
     GL::VBOLayout vbl = VBOLayout();
     vbl.push<float>(3, 0); // Position

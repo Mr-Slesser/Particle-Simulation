@@ -8,27 +8,37 @@ GL::Renderer::Renderer()
 GL::Renderer::~Renderer()
 {
     programs = nullptr;
-    forces = nullptr;
     datastore = nullptr;
-    glDeleteBuffers(1, &texBufferID);
+    glDeleteBuffers(1, &texBufferID0);
+    glDeleteBuffers(1, &texBufferID1);
 }
 
-bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces)
+bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1)
 {
     PROFILE("Renderer::init");
 
     programs = _programs;
-    forces = _forces;
+    forces0 = _forces0;
+    forces1 = _forces1;
     datastore = _datastore;
 
-    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    glGenBuffers(1, &texBufferID); // Texture Buffer
-    glBindBuffer(GL_TEXTURE_BUFFER, texBufferID);
-    glBufferData(GL_TEXTURE_BUFFER, forces->size(), forces->getDataPointer(), GL_DYNAMIC_DRAW);
-    glGenTextures(1, &texBufferTextureID);
-    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
-    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
-    /* ------------------------------------------------------------------------ */
+    /* -------------------- TEXTURE BUFFER OBJECT 0 ----------------------------- */
+    glGenBuffers(1, &texBufferID0); // Texture Buffer
+    glBindBuffer(GL_TEXTURE_BUFFER, texBufferID0);
+    glBufferData(GL_TEXTURE_BUFFER, forces0->size(), forces0->getDataPointer(), GL_DYNAMIC_DRAW);
+    glGenTextures(1, &texBufferTextureID0);
+    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID0);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID0);
+    /* -------------------------------------------------------------------------- */
+
+    /* -------------------- TEXTURE BUFFER OBJECT 0 ----------------------------- */
+    glGenBuffers(1, &texBufferID1); // Texture Buffer
+    glBindBuffer(GL_TEXTURE_BUFFER, texBufferID1);
+    glBufferData(GL_TEXTURE_BUFFER, forces1->size(), forces1->getDataPointer(), GL_DYNAMIC_DRAW);
+    glGenTextures(1, &texBufferTextureID1);
+    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID1);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID1);
+    /* -------------------------------------------------------------------------- */
 
     return true;
 }
@@ -49,29 +59,40 @@ void GL::Renderer::update(double dt)
     programs->use(UPDATE);
     datastore->bindUpdateArray();
 
-    /* -------------------- TEXTURE BUFFER OBJECT ----------------------------- */
-    GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID));
-    auto tpointer = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
-    memcpy(tpointer, forces->getDataPointer(), forces->size());
+    /* -------------------- TEXTURE BUFFER OBJECT 0 ----------------------------- */
+    GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID0));
+    auto tpointer0 = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
+    memcpy(tpointer0, forces0->getDataPointer(), forces0->size());
     GLCheck(glUnmapBuffer(GL_TEXTURE_BUFFER));
-    glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID);
-    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID);
-    /* ------------------------------------------------------------------------ */
+    GLCheck(glActiveTexture(GL_TEXTURE0));
+    GLCheck(glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID0));
+    GLCheck(glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID0));
+    /* ------------------------------------------------------------------------- */
 
-    glActiveTexture(GL_TEXTURE0);
+    /* -------------------- TEXTURE BUFFER OBJECT 1 ----------------------------- */
+    GLCheck(GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, texBufferID1)));
+    auto tpointer1 = (glm::vec3 *)glMapBuffer(GL_TEXTURE_BUFFER, GL_WRITE_ONLY);
+    memcpy(tpointer1, forces1->getDataPointer(), forces1->size());
+    GLCheck(glUnmapBuffer(GL_TEXTURE_BUFFER));
+    GLCheck(glActiveTexture(GL_TEXTURE1));
+    GLCheck(glBindTexture(GL_TEXTURE_BUFFER, texBufferTextureID1));
+    GLCheck(glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, texBufferID1));
+    /* ------------------------------------------------------------------------- */
+
     programs->get_active(UPDATE)->setFloat("dt", (float)dt);
-    programs->get_active(UPDATE)->setInt("tbo_id", 0);
-    forces->setGridData(programs->get_active(UPDATE));
+    programs->get_active(UPDATE)->setInt("tbo_id0", 0);
+    programs->get_active(UPDATE)->setInt("tbo_id1", 1);
 
-    glEnable(GL_RASTERIZER_DISCARD);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, datastore->getSubVertexBufferID());
-    glBeginTransformFeedback(GL_POINTS);
-    glDrawArrays(GL_POINTS, 0, datastore->getPointerSize());
+    forces0->setGridData(programs->get_active(UPDATE));
 
-    glEndTransformFeedback();
-    datastore->unbindSubVertexBuffer();
-    glFlush();
-    glDisable(GL_RASTERIZER_DISCARD);
+    GLCheck(glEnable(GL_RASTERIZER_DISCARD));
+    GLCheck(glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, datastore->getSubVertexBufferID()));
+    GLCheck(glBeginTransformFeedback(GL_POINTS));
+    GLCheck(glDrawArrays(GL_POINTS, 0, datastore->getPointerSize()));
+    GLCheck(glEndTransformFeedback());
+    // datastore->unbindSubVertexBuffer();
+    GLCheck(glFlush());
+    GLCheck(glDisable(GL_RASTERIZER_DISCARD));
 
     datastore->swapBuffers();
     datastore->unbindUpdateArray();
@@ -112,10 +133,10 @@ void GL::Renderer::addParticle(int num)
 
     std::vector<PT::ParticleData> a;
 
-    auto grid = forces->getDimensions();
-    float X = grid.x * forces->getResolution();
-    float Y = grid.y * forces->getResolution();
-    float Z = grid.z * forces->getResolution();
+    auto grid = forces0->getDimensions();
+    float X = grid.x * forces0->getResolution();
+    float Y = grid.y * forces0->getResolution();
+    float Z = grid.z * forces0->getResolution();
 
     for (int i = 0; i < num; ++i)
     {
