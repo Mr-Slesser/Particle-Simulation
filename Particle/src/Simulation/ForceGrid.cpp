@@ -38,8 +38,8 @@ ForceGrid::~ForceGrid()
 int ForceGrid::index(int x, int y, int z)
 {
     auto dim = data->Dimensions;
-    int SY = (int)dim.y * data->Resolution;
-    int SZ = (int)dim.z * data->Resolution;
+    int SY = (int)dim.y;
+    int SZ = (int)dim.z;
 
     return (y * SY) + (z * SZ) + x;
 }
@@ -50,15 +50,15 @@ void ForceGrid::update(double &dt)
 
     std::lock_guard<std::mutex> lockGuard(mutex);
     static double yoff = 0.0;
-    for (int y = 0; y < data->Dimensions.y; y++)
+    for (int y = 0; y < data->Dimensions.y - 1; y++)
     {
         double zoff = 0.0;
-        for (int z = 0; z < data->Dimensions.z; z++)
+        for (int z = 0; z < data->Dimensions.z - 1; z++)
         {
             double xoff = 0.0;
             // float lat = Utils::Mathf::Map(z, 0, total, -HALF_PI, HALF_PI);
             double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
-            for (int x = 0; x < data->Dimensions.x; x++)
+            for (int x = 0; x < data->Dimensions.x - 1; x++)
             {
                 // float lon = Utils::Mathf::Map(x, 0, total, -PI, PI);
                 double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;

@@ -18,17 +18,17 @@
 
 // Disable for non-debug.
 #ifdef NDEBUG
-#define CORE_LOG_TRACE
-#define CORE_LOG_INFO
-#define CORE_LOG_WARN
-#define CORE_LOG_ERROR
-#define CORE_LOG_CRITICAL
+#define CORE_LOG_TRACE(...)
+#define CORE_LOG_INFO(...)
+#define CORE_LOG_WARN(...)
+#define CORE_LOG_ERROR(...)
+#define CORE_LOG_CRITICAL(...)
 
-#define GL_LOG_TRACE
-#define GL_LOG_INFO
-#define GL_LOG_WARN
-#define GL_LOG_ERROR
-#define GL_LOG_CRITICAL
+#define GL_LOG_TRACE(...)
+#define GL_LOG_INFO(...)
+#define GL_LOG_WARN(...)
+#define GL_LOG_ERROR(...)
+#define GL_LOG_CRITICAL(...)
 #endif
 
 namespace PT
