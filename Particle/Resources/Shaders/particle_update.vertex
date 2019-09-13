@@ -146,7 +146,9 @@ vec4 SampleForceTexture(samplerBuffer sampler)
 
 int SampleIndex(int x, int y, int z)
 {   
-    return int(int((inPosition.y + y) / SIZE_Y) * X) + int(int((inPosition.z + z) / SIZE_Z) * Z) + int(int(inPosition.x + x) / SIZE_X);
+    // return int(int((inPosition.y + y) / SIZE_Y) * Y) + int(int((inPosition.z + z) / SIZE_Z) * Z) + int(int(inPosition.x + x) / SIZE_X);
+
+    return int(int((inPosition.y + y) / SIZE_Y)) + int(int((inPosition.z + z) / SIZE_Z)) + int(int(inPosition.x + x) / SIZE_X);
 }
 
 void CheckBounds()

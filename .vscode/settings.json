@@ -88,5 +88,6 @@
         "memory_resource": "cpp"
     },
     "todo-tree.showTagsFromOpenFilesOnly": false,
-    "C_Cpp.errorSquiggles": "Enabled"
+    "C_Cpp.errorSquiggles": "Enabled",
+    "todo-tree.tree.showTagsFromOpenFilesOnly": false
 }

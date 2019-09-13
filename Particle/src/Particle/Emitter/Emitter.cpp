@@ -40,12 +40,11 @@ void Emitter::spawnParticle()
 
 void Emitter::update(GL::DebugDatastore *debugdatastore)
 {
-    debugdatastore->addElement({position, Colour::RED});
     auto secondVertexPosition = glm::vec3(
         position.x + (direction.x * force),
         position.y,
         position.z + (direction.y * force));
-    debugdatastore->addElement({secondVertexPosition, Colour::RED});
+    debugdatastore->addElement({position, Colour::RED}, {secondVertexPosition, Colour::RED});
 }
 
 void Emitter::GUIElement(std::string name)

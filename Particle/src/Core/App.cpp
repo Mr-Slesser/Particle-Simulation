@@ -52,7 +52,7 @@ bool PT::App::init()
     forces0 = new PT::ForceGrid(perlin0, glm::vec3(50, 1, 50), 5, 0, debugDatastore);
 
     perlin1 = new Utils::Perlin(256);
-    forces1 = new PT::ForceGrid(perlin1, glm::vec3(50, 2, 50), 5, 10, debugDatastore);
+    forces1 = new PT::ForceGrid(perlin1, glm::vec3(50, 1, 50), 5, 10, debugDatastore);
 
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
@@ -107,12 +107,10 @@ void PT::App::run()
 
         std::thread forces0Thread([this] {
             forces0->update(this->dt);
-            forces0->updateDebugLines();
         });
 
         std::thread forces1Thread([this] {
             forces1->update(this->dt);
-            forces1->updateDebugLines();
         });
 
         InputManager::get()->processInput(window, renderer);
@@ -121,13 +119,19 @@ void PT::App::run()
 
         forces0Thread.join();
         forces1Thread.join();
-        datastore->Update();
 
+        std::thread forceDebugThread([this] {
+            forces0->updateDebugLines();
+            forces1->updateDebugLines();
+        });
+
+        datastore->Update();
         renderer->draw(dt);
+        forceDebugThread.join();
         debugRenderer->draw(debugDatastore);
 
         gui->begin();
-        // gui->constantElements();
+        gui->constantElements();
         gui->render(forces0, forces1);
         gui->end();
 
