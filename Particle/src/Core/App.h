@@ -40,11 +40,6 @@ private:
     GUILayer *gui;
 
     Simulation *simulation;
-    // Utils::Perlin *perlin0;
-    // Utils::Perlin *perlin1;
-
-    // ForceGrid *forces0;
-    // ForceGrid *forces1;
 
     EmitterManager *emitters;
 

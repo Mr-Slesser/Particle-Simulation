@@ -47,7 +47,7 @@ void InputManager::processInput(Window *window, GL::Renderer *renderer)
 
     if (glfwGetKey(window->context(), GLFW_KEY_Q) == GLFW_PRESS)
     {
-        renderer->addParticle(100);
+        renderer->addParticle(10000);
     }
 
     dispatch(window);

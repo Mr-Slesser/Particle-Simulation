@@ -55,23 +55,23 @@ void ForceGrid::update(double &dt)
         {
             double xoff = 0.0;
             // float lat = Utils::Mathf::Map(z, 0, total, -HALF_PI, HALF_PI);
-            double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
+            double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff, zoff) * TWO_PI * 4;
             for (int x = 0; x < data->Dimensions.x; x++)
             {
                 // float lon = Utils::Mathf::Map(x, 0, total, -PI, PI);
-                double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, zoff, yoff) * TWO_PI * 4;
+                double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff, zoff) * TWO_PI * 4;
 
                 float xp = 1.0f * sin(lon) * cos(lat);
-                float yp = 1.0f * sin(lon) * sin(lat);
+                float yp = 0.1f * sin(lon) * sin(lat);
                 float zp = 1.0f * cos(lon);
 
                 int i = index(x, y, z);
                 forces[i] = glm::vec3(xp, yp, zp);
-                xoff += 0.001;
+                xoff += 0.0001;
             }
-            zoff += 0.001;
+            zoff += 0.0001;
         }
-        yoff += 0.001;
+        yoff += 0.0001;
     }
 }
 

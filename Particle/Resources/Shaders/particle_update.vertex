@@ -42,7 +42,7 @@ uniform float sampleStengthDegradation;
 
 vec3 CalculateDrag();
 vec3 ApplyDrag(vec3 _drag, vec3 _velocity);
-vec4 SampleForceTexture(samplerBuffer sampler);
+vec4 SampleForceTexture();
 int SampleIndex(int x, int y, int z);
 void CheckBounds();
 
@@ -54,12 +54,14 @@ void main()
 {
     vec4 textureSample;
 
-    textureSample = SampleForceTexture(tbo_id0);
+    textureSample = SampleForceTexture();
     vec3 drag = CalculateDrag();
-    float gravityModifier = 1.0 * map(inPosition.y, 0.0, (SIZE_Y + SIZE), 0.0, 1.0); // Want gravity to pull harder the higher it is!
+    // float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y * 2), 1.0, 5.0); // Want gravity to pull harder the higher it is!
+    float gravityModifier = 1.0;
+
     vec3 calculatedVelocity = vec3(
         clamp(inVelocity.x + textureSample.x, MIN_SPEED, MAX_SPEED) * dt,
-        clamp(inVelocity.y + textureSample.y - ((gravity + gravityModifier) * inMass), MIN_SPEED, MAX_SPEED) * dt,
+        clamp(inVelocity.y + textureSample.y - (gravity * gravityModifier * inMass), MIN_SPEED, MAX_SPEED) * dt,
         clamp(inVelocity.z + textureSample.z, MIN_SPEED, MAX_SPEED) * dt
     );
     calculatedVelocity = ApplyDrag(drag, calculatedVelocity);
@@ -67,10 +69,14 @@ void main()
     outPosition = inPosition + calculatedVelocity;
     CheckBounds();
 
-    // outColor = vec4(calculatedVelocity.xyz, 1);
-    outColor = inColor;
+    float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
+    float g = map(inPosition.x, 0.0, SIZE_X, 0.0, 1.0);
+    float b = map(inPosition.z, 0.0, SIZE_Z, 0.0, 1.0);
 
-    // These values are simply passed through... 
+    // outColor = vec4(calculatedVelocity.xyz, 1);
+    outColor = vec4(r, g, b, 1.0);
+    // outColor = inColor;
+
     outVelocity = calculatedVelocity;
     outLifespan = inLifespan;
     outMass = inMass;
@@ -99,46 +105,46 @@ vec3 ApplyDrag(vec3 _drag, vec3 _velocity)
     else newVelocity.z -= _drag.z;
 
     return newVelocity;
-
 }
 
-vec4 SampleForceTexture(samplerBuffer sampler)
+vec4 SampleForceTexture()
 {
-    vec4 textureSample;
+    vec4 textureSample = vec4(0.0, 0.0, 0.0, 0.0);
     float ss = sampleStrength;
 
-    textureSample += (texelFetch(sampler, SampleIndex(0, 0, 0)));
-    ss * sampleStengthDegradation;
-
-    for(int i = 1; i <= samples; ++i)
+    if (inPosition.y > 0 && inPosition.y <= 2 * SIZE_Y)
     {
-        if (inPosition.y < SIZE_Y)
+
+        if (inPosition.y <= SIZE_Y)
         {
-            textureSample += (texelFetch(sampler, SampleIndex( 1,  0,  i))); // Above Top
-            textureSample += (texelFetch(sampler, SampleIndex( 1, -i,  0))); // Above Left
-            textureSample += (texelFetch(sampler, SampleIndex( 1,  i,  0))); // Above Right
-            textureSample += (texelFetch(sampler, SampleIndex( 1,  0, -i))); // Above Bottom
+            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, 0)));
+        }
+        else
+        {
+            textureSample += (texelFetch(tbo_id1, SampleIndex(0, 0, 0)));
         }
 
-        textureSample += (texelFetch(sampler, SampleIndex( 0,  0,  i))); // Top
-        textureSample += (texelFetch(sampler, SampleIndex( 0, -i,  0))); // Left
-        textureSample += (texelFetch(sampler, SampleIndex( 0,  i,  0))); // Right
-        textureSample += (texelFetch(sampler, SampleIndex( 0,  0, -i))); // Bottom
-
-        if (inPosition.y >= SIZE)
+        ss * sampleStengthDegradation;
+        
+        for(int i = 1; i <= samples; ++i)
         {
-            textureSample += (texelFetch(sampler, SampleIndex(-1,  0,  i))); // Below Top
-            textureSample += (texelFetch(sampler, SampleIndex(-1, -i,  0))); // Below Left
-            textureSample += (texelFetch(sampler, SampleIndex(-1,  i,  0))); // Below Right
-            textureSample += (texelFetch(sampler, SampleIndex(-1,  0, -i))); // Below Bottom
+            if (inPosition.y <= SIZE_Y)
+            {
+                textureSample += (texelFetch(tbo_id0, SampleIndex(  0,  0,  i))); // Top
+                textureSample += (texelFetch(tbo_id0, SampleIndex( -i,  0,  0))); // Left
+                textureSample += (texelFetch(tbo_id0, SampleIndex(  i,  0,  0))); // Right
+                textureSample += (texelFetch(tbo_id0, SampleIndex(  0,  0, -i))); // Bottom
+            }
+            else
+            {
+                textureSample += (texelFetch(tbo_id1, SampleIndex(  0,  0,  i))); // Top
+                textureSample += (texelFetch(tbo_id1, SampleIndex( -i,  0,  0))); // Left
+                textureSample += (texelFetch(tbo_id1, SampleIndex(  i,  0,  0))); // Right
+                textureSample += (texelFetch(tbo_id1, SampleIndex(  0,  0, -i))); // Bottom
+            }
+
+            ss *= sampleStengthDegradation;
         }
-
-        // textureSample += (texelFetch(sampler, SampleIndex(-i,  i))); // Top Left
-        // textureSample += (texelFetch(sampler, SampleIndex( i,  i))); // Top Right
-        // textureSample += (texelFetch(sampler, SampleIndex(-i, -i))); // Bottom Left
-        // textureSample += (texelFetch(sampler, SampleIndex( i, -i))); // Bottom Right
-
-        ss *= sampleStengthDegradation;
     }
 
     return textureSample;
@@ -146,7 +152,11 @@ vec4 SampleForceTexture(samplerBuffer sampler)
 
 int SampleIndex(int x, int y, int z)
 {   
-    return int(int((inPosition.y + y) / SIZE_Y) * X) + int(int((inPosition.z + z) / SIZE_Z) * Z) + int(int(inPosition.x + x) / SIZE_X);
+    int xp = int(int(inPosition.x + x) / SIZE_X);
+    int yp = int(int((inPosition.y / 2 + y) / SIZE_Y) * Y);
+    int zp = int(int((inPosition.z + z) / SIZE_Z) * Z);
+
+    return  yp + zp + xp;
 }
 
 void CheckBounds()
@@ -157,5 +167,5 @@ void CheckBounds()
     if (outPosition.z > SIZE_Z) outPosition.z = 0;
     if (outPosition.z < 0) outPosition.z = SIZE_Z;
 
-    if (outPosition.y < 0) outPosition.y = 0;
+    if (outPosition.y < 0) outPosition.y = 1.0;
 }

@@ -10,10 +10,6 @@ PT::App::~App()
 {
     delete emitters;
     delete simulation;
-    // delete perlin0;
-    // delete perlin1;
-    // delete forces0;
-    // delete forces1;
     delete programs;
     delete renderer;
 
@@ -50,11 +46,6 @@ bool PT::App::init()
 
     // Renderers & Forces
     simulation = new Simulation(50, 2, 50, 5, debugDatastore);
-    // perlin0 = new Utils::Perlin();
-    // forces0 = new PT::ForceGrid(perlin0, glm::vec3(50, 2, 50), 5, 0, debugDatastore);
-
-    // perlin1 = new Utils::Perlin(256);
-    // forces1 = new PT::ForceGrid(perlin1, glm::vec3(50, 2, 50), 5, 10, debugDatastore);
 
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
@@ -109,24 +100,9 @@ void PT::App::run()
         glfwPollEvents();
         this->debugDatastore->beginDebug();
 
-        // std::thread forces0Thread([this] {
-        //     forces0->update(this->dt);
-        //     if (this->debugDraw)
-        //         forces0->updateDebugLines();
-        // });
-
-        // std::thread forces1Thread([this] {
-        //     forces1->update(this->dt);
-        //     if (this->debugDraw)
-        //         forces1->updateDebugLines();
-        // });
-
         InputManager::get()->processInput(window, renderer);
         renderer->clear();
         emitters->update(debugDatastore);
-
-        // forces0Thread.join();
-        // forces1Thread.join();
 
         for (int i = 0; i < __simulation.size(); i++)
         {
@@ -145,6 +121,5 @@ void PT::App::run()
         gui->end();
 
         glfwSwapBuffers(window->context());
-        // dt += 0.001;
     }
 }
