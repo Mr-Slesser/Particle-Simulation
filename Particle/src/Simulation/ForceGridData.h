@@ -11,7 +11,7 @@ struct ForceGridData
     int Resolution;
     int yOffset;
     glm::vec2 MinMaxSpeed = glm::vec2(-10.0f, 10.0f);
-    float DragCoefficient = 0.6f;
+    float DragCoefficient = 0.3f;
     float Gravity = 0.1f;
     int Octaves = 5;
     float Persistance = 0.6f;

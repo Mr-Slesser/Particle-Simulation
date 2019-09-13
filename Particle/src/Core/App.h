@@ -28,6 +28,8 @@ private:
     double lastFrameTime = 0.0f;
     double dt;
 
+    bool debugDraw = true;
+
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
     GL::DebugRenderer *debugRenderer;
@@ -50,6 +52,9 @@ public:
 
     bool init();
     void run();
+
+    inline bool shouldDrawDebug() const { return debugDraw; }
+    void setDrawDebug(bool to) { debugDraw = to; }
 };
 
 } // namespace PT

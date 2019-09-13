@@ -30,7 +30,7 @@ public:
     void constantElements();
     void addElement(std::function<void()> window);
     bool init(GLFWwindow *_window);
-    void render(ForceGrid *forcegrid0, ForceGrid *forcegrid1);
+    void render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1);
 
     void begin();
     void end();

@@ -51,7 +51,7 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render(ForceGrid *forcegrid0, ForceGrid *forcegrid1)
+void GUILayer::render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1)
 {
     PROFILE("GUILayer::render");
 
@@ -90,9 +90,13 @@ void GUILayer::render(ForceGrid *forcegrid0, ForceGrid *forcegrid1)
             // ImGui::SliderFloat3("Camera Pos", &camera_pos.x, -1000.0f, 1000.0f, "%.2f");
             // CameraManager::get()->getCamera()->setPosition(camera_pos);
 
+            // bool debug = app->shouldDrawDebug();
+            ImGui::Checkbox("Debug Draw", debug);
+            // app->setDrawDebug(debug);
+
             // Forcegrid: Drag coefficient
             float dragCoeff = forcegrid0->getDragCoeff();
-            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, -1.0f, 2.0f, "%.2f");
+            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, 0.0f, 1.0f, "%.2f");
             forcegrid0->setDragCoeff(dragCoeff);
 
             // Forcegrid: Gravity
@@ -165,12 +169,12 @@ void GUILayer::render(ForceGrid *forcegrid0, ForceGrid *forcegrid1)
         ImGui::End();
     }
 
-    // for (auto w : windows)
-    // {
-    //     {
-    //         w();
-    //     }
-    // }
+    for (auto w : windows)
+    {
+        {
+            w();
+        }
+    }
 }
 
 void GUILayer::begin()
