@@ -18,6 +18,7 @@
 
 // Includes
 #include <algorithm>
+#include <array>
 #include <assert.h>
 #include <chrono>
 #include <cmath>

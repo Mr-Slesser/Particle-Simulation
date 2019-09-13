@@ -85,7 +85,9 @@
         "stack": "cpp",
         "hashtable": "cpp",
         "bit": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "regex": "cpp",
+        "shared_mutex": "cpp"
     },
     "todo-tree.showTagsFromOpenFilesOnly": false,
     "C_Cpp.errorSquiggles": "Enabled",

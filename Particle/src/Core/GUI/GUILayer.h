@@ -6,7 +6,7 @@
 
 #include "../Camera/CameraManager.h"
 #include "../Window/Window.h"
-#include "../../Simulation/ForceGrid.h"
+#include "../../Simulation/Simulation.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -30,7 +30,7 @@ public:
     void constantElements();
     void addElement(std::function<void()> window);
     bool init(GLFWwindow *_window);
-    void render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1);
+    void render(Simulation *sim);
 
     void begin();
     void end();

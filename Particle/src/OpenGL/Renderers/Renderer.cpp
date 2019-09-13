@@ -13,14 +13,18 @@ GL::Renderer::~Renderer()
     glDeleteBuffers(1, &texBufferID1);
 }
 
-bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1)
+bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation)
 {
     PROFILE("Renderer::init");
 
     programs = _programs;
-    forces0 = _forces0;
-    forces1 = _forces1;
+    simulation = _simulation;
+    // forces0 = _forces0;
+    // forces1 = _forces1;
     datastore = _datastore;
+
+    auto forces0 = simulation->Force(0);
+    auto forces1 = simulation->Force(1);
 
     /* -------------------- TEXTURE BUFFER OBJECT 0 ----------------------------- */
     glGenBuffers(1, &texBufferID0); // Texture Buffer
@@ -56,6 +60,9 @@ void GL::Renderer::update(double dt)
 {
     PROFILE("Renderer::update");
 
+    auto forces0 = simulation->Force(0);
+    auto forces1 = simulation->Force(1);
+
     programs->use(UPDATE);
     datastore->bindUpdateArray();
 
@@ -83,7 +90,8 @@ void GL::Renderer::update(double dt)
     programs->get_active(UPDATE)->setInt("tbo_id0", 0);
     programs->get_active(UPDATE)->setInt("tbo_id1", 1);
 
-    forces0->setGridData(programs->get_active(UPDATE));
+    // forces0->setGridData(programs->get_active(UPDATE));
+    simulation->PrepareDraw(programs->get_active(UPDATE));
 
     GLCheck(glEnable(GL_RASTERIZER_DISCARD));
     GLCheck(glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, datastore->getSubVertexBufferID()));
@@ -101,6 +109,9 @@ void GL::Renderer::update(double dt)
 void GL::Renderer::draw(double dt)
 {
     PROFILE("Renderer::draw");
+
+    auto forces0 = simulation->Force(0);
+    auto forces1 = simulation->Force(1);
 
     if (datastore->getPointerSize() > 0)
     {
@@ -130,6 +141,9 @@ void GL::Renderer::MVP()
 void GL::Renderer::addParticle(int num)
 {
     PROFILE("Renderer::addParticle");
+
+    auto forces0 = simulation->Force(0);
+    auto forces1 = simulation->Force(1);
 
     std::vector<PT::ParticleData> a;
 

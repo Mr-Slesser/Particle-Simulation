@@ -51,7 +51,7 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1)
+void GUILayer::render(Simulation *sim)
 {
     PROFILE("GUILayer::render");
 
@@ -90,29 +90,46 @@ void GUILayer::render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1)
             // ImGui::SliderFloat3("Camera Pos", &camera_pos.x, -1000.0f, 1000.0f, "%.2f");
             // CameraManager::get()->getCamera()->setPosition(camera_pos);
 
-            // bool debug = app->shouldDrawDebug();
-            ImGui::Checkbox("Debug Draw", debug);
-            // app->setDrawDebug(debug);
+            bool debug = sim->shouldDrawDebug();
+            ImGui::Checkbox("Debug Draw", &debug);
+            sim->setDrawDebug(debug);
 
-            // Forcegrid: Drag coefficient
-            float dragCoeff = forcegrid0->getDragCoeff();
-            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, 0.0f, 1.0f, "%.2f");
-            forcegrid0->setDragCoeff(dragCoeff);
-
-            // Forcegrid: Gravity
-            float gravity = forcegrid0->getGravity();
-            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
-            forcegrid0->setGravity(gravity);
-
-            ImGui::Text("Forcegrid 0");
-
-            // Forcegrid: Speed.
-            glm::vec2 speed = forcegrid0->getSpeed();
+            // Speed.
+            glm::vec2 speed = sim->getSpeed();
             ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");
             ImGui::SliderFloat("Max Speed", &speed.y, 0.0f, 10.0f, "%.2f");
-            forcegrid0->setSpeed(speed);
+            sim->setSpeed(speed);
 
-            // Forcegrid: Noise
+            // Drag coefficient
+            float dragCoeff = sim->getDragCoeff();
+            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, 0.0f, 1.0f, "%.2f");
+            sim->setDragCoeff(dragCoeff);
+
+            // Gravity
+            float gravity = sim->getGravity();
+            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
+            sim->setGravity(gravity);
+
+            // Samples
+            int samples = sim->getSamples();
+            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
+            sim->setSamples(samples);
+
+            // Sample Strength
+            float ss = sim->getSampleStrength();
+            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
+            sim->setSampleStrength(ss);
+
+            // Sample Strength Degredation
+            float ssd = sim->getSampleStengthDegradation();
+            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
+            sim->setSampleStengthDegradation(ssd);
+
+            // ------------ FORCE GRID 0 -------------------------------------
+            // ---------------------------------------------------------------
+            ImGui::Text("Forcegrid 0");
+            auto forcegrid0 = sim->Force(0);
+
             int octaves = forcegrid0->getOctaves();
             float per = forcegrid0->getPersistance();
             ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
@@ -120,51 +137,17 @@ void GUILayer::render(bool *debug, ForceGrid *forcegrid0, ForceGrid *forcegrid1)
             forcegrid0->setOctaves(octaves);
             forcegrid0->setPersistance(per);
 
-            // // Forcegrid: Samples
-            int samples = forcegrid0->getSamples();
-            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
-            forcegrid0->setSamples(samples);
-
-            // // Forcegrid: Sample Strength
-            float ss = forcegrid0->getSampleStrength();
-            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
-            forcegrid0->setSampleStrength(ss);
-
-            // // Forcegrid: Sample Strength Degredation
-            float ssd = forcegrid0->getSampleStengthDegradation();
-            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
-            forcegrid0->setSampleStengthDegradation(ssd);
-
+            // ------------ FORCE GRID 0 -------------------------------------
+            // ---------------------------------------------------------------
             ImGui::Text("Forcegrid 1");
+            auto forcegrid1 = sim->Force(1);
 
-            // // Forcegrid: Speed.
-            glm::vec2 speed1 = forcegrid1->getSpeed();
-            ImGui::SliderFloat("Min Speed", &speed1.x, -10.0f, 0.0f, "%.2f");
-            ImGui::SliderFloat("Max Speed", &speed1.y, 0.0f, 10.0f, "%.2f");
-            forcegrid1->setSpeed(speed1);
-
-            // Forcegrid: Noise
             int octaves1 = forcegrid1->getOctaves();
             float per1 = forcegrid1->getPersistance();
             ImGui::SliderInt("Octaves", &octaves1, 1.0f, 8.0f, "%d");
             ImGui::SliderFloat("Persistance", &per1, 0.0f, 1.0f, "%.2f");
             forcegrid1->setOctaves(octaves1);
             forcegrid1->setPersistance(per1);
-
-            // Forcegrid: Samples
-            int samples1 = forcegrid1->getSamples();
-            ImGui::SliderInt("Samples", &samples1, 0.0f, 10.0f, "%d");
-            forcegrid1->setSamples(samples1);
-
-            // Forcegrid: Sample Strength
-            float ss1 = forcegrid1->getSampleStrength();
-            ImGui::SliderFloat("Sample Str.", &ss1, 0.0f, 2.0f, "%.2f");
-            forcegrid1->setSampleStrength(ss1);
-
-            // Forcegrid: Sample Strength Degredation
-            float ssd1 = forcegrid1->getSampleStengthDegradation();
-            ImGui::SliderFloat("Sample Str Deg.", &ssd1, 0.0f, 1.0f, "%.2f");
-            forcegrid1->setSampleStengthDegradation(ssd1);
         }
         ImGui::End();
     }

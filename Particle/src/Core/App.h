@@ -9,6 +9,7 @@
 #include "../OpenGL/Datastores/DebugDatastore.h"
 #include "../OpenGL/Datastores/Datastore.h"
 
+#include "../Simulation/Simulation.h"
 #include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
 
@@ -38,11 +39,12 @@ private:
 
     GUILayer *gui;
 
-    Utils::Perlin *perlin0;
-    Utils::Perlin *perlin1;
+    Simulation *simulation;
+    // Utils::Perlin *perlin0;
+    // Utils::Perlin *perlin1;
 
-    ForceGrid *forces0;
-    ForceGrid *forces1;
+    // ForceGrid *forces0;
+    // ForceGrid *forces1;
 
     EmitterManager *emitters;
 

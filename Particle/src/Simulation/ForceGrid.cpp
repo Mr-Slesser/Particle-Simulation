@@ -24,8 +24,6 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
             }
         }
     }
-
-    std::cout << "X: " << xs << ", Y: " << ys << ", Z: " << zs << std::endl;
 }
 
 ForceGrid::~ForceGrid()
@@ -75,20 +73,6 @@ void ForceGrid::update(double &dt)
         }
         yoff += 0.001;
     }
-}
-
-void ForceGrid::setGridData(GL::Program *program)
-{
-    PROFILE("ForceGrid::setGridData");
-
-    program->setVec2("minMaxSpeed", data->MinMaxSpeed);
-    program->setVec3("dimensions", data->Dimensions);
-    program->setInt("resolution", data->Resolution);
-    program->setFloat("dragCoefficient", data->DragCoefficient);
-    program->setFloat("gravity", data->Gravity);
-    program->setInt("samples", data->Samples);
-    program->setFloat("sampleStrength", data->SampleStrength);
-    program->setFloat("sampleStengthDegradation", data->SampleStengthDegradation);
 }
 
 void ForceGrid::updateDebugLines()
