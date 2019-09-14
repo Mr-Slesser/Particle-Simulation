@@ -5,6 +5,7 @@
 * [ ] -> Culling / Bounds Checking
 
 * Caching
+* Ordering.. GPU runs in parallel to CPU, so reorder so that we submit at start of the frame, then update & render ( so 1 frame behind)
 * SPH
 * Tidy Renderer
 
