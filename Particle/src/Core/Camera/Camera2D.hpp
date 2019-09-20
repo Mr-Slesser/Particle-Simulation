@@ -17,24 +17,24 @@ namespace PT
         {
             switch(action)
             {
-                case ZOOM_IN:   // SECTION: ZOOM IN (-Z)
-                    updatePosition(glm::vec3(0.0f, 0.0f, -1.0f));
-                    break;
-                case ZOOM_OUT:  // SECTION: ZOOM OUT (+Z)
-                    updatePosition(glm::vec3(0.0f, 0.0f, 1.0f));
-                    break;
-                case LEFT:      // SECTION:: LEFT (-X)
-                    updatePosition(glm::vec3(-1.0f, 0.0f, 0.0f));
-                    break;
-                case RIGHT:     // SECTION: RIGHT (+X)
-                    updatePosition(glm::vec3(1.0f, 0.0f, 0.0f));
-                    break;
-                case UP:        // SECTION: RIGHT (+X)
-                    updatePosition(glm::vec3(0.0f, 1.0f, 0.0f));
-                    break;
-                case DOWN:      // SECTION: DOWN (-Y)
-                    updatePosition(glm::vec3(0.0f, -1.0f, 0.0f));
-                    break;
+			  case LEFT:      // SECTION:: LEFT (-X)
+				updatePosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+				break;
+			  case RIGHT:     // SECTION: RIGHT (+X)
+				updatePosition(glm::vec3(1.0f, 0.0f, 0.0f));
+				break;
+			  case UP:        // SECTION: UP (+Z)
+				updatePosition(glm::vec3(0.0f, 0.0f, -1.0f));
+				break;
+			  case DOWN:      // SECTION: DOWN (-Z)
+				updatePosition(glm::vec3(0.0f, 0.0f, 1.0f));
+				break;
+			  case RAISE:
+				updatePosition(glm::vec3(0.0f, 1.0f, 0.0f));
+				break;
+			  case LOWER:
+				updatePosition(glm::vec3(0.0f, -1.0f, 0.0f));
+				break;
                 default:
                     std::string r;
                     switch (action) {

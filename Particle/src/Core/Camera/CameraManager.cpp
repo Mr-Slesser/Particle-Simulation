@@ -29,6 +29,7 @@ CameraManager::CameraManager()
 bool CameraManager::initCameras()
 {
     // By default create the default camera!
+//    if (!registerCamera("DEFAULT", cam3D))
     if (!registerCamera("DEFAULT", cam3D))
     {
         CORE_LOG_ERROR("CameraManager::initCameras() - Default camera could not be initialized.");

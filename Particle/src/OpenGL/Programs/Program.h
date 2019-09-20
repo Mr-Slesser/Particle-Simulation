@@ -14,7 +14,7 @@ public:
     Program();
     virtual ~Program();
 
-    virtual bool init(const char *vertexPath = PATH("Shaders/point.vertex"), const char *fragmentPath = PATH("Shaders/point.fragment"));
+    virtual bool init(const char *vertexPath = PATH("Shaders/point.vertex.glsl"), const char *fragmentPath = PATH("Shaders/point.fragment.glsl"));
 
     void use();
 

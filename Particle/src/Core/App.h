@@ -30,6 +30,7 @@ private:
     double dt;
 
     bool debugDraw = true;
+    bool paused;
 
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
@@ -50,8 +51,8 @@ public:
     bool init();
     void run();
 
-    inline bool shouldDrawDebug() const { return debugDraw; }
-    void setDrawDebug(bool to) { debugDraw = to; }
+    inline bool isPaused() const { return paused; }
+    void setPaused(bool to) { paused = to; }
 };
 
 } // namespace PT

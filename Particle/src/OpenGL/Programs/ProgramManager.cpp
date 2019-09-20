@@ -22,7 +22,7 @@ bool ProgramManager::init()
 
     // UPDATE PROGRAM
     programs[PROGRAM_TYPE::UPDATE] = new UpdateProgram();
-    if (!programs[PROGRAM_TYPE::UPDATE]->init(PATH("Shaders/particle_update.vertex")))
+    if (!programs[PROGRAM_TYPE::UPDATE]->init(PATH("Shaders/particle_update.vertex.glsl")))
     {
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init UPDATE program.");
         return false;
@@ -40,7 +40,7 @@ bool ProgramManager::init()
 
     // DEBUG PROGRAM
     programs[PROGRAM_TYPE::RENDER_DEBUG] = new DebugProgram();
-    if (!programs[PROGRAM_TYPE::RENDER_DEBUG]->init(PATH("Shaders/Debug/debug.vertex"), PATH("Shaders/Debug/debug.fragment")))
+    if (!programs[PROGRAM_TYPE::RENDER_DEBUG]->init(PATH("Shaders/Debug/debug.vertex.glsl"), PATH("Shaders/Debug/debug.fragment.glsl")))
     {
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_DEBUG program.");
         return false;

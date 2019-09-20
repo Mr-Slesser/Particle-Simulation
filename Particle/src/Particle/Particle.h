@@ -36,6 +36,7 @@ public:
     float &getMass() { return data.mass; }
 
     ParticleData &getData() { return data; }
+
 };
 } // namespace PT
 

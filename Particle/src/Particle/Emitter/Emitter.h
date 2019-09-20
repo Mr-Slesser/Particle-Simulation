@@ -17,7 +17,8 @@ private:
     glm::vec3 position;
     glm::vec4 color;
     float force;
-    glm::vec2 direction;
+    glm::vec3 direction;
+    bool enabled;
     Utils::Timer timer;
 
     GL::Datastore *datastore;
@@ -32,7 +33,7 @@ public:
         float intervalMS,
         glm::vec3 position,
         float force,
-        glm::vec2 direction);
+        glm::vec3 direction);
 
     virtual ~Emitter();
 

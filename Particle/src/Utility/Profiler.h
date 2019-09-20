@@ -5,7 +5,7 @@ using namespace std;
 #define _PROFILER_FILE_LOG 1
 #define _PROFILER_ON 0
 
-#define OUTPUT "profiler-output-multi-thread"
+#define OUTPUT "profiler-output-post-rearrange"
 
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER

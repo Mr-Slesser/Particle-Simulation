@@ -9,6 +9,7 @@
 #include "../../Core/GlobalConfiguration.h"
 #include "../../Core/Camera/CameraManager.h"
 #include "../../Utility/Profiler.h"
+#include "../Buffers/TextureBuffer.h"
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
@@ -26,19 +27,7 @@ private:
 
     PT::Simulation *simulation;
 
-    /* -------------------- TEXTURE BUFFER OBJECT 0----------------------------- */
-    // PT::ForceGrid *forces0;
-
-    unsigned int texBufferID0;
-    unsigned int texBufferTextureID0;
-    /* ------------------------------------------------------------------------ */
-
-    /* -------------------- TEXTURE BUFFER OBJECT 1----------------------------- */
-    // PT::ForceGrid *forces1;
-
-    unsigned int texBufferID1;
-    unsigned int texBufferTextureID1;
-    /* ------------------------------------------------------------------------ */
+    TextureBuffer *textureBuffers[2];
 
 public:
     Renderer();
@@ -49,7 +38,6 @@ public:
     void draw(double dt);
     void update(double dt);
     void MVP();
-    void addParticle(int num);
 };
 
 } // namespace GL

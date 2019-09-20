@@ -2,7 +2,7 @@
 #include "App.h"
 
 PT::App::App()
-    : dt(0.0)
+    : dt(0.0), paused(false)
 {
 }
 
@@ -45,7 +45,7 @@ bool PT::App::init()
     }
 
     // Renderers & Forces
-    simulation = new Simulation(50, 2, 50, 5, debugDatastore);
+    simulation = new Simulation(50, 2, 50, 5, datastore, debugDatastore);
 
     renderer = new GL::Renderer();
     debugRenderer = new GL::DebugRenderer();
@@ -92,34 +92,34 @@ void PT::App::run()
     {
         PROFILE("App::run");
         double time = glfwGetTime();
-        dt = time - lastFrameTime;
+        dt = (time - lastFrameTime);
         lastFrameTime = time;
 
-        auto __simulation = simulation->__Update(dt);
+			auto __simulation = simulation->__Update(dt);
 
-        glfwPollEvents();
-        this->debugDatastore->beginDebug();
+			glfwPollEvents();
+			this->debugDatastore->beginDebug();
 
-        InputManager::get()->processInput(window, renderer);
-        renderer->clear();
-        emitters->update(debugDatastore);
+			InputManager::get()->processInput(window, renderer, simulation);
+			emitters->update(debugDatastore);
 
-        for (int i = 0; i < __simulation.size(); i++)
-        {
-            __simulation[i].join();
-        }
+			for (int i = 0; i < __simulation.size(); i++)
+			{
+				__simulation[i].join();
+			}
 
-        datastore->Update();
+			datastore->Update();
 
-        renderer->draw(dt);
-        if (this->debugDraw)
-            debugRenderer->draw(debugDatastore);
+		  renderer->clear();
+		  renderer->draw(dt);
 
-        gui->begin();
-        gui->constantElements();
-        gui->render(simulation);
-        gui->end();
+		  if (this->debugDraw)
+			  debugRenderer->draw(debugDatastore);
 
-        glfwSwapBuffers(window->context());
+		  gui->begin();
+		  gui->constantElements();
+		  gui->render(simulation);
+		  gui->end();
+		  glfwSwapBuffers(window->context());
     }
 }

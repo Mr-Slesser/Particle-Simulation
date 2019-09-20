@@ -21,7 +21,7 @@ public:
     ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, int yOffset, GL::DebugDatastore *_debugData);
     virtual ~ForceGrid();
 
-    virtual void update(double &dt);
+    virtual void update(double dt);
     virtual void updateDebugLines();
     int index(int x, int y, int z);
 

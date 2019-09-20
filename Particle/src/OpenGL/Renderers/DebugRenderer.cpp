@@ -9,9 +9,6 @@ DebugRenderer::DebugRenderer()
 
 DebugRenderer::~DebugRenderer()
 {
-    // programs = nullptr;
-    // forces = nullptr;
-
     delete VA;
     delete VB;
 }

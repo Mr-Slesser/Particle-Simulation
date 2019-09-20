@@ -23,7 +23,7 @@ InputManager::~InputManager()
     delete instance;
     instance = nullptr;
 
-    // Clean up map!
+    // TODO: Clean up map!
 }
 
 void InputManager::registerMouseCallbacks(Window *window)
@@ -38,16 +38,16 @@ void InputManager::setMouseHeld(bool torf)
     mouseHeld = torf;
 }
 
-void InputManager::processInput(Window *window, GL::Renderer *renderer)
+void InputManager::processInput(Window *window, GL::Renderer *renderer, PT::Simulation *simulation)
 {
     if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window->context(), true);
     }
 
-    if (glfwGetKey(window->context(), GLFW_KEY_Q) == GLFW_PRESS)
+    if (glfwGetKey(window->context(), GLFW_KEY_SPACE) == GLFW_PRESS)
     {
-        renderer->addParticle(10000);
+        simulation->AddParticle(100);
     }
 
     dispatch(window);

@@ -52,34 +52,49 @@ float map(float value, float min1, float max1, float min2, float max2) {
 
 void main()
 {
-    vec4 textureSample;
+    if (inLifespan > 0.0)
+    {
+        vec4 textureSample;
 
-    textureSample = SampleForceTexture();
-    vec3 drag = CalculateDrag();
-    // float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y * 2), 1.0, 5.0); // Want gravity to pull harder the higher it is!
-    float gravityModifier = 1.0;
+        textureSample = SampleForceTexture();
+        vec3 drag = CalculateDrag();
+        float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y * 2), 1.0, 5.0); // Want gravity to pull harder the higher it is!
 
-    vec3 calculatedVelocity = vec3(
+        vec3 calculatedVelocity = vec3(
         clamp(inVelocity.x + textureSample.x, MIN_SPEED, MAX_SPEED) * dt,
         clamp(inVelocity.y + textureSample.y - (gravity * gravityModifier * inMass), MIN_SPEED, MAX_SPEED) * dt,
         clamp(inVelocity.z + textureSample.z, MIN_SPEED, MAX_SPEED) * dt
-    );
-    calculatedVelocity = ApplyDrag(drag, calculatedVelocity);
+        );
+        calculatedVelocity = ApplyDrag(drag, calculatedVelocity);
 
-    outPosition = inPosition + calculatedVelocity;
-    CheckBounds();
+        outPosition = inPosition + calculatedVelocity;
+        CheckBounds();
 
-    float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
-    float g = map(inPosition.x, 0.0, SIZE_X, 0.0, 1.0);
-    float b = map(inPosition.z, 0.0, SIZE_Z, 0.0, 1.0);
+        //float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
+        //float g = map(inPosition.x, 0.0, SIZE_X, 0.0, 1.0);
+        //float b = map(inPosition.z, 0.0, SIZE_Z, 0.0, 1.0);
 
-    // outColor = vec4(calculatedVelocity.xyz, 1);
-    outColor = vec4(r, g, b, 1.0);
-    // outColor = inColor;
+        float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
+        float g = map(calculatedVelocity.x * 20, MIN_SPEED, MAX_SPEED, 0.0, 1.0);
+        float b = map(calculatedVelocity.z * 20, MIN_SPEED, MAX_SPEED, 0.0, 1.0);
 
-    outVelocity = calculatedVelocity;
-    outLifespan = inLifespan;
-    outMass = inMass;
+        // outColor = vec4(calculatedVelocity.xyz, 1);
+        outColor = vec4(r, g, b, outLifespan);
+
+        outVelocity = calculatedVelocity;
+        //    outLifespan = inLifespan;
+        outMass = inMass;
+    }
+    else
+    {
+        outPosition = inPosition;
+        outColor = inColor;
+        outLifespan = inLifespan;
+        outMass = inMass;
+        outVelocity = inVelocity;
+    }
+
+
 }
 
 vec3 CalculateDrag()
@@ -87,7 +102,7 @@ vec3 CalculateDrag()
     float speed = length(inVelocity);
     float dragSpeed = dragCoefficient * speed * speed;
     vec3 drag = inVelocity * -1;
-    drag = normalize(drag) * (dragCoefficient * speed * speed);
+    drag = normalize(drag) * (dragCoefficient * speed * speed) * inMass;
     return vec3(drag.x, drag.y, drag.z);
 }
 
@@ -147,7 +162,7 @@ vec4 SampleForceTexture()
         }
     }
 
-    return textureSample;
+    return textureSample * inMass;
 }
 
 int SampleIndex(int x, int y, int z)
@@ -161,11 +176,21 @@ int SampleIndex(int x, int y, int z)
 
 void CheckBounds()
 {
-    if (outPosition.x > SIZE_X) outPosition.x = 0;
-    if (outPosition.x < 0) outPosition.x = SIZE_X;
-
-    if (outPosition.z > SIZE_Z) outPosition.z = 0;
-    if (outPosition.z < 0) outPosition.z = SIZE_Z;
-
+//    if (outPosition.x > SIZE_X) outPosition.x = 0;
+//    if (outPosition.x < 0) outPosition.x = SIZE_X;
+//
+//    if (outPosition.z > SIZE_Z) outPosition.z = 0;
+//    if (outPosition.z < 0) outPosition.z = SIZE_Z;
+//
     if (outPosition.y < 0) outPosition.y = 1.0;
+
+    if (outPosition.x > SIZE_X || outPosition.x < 0 ||
+        outPosition.z > SIZE_Z || outPosition.z < 0)
+    {
+        outLifespan = 0.0f;
+    }
+    else
+    {
+        outLifespan = inLifespan;
+    }
 }

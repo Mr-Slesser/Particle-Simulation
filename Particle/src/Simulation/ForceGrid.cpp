@@ -8,6 +8,7 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
     : debugData(_debugData)
 {
     PROFILE("ForceGrid::ForceGrid");
+
     data = new ForceGridData(perlin, dimensions, resolution, yOffset);
 
     int ys = 0, xs = 0, zs = 0;
@@ -42,37 +43,36 @@ int ForceGrid::index(int x, int y, int z)
     return (y * SY) + (z * SZ) + x;
 }
 
-void ForceGrid::update(double &dt)
+void ForceGrid::update(double dt)
 {
-    PROFILE("ForceGrid::update");
+  PROFILE("ForceGrid::update");
 
-    std::lock_guard<std::mutex> lockGuard(mutex);
-    static double yoff = 0.0;
-    for (int y = 0; y < data->Dimensions.y; y++)
-    {
-        double zoff = 0.0;
-        for (int z = 0; z < data->Dimensions.z; z++)
-        {
-            double xoff = 0.0;
-            // float lat = Utils::Mathf::Map(z, 0, total, -HALF_PI, HALF_PI);
-            double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff, zoff) * TWO_PI * 4;
-            for (int x = 0; x < data->Dimensions.x; x++)
-            {
-                // float lon = Utils::Mathf::Map(x, 0, total, -PI, PI);
-                double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff, zoff) * TWO_PI * 4;
+  	std::lock_guard<std::mutex> lockGuard(mutex);
+	static double yoff = 0.0;
+	for (int y = 0; y < data->Dimensions.y; y++)
+	{
+	  double zoff = 0.0;
+	  for (int z = 0; z < data->Dimensions.z; z++)
+	  {
+		double xoff = 0.0;
+		double lat = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff) * TWO_PI * 4;
+		for (int x = 0; x < data->Dimensions.x; x++)
+		{
+		  double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff) * TWO_PI * 4;
 
-                float xp = 1.0f * sin(lon) * cos(lat);
-                float yp = 0.1f * sin(lon) * sin(lat);
-                float zp = 1.0f * cos(lon);
+		  float xp = 1.0f * sin(lon) * cos(lat);
+		  float yp = 0.1f * sin(lon) * sin(lat);
+		  float zp = 1.0f * cos(lon);
 
-                int i = index(x, y, z);
-                forces[i] = glm::vec3(xp, yp, zp);
-                xoff += 0.0001;
-            }
-            zoff += 0.0001;
-        }
-        yoff += 0.0001;
-    }
+		  int i = index(x, y, z);
+
+		  forces[i] = glm::vec3(xp, yp, zp);
+		  xoff += 0.01;
+		}
+		zoff += 0.01;
+	  }
+	  yoff += 0.01 * dt;
+	}
 }
 
 void ForceGrid::updateDebugLines()

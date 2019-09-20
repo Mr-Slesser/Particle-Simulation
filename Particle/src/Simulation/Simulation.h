@@ -2,6 +2,7 @@
 #define SIMULATION_H
 
 #include "ForceGrid.h"
+#include "../OpenGL/Datastores/Datastore.h"
 
 namespace PT
 {
@@ -22,13 +23,17 @@ private:
     std::vector<Utils::Perlin *> perlins;
     std::vector<ForceGrid *> forces;
 
+    GL::Datastore *datastore;
+
 public:
-    Simulation(int x, int y, int z, int resolution, GL::DebugDatastore *debugDatastore);
+    Simulation(int x, int y, int z, int resolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore);
     ~Simulation();
 
     std::vector<std::thread> __Update(double dt);
 
     void PrepareDraw(GL::Program *program);
+
+    void AddParticle(int num_to_add);
 
 public:
     inline void setDimensions(glm::vec3 d) { Dimensions = d; }

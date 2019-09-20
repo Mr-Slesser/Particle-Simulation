@@ -3,14 +3,17 @@
 
 #include "../../Particle/Particle.h"
 #include "../Buffers/VertexArray.h"
-
+#include <set>
 namespace GL
 {
 class Datastore
 {
 private:
+  	std::mutex mutex;
     std::vector<PT::ParticleData> elements;
     std::queue<PT::ParticleData> waitingToSpawn;
+  	std::queue<int> freeIndices;
+  	std::set<int> s;
 
     VertexBuffer *vb1;
     VertexBuffer *vb2;
@@ -24,6 +27,7 @@ public:
 
     void Init();
     void Update();
+    void checkForFreeIndices();
 
     void addElement(PT::ParticleData element);
     void addToQueue(PT::ParticleData element);
@@ -32,7 +36,7 @@ public:
     void copyData(std::vector<PT::ParticleData> &data);
 
     void submitData(PT::ParticleData &data);
-    void copyData(PT::ParticleData &data);
+    void copyData(PT::ParticleData data);
 
     void swapBuffers();
 

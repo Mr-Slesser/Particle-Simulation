@@ -8,7 +8,6 @@ Window::Window(const WindowConfig _config)
 
 Window::~Window()
 {
-    delete ctx;
 }
 
 GLFWwindow *Window::init()

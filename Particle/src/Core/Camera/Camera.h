@@ -47,6 +47,8 @@ public:
 
     void setPY(float y, float p);
 
+    float getSpeed() { return cSpeed; }
+
     // SECTION: Others
     virtual void handle_input(CAM_INPUT_MAP action);
 };

@@ -95,9 +95,39 @@ void Datastore::Init()
     vaR->unbind();
 }
 
+void Datastore::checkForFreeIndices()
+{
+  if (freeIndices.empty())
+  {
+	bindVertexBuffer();
+
+	auto cursor = vb1->getPointer();
+
+	for (int i = 0; i < pointer->size; ++i, cursor++)
+	{
+	  auto c = *cursor;
+
+	  if (c.lifespan <= 0.0f)
+	  {
+		std::lock_guard<std::mutex> lockGuard(mutex);
+
+		std::pair<std::set<int>::iterator, bool> p = s.insert(i);
+		if (p.second)
+		{
+		  freeIndices.push(i);
+		}
+	  }
+	}
+
+	vb1->releasePointer();
+  }
+}
+
+
 void Datastore::Update()
 {
     PROFILE("Datastore::Update");
+  	checkForFreeIndices();
 
     if (!waitingToSpawn.empty())
     {
@@ -123,11 +153,27 @@ void Datastore::submitData(std::vector<PT::ParticleData> &data)
 void Datastore::copyData(std::vector<PT::ParticleData> &data)
 {
     PROFILE("Datastore::copyData");
-
     bindVertexBuffer();
-    pointer->it = vb1->getPointer() + pointer->size - 1;
-    memcpy(pointer->it, data.data(), data.size() * sizeof(PT::ParticleData));
-    pointer->size += data.size() - 1;
+    pointer->it = vb1->getPointer();
+    while (!freeIndices.empty() && !data.empty())
+	{
+
+	  int i = freeIndices.front();
+	  freeIndices.pop();
+	  s.erase(i);
+
+      	auto toAdd = data.back();
+      	data.pop_back();
+
+	  	*(pointer->it + i) = toAdd;
+	}
+
+  if (!data.empty())
+  {
+  	pointer->it += pointer->size - 1;
+  	memcpy(pointer->it, data.data(), data.size() * sizeof(PT::ParticleData));
+  	pointer->size += data.size() - 1;
+  }
     vb1->releasePointer();
     PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
 }
@@ -141,16 +187,28 @@ void Datastore::submitData(PT::ParticleData &data)
         copyData(data);
 }
 
-void Datastore::copyData(PT::ParticleData &data)
+void Datastore::copyData(PT::ParticleData data)
 {
     PROFILE("Datastore::copyData (single)");
 
-    bindVertexBuffer();
-    pointer->it = vb1->getPointer() + pointer->size - 1;
+  bindVertexBuffer();
+  if (!freeIndices.empty())
+  {
+	int i = freeIndices.front();
+	freeIndices.pop();
+	pointer->it = vb1->getPointer() + i;
+	*pointer->it = data;
+  } else {
+	bindVertexBuffer();
+	pointer->it = vb1->getPointer() + pointer->size - 1;
     memcpy(pointer->it, &data, sizeof(PT::ParticleData));
     pointer->size += 1;
     vb1->releasePointer();
     PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
+  }
+
+  vb1->releasePointer();
+
 }
 
 void Datastore::swapBuffers()
