@@ -23,23 +23,23 @@ void Datastore::Init()
 {
     PROFILE("Datastore::Init");
 
-    // Setup Pointer
-    pointer = new VBPointer();
-    pointer->start = pointer->it = nullptr;
-    pointer->size = 0;
-    PT::GC::get()->init();
+  // Setup Pointer
+  pointer = new VBPointer<PT::ParticleData>();
+  pointer->start = pointer->it = nullptr;
+  pointer->size = 0;
+  PT::GC::get()->init();
 
-    GL::VBOLayout vbl = VBOLayout();
-    vbl.push<float>(3, 0); // Position
-    vbl.push<float>(3, 0); // Velocity
-    vbl.push<float>(4, 1); // Colour
-    vbl.push<float>(1, 0); // Lifespan
-    vbl.push<float>(1, 0); // Mass
+  GL::VBOLayout vbl = VBOLayout();
+  vbl.push<float>(3, 0); // Position
+  vbl.push<float>(3, 0); // Velocity
+  vbl.push<float>(4, 1); // Colour
+  vbl.push<float>(1, 0); // Lifespan
+  vbl.push<float>(1, 0); // Mass
 
     vaU = new VertexArray();
     vaU->init();
 
-    vb1 = new VertexBuffer(GL_DYNAMIC_DRAW);
+    vb1 = new VertexBuffer<PT::ParticleData>(GL_DYNAMIC_DRAW);
     vb1->init(sizeof(PT::ParticleData) * PT::GC::get()->getInt("MAX_PARTICLES"));
 
     {
@@ -80,7 +80,7 @@ void Datastore::Init()
         vb1->releasePointer();
     }
 
-    vb2 = new VertexBuffer(GL_DYNAMIC_DRAW);
+    vb2 = new VertexBuffer<PT::ParticleData>(GL_DYNAMIC_DRAW);
     vb2->init(sizeof(PT::ParticleData) * PT::GC::get()->getInt("MAX_PARTICLES"));
 
     vb1->bind();

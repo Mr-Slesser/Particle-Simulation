@@ -9,9 +9,10 @@ namespace GL
 enum PROGRAM_TYPE
 {
     UPDATE = 0,
-    RENDER = 1,
-    RENDER_DEBUG = 2,
-    SIZE = 3
+    RENDER,
+    RENDER_DEBUG,
+    RENDER_MESH,
+    SIZE
 };
 
 class ProgramManager

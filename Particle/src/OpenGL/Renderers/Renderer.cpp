@@ -69,6 +69,7 @@ void GL::Renderer::draw(double dt)
   if (datastore->getPointerSize() > 0)
   {
 	this->update(dt);
+
 	programs->use(RENDER);
 	MVP();
 	datastore->bindRenderArray();
@@ -84,8 +85,7 @@ void GL::Renderer::MVP()
 {
   PROFILE("Renderer::MVP");
 
-  model = glm::mat4(1.0f);
-  programs->get_active(RENDER)->setMat4("model", model);
+  programs->get_active(RENDER)->setMat4("model", glm::mat4(1.0f));
   programs->get_active(RENDER)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
   programs->get_active(RENDER)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
 }

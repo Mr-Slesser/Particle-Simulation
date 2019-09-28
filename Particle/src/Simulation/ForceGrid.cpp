@@ -64,6 +64,19 @@ void ForceGrid::update(double dt)
 		  float yp = 0.1f * sin(lon) * sin(lat);
 		  float zp = 1.0f * cos(lon);
 
+		  float mag = sqrt(xp * xp + yp * yp + zp * zp);
+
+//		  if (mag > maxMagnitude)
+//		  {
+
+//		  float magnitude = Utils::Random::ZeroToN(data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff));
+		  float magnitude = maxMagnitude * data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff);
+
+		  	xp = xp * magnitude / mag;
+		    yp = yp * magnitude / mag;
+		    zp = zp * magnitude / mag;
+//		  }
+
 		  int i = index(x, y, z);
 
 		  forces[i] = glm::vec3(xp, yp, zp);
@@ -79,22 +92,25 @@ void ForceGrid::updateDebugLines()
 {
     PROFILE("ForceGrid::updateDebugLines");
 
-    float cellSize = (data->Resolution * 0.5f) / 2.0f;
+    float cellSize = (data->Resolution * 0.5f) * 0.5f;
     for (int y = 0; y < data->Dimensions.y; y++)
     {
         for (int z = 0; z < data->Dimensions.z; z++)
         {
             for (int x = 0; x < data->Dimensions.x; x++)
             {
-                glm::vec3 n = glm::normalize(forces[y + z + x]);
+              	auto f = forces[y + z + x];
+                glm::vec3 n = glm::normalize(f);
 
                 float xp = x * data->Resolution + (data->Resolution * 0.5f);
                 float yp = y * data->Resolution + (data->Resolution * 0.5f) + data->yOffset;
                 float zp = z * data->Resolution + (data->Resolution * 0.5f);
 
-                float dirx = xp + (n.x * cellSize);
-                float diry = yp + (n.y * cellSize);
-                float dirz = zp + (n.z * cellSize);
+                float mag = showActualMagnitude ? sqrt(f.x * f.x + f.y * f.y + f.z * f.z) : 1;
+
+                float dirx = xp + (n.x * cellSize * mag);
+                float diry = yp + (n.y * cellSize * mag);
+                float dirz = zp + (n.z * cellSize * mag);
 
                 debugData->addElement({glm::vec3(xp, yp, zp)}, {glm::vec3(dirx, diry, dirz)});
             }

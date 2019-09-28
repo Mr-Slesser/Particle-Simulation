@@ -11,7 +11,7 @@
 #include "../../Utility/Profiler.h"
 #include "../Buffers/TextureBuffer.h"
 
-#define ZERO_MEM(a) memset(a, 0, sizeof(a))
+//#define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
 namespace GL
 {
@@ -21,12 +21,7 @@ private:
     ProgramManager *programs;
     Datastore *datastore;
 
-    glm::mat4 model;
-    glm::mat4 view;
-    glm::mat4 projection;
-
     PT::Simulation *simulation;
-
     TextureBuffer *textureBuffers[2];
 
 public:

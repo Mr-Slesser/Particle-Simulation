@@ -23,11 +23,8 @@ bool GUILayer::init(GLFWwindow *_window)
     io = &ImGui::GetIO();
     (void)io;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    //io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
     io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
-    //io->ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-    //io->ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
     ImGui::StyleColorsDark();
 
@@ -137,7 +134,16 @@ void GUILayer::render(Simulation *sim)
             forcegrid0->setOctaves(octaves);
             forcegrid0->setPersistance(per);
 
-            // ------------ FORCE GRID 0 -------------------------------------
+            bool actualMag = forcegrid0->isShowingActualMagnitude();
+		  	ImGui::Checkbox("Actual Magnitude", &actualMag);
+		  	forcegrid0->setShowActualMagnitude(actualMag);
+
+		  	float mag = forcegrid0->getMaxMagnitude();
+		  	ImGui::SliderFloat("Maximum Magnitude", &mag, 0.0f, 20.0f, "%.2f");
+		  	forcegrid0->setMaxMagnitude(mag);
+
+
+		  // ------------ FORCE GRID 0 -------------------------------------
             // ---------------------------------------------------------------
 //            ImGui::Text("Forcegrid 1");
 //            auto forcegrid1 = sim->Force(1);

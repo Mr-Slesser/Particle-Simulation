@@ -47,6 +47,15 @@ bool ProgramManager::init()
     }
     Print_All(programs[PROGRAM_TYPE::RENDER_DEBUG]->getID());
 
+    // RENDER MESH PROGRAM
+	programs[PROGRAM_TYPE::RENDER_MESH] = new Program();
+	if (!programs[PROGRAM_TYPE::RENDER_MESH]->init(PATH("Shaders/mesh.vertex.glsl"), PATH("Shaders/mesh.fragment.glsl")))
+	{
+	  GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_MESH program.");
+	  return false;
+	}
+	Print_All(programs[PROGRAM_TYPE::RENDER_MESH]->getID());
+
     return true;
 }
 

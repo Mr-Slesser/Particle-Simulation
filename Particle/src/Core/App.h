@@ -6,6 +6,7 @@
 #include "../OpenGL/Programs/ProgramManager.h"
 #include "../OpenGL/Renderers/Renderer.h"
 #include "../OpenGL/Renderers/DebugRenderer.h"
+#include "../OpenGL/Renderers/MeshRenderer.h"
 #include "../OpenGL/Datastores/DebugDatastore.h"
 #include "../OpenGL/Datastores/Datastore.h"
 
@@ -35,13 +36,13 @@ private:
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
     GL::DebugRenderer *debugRenderer;
+    GL::MeshRenderer *meshRenderer;
     GL::Datastore *datastore;
     GL::DebugDatastore *debugDatastore;
+  	GL::MeshDatastore *meshDatastore;
 
-    GUILayer *gui;
-
+  	GUILayer *gui;
     Simulation *simulation;
-
     EmitterManager *emitters;
 
 public:

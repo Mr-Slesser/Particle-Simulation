@@ -12,4 +12,3 @@ rm -rf **/Makefile
 rm -rf config
 rm -rf .idea
 rm -rf .vscode
-rm -rf cmake-build-debug

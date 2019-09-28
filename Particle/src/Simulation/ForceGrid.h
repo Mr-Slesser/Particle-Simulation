@@ -11,6 +11,9 @@ namespace PT
 class ForceGrid
 {
 private:
+    bool showActualMagnitude = true;
+    float maxMagnitude = 1.0f;
+
     std::mutex mutex;
     ForceGridData *data;
     GL::DebugDatastore *debugData;
@@ -36,6 +39,12 @@ public:
     inline float getPersistance() { return data->Persistance; }
     inline int getResolution() { return data->Resolution; }
     inline glm::vec3 getDimensions() { return data->Dimensions; }
+
+    bool isShowingActualMagnitude() { return showActualMagnitude; }
+    void setShowActualMagnitude(bool to) { showActualMagnitude = to; }
+
+    float getMaxMagnitude() { return maxMagnitude; }
+	void setMaxMagnitude(float to ) {  maxMagnitude = to; }
 
     inline int elements() { return forces.size(); }
     inline int size() { return sizeof(glm::vec3) * forces.size(); }

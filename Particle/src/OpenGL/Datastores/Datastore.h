@@ -4,6 +4,7 @@
 #include "../../Particle/Particle.h"
 #include "../Buffers/VertexArray.h"
 #include <set>
+
 namespace GL
 {
 class Datastore
@@ -15,11 +16,11 @@ private:
   	std::queue<int> freeIndices;
   	std::set<int> s;
 
-    VertexBuffer *vb1;
-    VertexBuffer *vb2;
+    VertexBuffer<PT::ParticleData> *vb1;
+    VertexBuffer<PT::ParticleData> *vb2;
     VertexArray *vaR;
     VertexArray *vaU;
-    VBPointer *pointer;
+    VBPointer<PT::ParticleData> *pointer;
 
 public:
     Datastore();
@@ -52,7 +53,7 @@ public:
 
     inline std::vector<PT::ParticleData> &getElements() { return elements; }
     inline PT::ParticleData *getData() { return elements.data(); }
-    inline VertexBuffer *getVertexBuffer() { return vb1; }
+    inline VertexBuffer<PT::ParticleData> *getVertexBuffer() { return vb1; }
 
     inline unsigned int getVertexBufferID() { return vb1->getID(); }
     inline unsigned int getSubVertexBufferID() { return vb2->getID(); }
@@ -60,7 +61,7 @@ public:
     inline VertexArray *getUpdateArray() { return vaU; }
     inline VertexArray *getRenderArray() { return vaR; }
 
-    inline VBPointer *getPointer() { return pointer; }
+    inline VBPointer<PT::ParticleData> *getPointer() { return pointer; }
     inline unsigned int getPointerSize() { return pointer->size - 1; }
 };
 

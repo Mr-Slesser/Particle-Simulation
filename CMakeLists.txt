@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(Particle)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 include_directories(Particle/src)
 include_directories(Particle/src/Core)
@@ -49,11 +49,11 @@ include_directories(vendor/spdlog/tests)
 add_executable(Particle
         Particle/Resources/Definitions/Error.def
         Particle/Resources/Definitions/Input-Camera.def
-        Particle/Resources/Shaders/Debug/debug.fragment
-        Particle/Resources/Shaders/Debug/debug.vertex
+        Particle/Resources/Shaders/Debug/debug.fragment.glsl
+        Particle/Resources/Shaders/Debug/debug.vertex.glsl
         Particle/Resources/Shaders/particle_update.vertex.glsl
-        Particle/Resources/Shaders/point.fragment
-        Particle/Resources/Shaders/point.vertex
+        Particle/Resources/Shaders/point.fragment.glsl
+        Particle/Resources/Shaders/point.vertex.glsl
         Particle/src/Core/Camera/Camera.cpp
         Particle/src/Core/Camera/Camera.h
         Particle/src/Core/Camera/Camera2D.hpp
@@ -91,6 +91,8 @@ add_executable(Particle
         Particle/src/Headers/ImGUI.hpp
         Particle/src/Headers/OpenGL.hpp
         Particle/src/Headers/stb_image.h
+        Particle/src/OpenGL/Buffers/TextureBuffer.cpp
+        Particle/src/OpenGL/Buffers/TextureBuffer.h
         Particle/src/OpenGL/Buffers/VBOLayout.h
         Particle/src/OpenGL/Buffers/VertexArray.cpp
         Particle/src/OpenGL/Buffers/VertexArray.h
@@ -100,6 +102,8 @@ add_executable(Particle
         Particle/src/OpenGL/Datastores/Datastore.h
         Particle/src/OpenGL/Datastores/DebugDatastore.cpp
         Particle/src/OpenGL/Datastores/DebugDatastore.h
+        Particle/src/OpenGL/Datastores/MeshDatastore.cpp
+        Particle/src/OpenGL/Datastores/MeshDatastore.h
         Particle/src/OpenGL/Primitives/Cube.h
         Particle/src/OpenGL/Primitives/Quad.h
         Particle/src/OpenGL/Primitives/Vertex.h
@@ -113,6 +117,8 @@ add_executable(Particle
         Particle/src/OpenGL/Programs/UpdateProgram.h
         Particle/src/OpenGL/Renderers/DebugRenderer.cpp
         Particle/src/OpenGL/Renderers/DebugRenderer.h
+        Particle/src/OpenGL/Renderers/MeshRenderer.cpp
+        Particle/src/OpenGL/Renderers/MeshRenderer.h
         Particle/src/OpenGL/Renderers/Renderer.cpp
         Particle/src/OpenGL/Renderers/Renderer.h
         Particle/src/OpenGL/GLLog.h
@@ -145,7 +151,6 @@ add_executable(Particle
         Particle/src/main.cpp
         Particle/src/PCHeader.cpp
         Particle/src/PCHeader.h
-        Particle/imgui.ini
         vendor/glad/include/glad/glad.h
         vendor/glad/include/KHR/khrplatform.h
         vendor/glfw/include/GLFW/glfw3.h
@@ -601,10 +606,4 @@ add_executable(Particle
         vendor/spdlog/tests/test_sink.h
         vendor/spdlog/tests/test_systemd.cpp
         vendor/spdlog/tests/utils.cpp
-        vendor/spdlog/tests/utils.h Particle/src/OpenGL/Buffers/TextureBuffer.cpp Particle/src/OpenGL/Buffers/TextureBuffer.h)
-
-target_link_libraries(Particle "-framework Cocoa")
-target_link_libraries(Particle "-framework OpenGL")
-target_link_libraries(Particle "-framework IOKit")
-target_link_libraries(Particle "-framework CoreVideo")
-target_link_libraries(Particle "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
+        vendor/spdlog/tests/utils.h)

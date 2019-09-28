@@ -18,7 +18,7 @@ protected:
     PT::ForceGrid *forces1;
     ProgramManager *programs;
 
-    VertexBuffer *VB;
+    VertexBuffer<PT::ParticleData> *VB;
     VertexArray *VA;
 
 private:

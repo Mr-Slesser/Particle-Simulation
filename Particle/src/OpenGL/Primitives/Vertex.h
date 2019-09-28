@@ -14,4 +14,11 @@ struct TVertex
     glm::vec2 texcoords;
 };
 
+struct MVertex
+{
+  glm::vec3 position;
+  glm::vec4 colour;
+  glm::vec3 normals;
+};
+
 #endif /* VERTEX_H */
