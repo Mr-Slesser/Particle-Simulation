@@ -139,15 +139,15 @@ void GUILayer::render(Simulation *sim)
 
             // ------------ FORCE GRID 0 -------------------------------------
             // ---------------------------------------------------------------
-            ImGui::Text("Forcegrid 1");
-            auto forcegrid1 = sim->Force(1);
-
-            int octaves1 = forcegrid1->getOctaves();
-            float per1 = forcegrid1->getPersistance();
-            ImGui::SliderInt("Octaves", &octaves1, 1.0f, 8.0f, "%d");
-            ImGui::SliderFloat("Persistance", &per1, 0.0f, 1.0f, "%.2f");
-            forcegrid1->setOctaves(octaves1);
-            forcegrid1->setPersistance(per1);
+//            ImGui::Text("Forcegrid 1");
+//            auto forcegrid1 = sim->Force(1);
+//
+//            int octaves1 = forcegrid1->getOctaves();
+//            float per1 = forcegrid1->getPersistance();
+//            ImGui::SliderInt("Octaves", &octaves1, 1.0f, 8.0f, "%d");
+//            ImGui::SliderFloat("Persistance", &per1, 0.0f, 1.0f, "%.2f");
+//            forcegrid1->setOctaves(octaves1);
+//            forcegrid1->setPersistance(per1);
         }
         ImGui::End();
     }

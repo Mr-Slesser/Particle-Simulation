@@ -74,7 +74,7 @@ bool GC::getBool(const char *name)
     }
 }
 
-glm::vec4 &GC::getVec4(const char *name)
+glm::vec4 GC::getVec4(const char *name)
 {
     if (vec4s.find(name) != vec4s.end())
     {
@@ -83,8 +83,7 @@ glm::vec4 &GC::getVec4(const char *name)
     else
     {
         CORE_LOG_ERROR("Global Config::getVec4() -> {} not found.", name);
-        auto a = glm::vec4(1.0f);
-        return a;
+        return glm::vec4(1.0f);
     }
 }
 

@@ -6,12 +6,12 @@ namespace PT
 Simulation::Simulation(int x, int y, int z, int resolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore)
     : Resolution(resolution), Dimensions(glm::vec3(x, y, z)), drawDebug(true), datastore(datastore)
 {
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 1; i++)
     {
-        perlins.push_back(new Utils::Perlin((i + 1) * 256));
+        perlins.push_back(new Utils::Perlin((i * 10) * 256));
     }
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 1; i++)
     {
         forces.push_back(new ForceGrid(perlins[i], glm::vec3(x, y, z), resolution, i * (y * resolution), debugDatastore));
     }

@@ -24,7 +24,7 @@ public:
     float getFloat(const char *name);
     bool getBool(const char *name);
 
-    glm::vec4 &getVec4(const char *name);
+    glm::vec4 getVec4(const char *name);
 
     bool addInt(const char *name, int value);
     bool addFloat(const char *name, float value);

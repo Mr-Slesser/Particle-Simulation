@@ -197,7 +197,8 @@ void Datastore::copyData(PT::ParticleData data)
         freeIndices.pop();
         pointer->it = vb1->getPointer() + i;
         *pointer->it = data;
-    }
+	  	vb1->releasePointer();
+	}
     else
     {
         bindVertexBuffer();
@@ -208,7 +209,6 @@ void Datastore::copyData(PT::ParticleData data)
         PT::GC::get()->updateInt("CURR_NO_PARTICLES", pointer->size);
     }
 
-    vb1->releasePointer();
 }
 
 void Datastore::swapBuffers()

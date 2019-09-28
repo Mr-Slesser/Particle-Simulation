@@ -16,7 +16,7 @@ uniform float dt;
 uniform samplerBuffer tbo_id0;
 uniform samplerBuffer tbo_id1;
 
-uniform vec2 minMaxSpeed; // x: Min, y: Max
+uniform vec2 minMaxSpeed;// x: Min, y: Max
 uniform int resolution;
 uniform vec3 dimensions;
 uniform float dragCoefficient;
@@ -43,11 +43,12 @@ uniform float sampleStengthDegradation;
 vec3 CalculateDrag();
 vec3 ApplyDrag(vec3 _drag, vec3 _velocity);
 vec4 SampleForceTexture();
+vec4 SampleForceTextures();
 int SampleIndex(int x, int y, int z);
 void CheckBounds();
 
 float map(float value, float min1, float max1, float min2, float max2) {
-  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+    return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
 
 void main()
@@ -61,28 +62,22 @@ void main()
         float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y * 2), 1.0, 5.0); // Want gravity to pull harder the higher it is!
 
         vec3 calculatedVelocity = vec3(
-        clamp(inVelocity.x + textureSample.x, MIN_SPEED, MAX_SPEED) * dt,
-        clamp(inVelocity.y + textureSample.y - (gravity * gravityModifier * inMass), MIN_SPEED, MAX_SPEED) * dt,
-        clamp(inVelocity.z + textureSample.z, MIN_SPEED, MAX_SPEED) * dt
+        clamp(inVelocity.x + (textureSample.x * inMass), MIN_SPEED, MAX_SPEED) * dt,
+        clamp(inVelocity.y + (textureSample.y * inMass) - (gravity * gravityModifier * inMass), MIN_SPEED, MAX_SPEED) * dt,
+        clamp(inVelocity.z + (textureSample.z * inMass), MIN_SPEED, MAX_SPEED) * dt
         );
         calculatedVelocity = ApplyDrag(drag, calculatedVelocity);
 
         outPosition = inPosition + calculatedVelocity;
         CheckBounds();
 
-        //float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
-        //float g = map(inPosition.x, 0.0, SIZE_X, 0.0, 1.0);
-        //float b = map(inPosition.z, 0.0, SIZE_Z, 0.0, 1.0);
-
         float r = map(inPosition.y, 0.0, 2 * SIZE_Y, 0.0, 1.0);
         float g = map(calculatedVelocity.x * 20, MIN_SPEED, MAX_SPEED, 0.0, 1.0);
         float b = map(calculatedVelocity.z * 20, MIN_SPEED, MAX_SPEED, 0.0, 1.0);
 
-        // outColor = vec4(calculatedVelocity.xyz, 1);
         outColor = vec4(r, g, b, outLifespan);
 
         outVelocity = calculatedVelocity;
-        //    outLifespan = inLifespan;
         outMass = inMass;
     }
     else
@@ -129,6 +124,31 @@ vec4 SampleForceTexture()
 
     if (inPosition.y > 0 && inPosition.y <= 2 * SIZE_Y)
     {
+        textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, 0)));
+
+        ss * sampleStengthDegradation;
+
+        for (int i = 1; i <= samples; ++i)
+        {
+            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, i)));// Top
+            textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));// Left
+            textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));// Right
+            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));// Bottom
+
+            ss *= sampleStengthDegradation;
+        }
+    }
+
+    return textureSample * inMass;
+}
+
+vec4 SampleForceTextures()
+{
+    vec4 textureSample = vec4(0.0, 0.0, 0.0, 0.0);
+    float ss = sampleStrength;
+
+    if (inPosition.y > 0 && inPosition.y <= 2 * SIZE_Y)
+    {
 
         if (inPosition.y <= SIZE_Y)
         {
@@ -140,15 +160,15 @@ vec4 SampleForceTexture()
         }
 
         ss * sampleStengthDegradation;
-        
-        for(int i = 1; i <= samples; ++i)
+
+        for (int i = 1; i <= samples; ++i)
         {
             if (inPosition.y <= SIZE_Y)
             {
-                textureSample += (texelFetch(tbo_id0, SampleIndex(  0,  0,  i))); // Top
-                textureSample += (texelFetch(tbo_id0, SampleIndex( -i,  0,  0))); // Left
-                textureSample += (texelFetch(tbo_id0, SampleIndex(  i,  0,  0))); // Right
-                textureSample += (texelFetch(tbo_id0, SampleIndex(  0,  0, -i))); // Bottom
+                textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, i)));// Top
+                textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));// Left
+                textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));// Right
+                textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));// Bottom
             }
             else
             {
@@ -166,26 +186,26 @@ vec4 SampleForceTexture()
 }
 
 int SampleIndex(int x, int y, int z)
-{   
+{
     int xp = int(int(inPosition.x + x) / SIZE_X);
     int yp = int(int((inPosition.y / 2 + y) / SIZE_Y) * Y);
     int zp = int(int((inPosition.z + z) / SIZE_Z) * Z);
 
-    return  yp + zp + xp;
+    return yp + zp + xp;
 }
 
 void CheckBounds()
 {
-//    if (outPosition.x > SIZE_X) outPosition.x = 0;
-//    if (outPosition.x < 0) outPosition.x = SIZE_X;
-//
-//    if (outPosition.z > SIZE_Z) outPosition.z = 0;
-//    if (outPosition.z < 0) outPosition.z = SIZE_Z;
-//
+    //    if (outPosition.x > SIZE_X) outPosition.x = 0;
+    //    if (outPosition.x < 0) outPosition.x = SIZE_X;
+    //
+    //    if (outPosition.z > SIZE_Z) outPosition.z = 0;
+    //    if (outPosition.z < 0) outPosition.z = SIZE_Z;
+
     if (outPosition.y < 0) outPosition.y = 1.0;
 
     if (outPosition.x > SIZE_X || outPosition.x < 0 ||
-        outPosition.z > SIZE_Z || outPosition.z < 0)
+    outPosition.z > SIZE_Z || outPosition.z < 0)
     {
         outLifespan = 0.0f;
     }
