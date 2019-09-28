@@ -2,6 +2,9 @@
 /bin-int
 /GoogleTest
 /.vs
+/.idea
+/.vscode
+/cmake-build-debug
 
 # XCode
 **/*.xc*

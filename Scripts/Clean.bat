@@ -6,3 +6,6 @@ del /F/Q/S *.vcx*
 del /F/Q/S *.sln
 del /F/Q/S Makefile
 del /F/Q/S config
+rmdir /S/Q .idea
+rmdir /S/Q .vscode
+rmdir /S/Q cmake-build-debug
