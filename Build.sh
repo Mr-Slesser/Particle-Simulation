@@ -3,8 +3,7 @@ echo "[1] Build & Run"
 echo "[2] Build"
 echo "[3] Clean"
 echo "[4] Generate"
-echo "[5] Generate (XCode)"
-echo "[6] Commit"
+echo "[5] Commit"
 
 read -p "Enter selection :> " sel
 
@@ -22,9 +21,6 @@ case $sel in
         ./Scripts/Generate.sh
         ;;
     5)
-        ./Scripts/GenerateXCode.sh
-        ;;
-    6)
         ./Scripts/Commit.sh
         ;;
 esac
