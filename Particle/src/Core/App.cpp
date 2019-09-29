@@ -30,8 +30,18 @@ bool PT::App::init()
   CORE_LOG_TRACE("Logger startup: [Core]");
   GL_LOG_TRACE("  Logger startup: [GL  ]");
 
+  Utils::ApplicationData *d = Utils::ConfigReader::ReadConfig(PATH("config.ini"));
+  if (d == nullptr)
+  {
+	GL_LOG_CRITICAL("GL::Renderer::init() -> Failed to read configuration file");
+	return false;
+  }
+
+  GC::get()->init(d->maxParticles);
+  InputManager::get()->setParticleFloodAmount(d->particleFloodNumber);
+
   // Window
-  window = new Window();
+  window = new Window(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen));
   if (window->init() == nullptr)
   {
 	CORE_LOG_TRACE("EXIT: Window initialization failed");
@@ -41,7 +51,7 @@ bool PT::App::init()
   // Datastores
   datastore = new GL::Datastore();
   debugDatastore = new GL::DebugDatastore();
-  meshDatastore = new GL::MeshDatastore(50 * 5, 50 * 5, 1);
+  meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
 
   // Programs
   programs = new GL::ProgramManager();
@@ -52,7 +62,7 @@ bool PT::App::init()
   }
 
   // Renderers & Forces
-  simulation = new Simulation(50, 2, 50, 5, datastore, debugDatastore);
+  simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore);
 
   renderer = new GL::Renderer();
   debugRenderer = new GL::DebugRenderer();
@@ -124,7 +134,7 @@ void PT::App::run()
 	}
 
 	datastore->Update();
-//	meshDatastore->Update();
+	meshDatastore->Update();
 
 	renderer->clear();
 

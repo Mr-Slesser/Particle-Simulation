@@ -17,7 +17,7 @@ uniform samplerBuffer tbo_id0;
 uniform samplerBuffer tbo_id1;
 
 uniform vec2 minMaxSpeed;// x: Min, y: Max
-uniform int resolution;
+uniform vec2 resolution;
 uniform vec3 dimensions;
 uniform float dragCoefficient;
 uniform float gravity;
@@ -33,9 +33,9 @@ uniform float sampleStengthDegradation;
 #define Y GD.y
 #define Z GD.z
 
-#define SIZE_X X * SIZE
-#define SIZE_Y Y * SIZE
-#define SIZE_Z Z * SIZE
+#define SIZE_X X * SIZE.x
+#define SIZE_Y Y * SIZE.y
+#define SIZE_Z Z * SIZE.x
 
 #define MIN_SPEED SL.x
 #define MAX_SPEED SL.y
@@ -59,7 +59,7 @@ void main()
 
         textureSample = SampleForceTexture();
         vec3 drag = CalculateDrag();
-        float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y * 2), 1.0, 5.0); // Want gravity to pull harder the higher it is!
+        float gravityModifier = map(inPosition.y, 0.0, (SIZE_Y), 1.0, 5.0); // Want gravity to pull harder the higher it is!
 
         vec3 calculatedVelocity = vec3(
         clamp(inVelocity.x + (textureSample.x * inMass), MIN_SPEED, MAX_SPEED) * dt,
@@ -130,10 +130,10 @@ vec4 SampleForceTexture()
 
         for (int i = 1; i <= samples; ++i)
         {
-            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, i)));// Top
-            textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));// Left
-            textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));// Right
-            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));// Bottom
+            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, i)));   // Top
+            textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));  // Left
+            textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));   // Right
+            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));  // Bottom
 
             ss *= sampleStengthDegradation;
         }
@@ -188,7 +188,7 @@ vec4 SampleForceTextures()
 int SampleIndex(int x, int y, int z)
 {
     int xp = int(int(inPosition.x + x) / SIZE_X);
-    int yp = int(int((inPosition.y / 2 + y) / SIZE_Y) * Y);
+    int yp = int(int((inPosition.y + y) / SIZE_Y) * Y);
     int zp = int(int((inPosition.z + z) / SIZE_Z) * Z);
 
     return yp + zp + xp;
@@ -196,12 +196,6 @@ int SampleIndex(int x, int y, int z)
 
 void CheckBounds()
 {
-    //    if (outPosition.x > SIZE_X) outPosition.x = 0;
-    //    if (outPosition.x < 0) outPosition.x = SIZE_X;
-    //
-    //    if (outPosition.z > SIZE_Z) outPosition.z = 0;
-    //    if (outPosition.z < 0) outPosition.z = SIZE_Z;
-
     if (outPosition.y < 0) outPosition.y = 1.0;
 
     if (outPosition.x > SIZE_X || outPosition.x < 0 ||

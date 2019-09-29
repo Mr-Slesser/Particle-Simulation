@@ -19,6 +19,8 @@ class InputManager
   bool mouseHeld;
   float sensitivity;
 
+  unsigned int particleFloodAmount;
+
   std::map<unsigned int, std::vector<InputReceiver *>> dispatchers;
 
  public:
@@ -36,6 +38,8 @@ class InputManager
   { return mouseHeld; }
   const inline float getSensitivity() const
   { return sensitivity; }
+
+  inline void setParticleFloodAmount(int to) { particleFloodAmount = to; }
 
   void processInput(Window *window, GL::Renderer *renderer, PT::Simulation *simulation);
 };

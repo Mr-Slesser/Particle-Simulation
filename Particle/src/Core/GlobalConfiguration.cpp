@@ -22,10 +22,10 @@ GC::~GC()
     floats.clear();
 }
 
-void GC::init()
+void GC::init(unsigned int max)
 {
     // Add values..
-    addInt("MAX_PARTICLES", 1000000);
+    addInt("MAX_PARTICLES", max);
     addInt("CURR_NO_PARTICLES", 0);
 
     addBool("PAUSED", false);

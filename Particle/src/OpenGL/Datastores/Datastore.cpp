@@ -27,7 +27,6 @@ void Datastore::Init()
   pointer = new VBPointer<PT::ParticleData>();
   pointer->start = pointer->it = nullptr;
   pointer->size = 0;
-  PT::GC::get()->init();
 
   GL::VBOLayout vbl = VBOLayout();
   vbl.push<float>(3, 0); // Position

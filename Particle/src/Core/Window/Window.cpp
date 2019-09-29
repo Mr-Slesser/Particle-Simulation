@@ -22,7 +22,7 @@ GLFWwindow *Window::init()
     }
     setGLVersion(config.major, config.minor);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-    ctx = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
+    ctx = glfwCreateWindow(config.width, config.height, config.title, config.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
     if (ctx == NULL)
     {

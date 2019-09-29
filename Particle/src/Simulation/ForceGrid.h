@@ -18,7 +18,7 @@ private:
     ForceGridData *data;
     GL::DebugDatastore *debugData;
     std::vector<glm::vec3> debugVertices;
-    std::vector<glm::vec3> forces; // Layout: X-Dir, Y-Dir, Z-Dir, Strength
+    std::vector<glm::vec3> forces; // Layout: X-Dir, Y-Dir, Z-Dir
 
 public:
     ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution, int yOffset, GL::DebugDatastore *_debugData);

@@ -18,7 +18,7 @@ private:
 public:
     virtual ~GC();
     static GC *get();
-    void init();
+    void init(unsigned int max);
 
     int getInt(const char *name);
     float getFloat(const char *name);

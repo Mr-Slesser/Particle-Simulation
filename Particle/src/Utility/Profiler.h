@@ -3,9 +3,9 @@
 
 using namespace std;
 #define _PROFILER_FILE_LOG 1
-#define _PROFILER_ON 0
+#define _PROFILER_ON 1
 
-#define OUTPUT "profiler-output-post-rearrange"
+#define OUTPUT "profiler-output-aftermesh"
 
 #ifdef _PROFILER_FILE_LOG
 #define _PROFILER_FILE_LOGGER

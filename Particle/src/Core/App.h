@@ -1,6 +1,8 @@
 #ifndef APP_H
 #define APP_H
 
+#include "../Utility/ConfigReader.h"
+
 #include "Window/Window.h"
 
 #include "../OpenGL/Programs/ProgramManager.h"

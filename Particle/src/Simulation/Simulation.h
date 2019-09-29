@@ -10,7 +10,7 @@ class Simulation
 {
 private:
     glm::vec3 Dimensions;
-    int Resolution;
+    glm::vec2 Resolution;
     glm::vec2 MinMaxSpeed = glm::vec2(-10.0f, 10.0f);
     float DragCoefficient = 0.3f;
     float Gravity = 0.1f;
@@ -26,7 +26,7 @@ private:
     GL::Datastore *datastore;
 
 public:
-    Simulation(int x, int y, int z, int resolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore);
+    Simulation(int x, int y, int z, int resolution, int yresolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore);
     ~Simulation();
 
     std::vector<std::thread> __Update(double dt);
@@ -39,7 +39,7 @@ public:
     inline void setDimensions(glm::vec3 d) { Dimensions = d; }
     inline glm::vec3 getDimensions() { return Dimensions; }
 
-    inline int getResolution() { return Resolution; }
+    inline glm::vec2 getResolution() { return Resolution; }
 
     inline void setSpeed(glm::vec2 s) { MinMaxSpeed = s; }
     inline glm::vec2 getSpeed() { return MinMaxSpeed; }

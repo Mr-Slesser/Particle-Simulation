@@ -25,7 +25,6 @@ void MeshDatastore::Init()
   pointer = new VBPointer<MVertex>();
   pointer->start = pointer->it = nullptr;
   pointer->size = 0;
-  PT::GC::get()->init();
 
   GL::VBOLayout vbl = VBOLayout();
   vbl.push<float>(3, 0); // Position

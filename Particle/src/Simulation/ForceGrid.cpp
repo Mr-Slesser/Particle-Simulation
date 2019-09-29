@@ -11,16 +11,12 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
 
     data = new ForceGridData(perlin, dimensions, resolution, yOffset);
 
-    int ys = 0, xs = 0, zs = 0;
     for (int y = 0; y < data->Dimensions.y; y++)
     {
-        ys++;
         for (int z = 0; z < data->Dimensions.z; z++)
         {
-            zs++;
             for (int x = 0; x < data->Dimensions.x; x++)
             {
-                xs++;
                 forces.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
             }
         }
@@ -65,17 +61,10 @@ void ForceGrid::update(double dt)
 		  float zp = 1.0f * cos(lon);
 
 		  float mag = sqrt(xp * xp + yp * yp + zp * zp);
-
-//		  if (mag > maxMagnitude)
-//		  {
-
-//		  float magnitude = Utils::Random::ZeroToN(data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff));
 		  float magnitude = maxMagnitude * data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff);
-
-		  	xp = xp * magnitude / mag;
-		    yp = yp * magnitude / mag;
-		    zp = zp * magnitude / mag;
-//		  }
+		  xp = xp * magnitude / mag;
+		  yp = yp * magnitude / mag;
+		  zp = zp * magnitude / mag;
 
 		  int i = index(x, y, z);
 

@@ -47,7 +47,7 @@ void InputManager::processInput(Window *window, GL::Renderer *renderer, PT::Simu
 
     if (glfwGetKey(window->context(), GLFW_KEY_SPACE) == GLFW_PRESS)
     {
-        simulation->AddParticle(100);
+        simulation->AddParticle(particleFloodAmount);
     }
 
     dispatch(window);

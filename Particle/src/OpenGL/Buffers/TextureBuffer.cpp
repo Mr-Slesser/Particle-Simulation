@@ -8,7 +8,7 @@ TextureBuffer::TextureBuffer(GLenum _textureUnit, PT::ForceGrid *_force)
 
     GLCheck(glGenBuffers(1, &bufferID));
     GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, bufferID));
-    GLCheck(glBufferData(GL_TEXTURE_BUFFER,force->size(), force->getDataPointer(), GL_DYNAMIC_DRAW));
+    GLCheck(glBufferData(GL_TEXTURE_BUFFER, force->size(), force->getDataPointer(), GL_DYNAMIC_DRAW));
     GLCheck(glGenTextures(1, &bufferTextureID));
     GLCheck(glBindTexture(GL_TEXTURE_BUFFER, bufferTextureID));
     GLCheck(glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, bufferID));
