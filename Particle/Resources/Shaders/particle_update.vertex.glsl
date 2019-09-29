@@ -14,7 +14,6 @@ out float outMass;
 
 uniform float dt;
 uniform samplerBuffer tbo_id0;
-uniform samplerBuffer tbo_id1;
 
 uniform vec2 minMaxSpeed;// x: Min, y: Max
 uniform vec2 resolution;
@@ -43,7 +42,6 @@ uniform float sampleStengthDegradation;
 vec3 CalculateDrag();
 vec3 ApplyDrag(vec3 _drag, vec3 _velocity);
 vec4 SampleForceTexture();
-vec4 SampleForceTextures();
 int SampleIndex(int x, int y, int z);
 void CheckBounds();
 
@@ -134,49 +132,6 @@ vec4 SampleForceTexture()
             textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));  // Left
             textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));   // Right
             textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));  // Bottom
-
-            ss *= sampleStengthDegradation;
-        }
-    }
-
-    return textureSample * inMass;
-}
-
-vec4 SampleForceTextures()
-{
-    vec4 textureSample = vec4(0.0, 0.0, 0.0, 0.0);
-    float ss = sampleStrength;
-
-    if (inPosition.y > 0 && inPosition.y <= 2 * SIZE_Y)
-    {
-
-        if (inPosition.y <= SIZE_Y)
-        {
-            textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, 0)));
-        }
-        else
-        {
-            textureSample += (texelFetch(tbo_id1, SampleIndex(0, 0, 0)));
-        }
-
-        ss * sampleStengthDegradation;
-
-        for (int i = 1; i <= samples; ++i)
-        {
-            if (inPosition.y <= SIZE_Y)
-            {
-                textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, i)));// Top
-                textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));// Left
-                textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));// Right
-                textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));// Bottom
-            }
-            else
-            {
-                textureSample += (texelFetch(tbo_id1, SampleIndex(  0,  0,  i))); // Top
-                textureSample += (texelFetch(tbo_id1, SampleIndex( -i,  0,  0))); // Left
-                textureSample += (texelFetch(tbo_id1, SampleIndex(  i,  0,  0))); // Right
-                textureSample += (texelFetch(tbo_id1, SampleIndex(  0,  0, -i))); // Bottom
-            }
 
             ss *= sampleStengthDegradation;
         }

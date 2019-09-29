@@ -2,25 +2,17 @@
 #define APP_H
 
 #include "../Utility/ConfigReader.h"
-
 #include "Window/Window.h"
-
 #include "../OpenGL/Programs/ProgramManager.h"
 #include "../OpenGL/Renderers/Renderer.h"
 #include "../OpenGL/Renderers/DebugRenderer.h"
 #include "../OpenGL/Renderers/MeshRenderer.h"
 #include "../OpenGL/Datastores/DebugDatastore.h"
 #include "../OpenGL/Datastores/Datastore.h"
-
 #include "../Simulation/Simulation.h"
 #include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
-
-#include "Camera/CameraManager.h"
-#include "Input/InputManager.h"
-
 #include "../Utility/Timer.h"
-
 #include "../Particle/Emitter/EmitterManager.h"
 
 namespace PT
@@ -31,9 +23,7 @@ private:
     Window *window;
     double lastFrameTime = 0.0f;
     double dt;
-
     bool debugDraw = true;
-    bool paused;
 
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
@@ -53,9 +43,6 @@ public:
 
     bool init();
     void run();
-
-    inline bool isPaused() const { return paused; }
-    void setPaused(bool to) { paused = to; }
 };
 
 } // namespace PT

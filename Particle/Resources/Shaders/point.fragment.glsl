@@ -13,7 +13,5 @@ void main()
     if (f > 0.25)
         discard;
 
-
-    //FragColor = mix(color1, color2, smoothstep(0.1, 0.25, f));
     FragColor = outColor;
 }

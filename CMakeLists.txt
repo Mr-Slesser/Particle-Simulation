@@ -37,16 +37,12 @@ add_executable(Particle
         Particle/Resources/config.ini
         Particle/src/Core/Camera/Camera.cpp
         Particle/src/Core/Camera/Camera.h
-        Particle/src/Core/Camera/Camera2D.hpp
-        Particle/src/Core/Camera/Camera3D.hpp
         Particle/src/Core/Camera/CameraManager.cpp
         Particle/src/Core/Camera/CameraManager.h
-        Particle/src/Core/Camera/CameraStructures.h
         Particle/src/Core/GUI/GUILayer.cpp
         Particle/src/Core/GUI/GUILayer.h
         Particle/src/Core/Input/InputManager.cpp
         Particle/src/Core/Input/InputManager.h
-        Particle/src/Core/Input/InputReceiver.h
         Particle/src/Core/Window/Window.cpp
         Particle/src/Core/Window/Window.h
         Particle/src/Core/App.cpp
@@ -77,7 +73,6 @@ add_executable(Particle
         Particle/src/OpenGL/Buffers/VBOLayout.h
         Particle/src/OpenGL/Buffers/VertexArray.cpp
         Particle/src/OpenGL/Buffers/VertexArray.h
-        Particle/src/OpenGL/Buffers/VertexBuffer.cpp
         Particle/src/OpenGL/Buffers/VertexBuffer.h
         Particle/src/OpenGL/Datastores/Datastore.cpp
         Particle/src/OpenGL/Datastores/Datastore.h
@@ -125,13 +120,11 @@ add_executable(Particle
         Particle/src/Utility/Random/Random.cpp
         Particle/src/Utility/Random/Random.h
         Particle/src/Utility/ConfigReader.h
-        Particle/src/Utility/Exception.h
         Particle/src/Utility/Log.cpp
         Particle/src/Utility/Log.h
         Particle/src/Utility/Profiler.h
         Particle/src/Utility/Timer.cpp
         Particle/src/Utility/Timer.h
-        Particle/src/Utility/Utils.h
         Particle/src/main.cpp
         Particle/src/PCHeader.cpp
         Particle/src/PCHeader.h)

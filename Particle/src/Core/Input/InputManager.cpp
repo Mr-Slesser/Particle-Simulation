@@ -22,15 +22,13 @@ InputManager::~InputManager()
 {
     delete instance;
     instance = nullptr;
-
-    // TODO: Clean up map!
 }
 
 void InputManager::registerMouseCallbacks(Window *window)
 {
-    glfwSetCursorPosCallback(window->context(), PT::mouseCursorHandler);
-    glfwSetMouseButtonCallback(window->context(), PT::mouseButtonHandler);
-    glfwSetScrollCallback(window->context(), PT::mouseScrollHandler);
+    glfwSetCursorPosCallback(window->Context(), PT::mouseCursorHandler);
+    glfwSetMouseButtonCallback(window->Context(), PT::mouseButtonHandler);
+    glfwSetScrollCallback(window->Context(), PT::mouseScrollHandler);
 }
 
 void InputManager::setMouseHeld(bool torf)
@@ -40,12 +38,12 @@ void InputManager::setMouseHeld(bool torf)
 
 void InputManager::processInput(Window *window, GL::Renderer *renderer, PT::Simulation *simulation)
 {
-    if (glfwGetKey(window->context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window->Context(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-        glfwSetWindowShouldClose(window->context(), true);
+        glfwSetWindowShouldClose(window->Context(), true);
     }
 
-    if (glfwGetKey(window->context(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    if (glfwGetKey(window->Context(), GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         simulation->AddParticle(particleFloodAmount);
     }
@@ -53,11 +51,11 @@ void InputManager::processInput(Window *window, GL::Renderer *renderer, PT::Simu
     dispatch(window);
 }
 
-bool InputManager::register_dispatch(const char *key_name, unsigned int key, InputReceiver *dispatch_to)
+bool InputManager::register_dispatch(const char *key_name, unsigned int key, CameraManager *dispatch_to)
 {
     if (dispatchers.find(key) == dispatchers.end())
     {
-        std::vector<InputReceiver *> a;
+        std::vector<CameraManager *> a;
         a.reserve(1);
         dispatchers[key] = a;
     }
@@ -71,7 +69,7 @@ void InputManager::dispatch(Window *window)
 {
     for (auto const &d : dispatchers)
     {
-        if (glfwGetKey(window->context(), d.first) == GLFW_PRESS)
+        if (glfwGetKey(window->Context(), d.first) == GLFW_PRESS)
         {
             for (auto r : d.second)
             {

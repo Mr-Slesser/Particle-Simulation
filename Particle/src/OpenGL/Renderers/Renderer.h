@@ -5,9 +5,6 @@
 #include "../../Simulation/ForceGrid.h"
 #include "../../Simulation/Simulation.h"
 #include "../Datastores/Datastore.h"
-
-#include "../../Core/GlobalConfiguration.h"
-#include "../../Core/Camera/CameraManager.h"
 #include "../../Utility/Profiler.h"
 #include "../Buffers/TextureBuffer.h"
 

@@ -1,14 +1,24 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include "InputReceiver.h"
 #include "../Window/Window.h"
 #include "../../Simulation/Simulation.h"
-#include "../Camera/CameraManager.h"
 #include "../../OpenGL/Renderers/Renderer.h"
 
 namespace PT
 {
+//class InputReceiver
+//{
+// private:
+//
+// public:
+//  InputReceiver() {}
+//  virtual ~InputReceiver() {}
+//
+//  virtual void register_input_dispatch() = 0;
+//  virtual void receive_dispatched_input(unsigned int key) = 0;
+//};
+
 class InputManager
 {
  private:
@@ -21,13 +31,13 @@ class InputManager
 
   unsigned int particleFloodAmount;
 
-  std::map<unsigned int, std::vector<InputReceiver *>> dispatchers;
+  std::map<unsigned int, std::vector<CameraManager *>> dispatchers;
 
  public:
   static InputManager *get();
   ~InputManager();
 
-  bool register_dispatch(const char *key_name, unsigned int key, InputReceiver *dispatch_to);
+  bool register_dispatch(const char *key_name, unsigned int key, CameraManager *dispatch_to);
   void dispatch(Window *window);
 
   void registerMouseCallbacks(Window *window);
@@ -62,9 +72,6 @@ static void mouseCursorHandler(GLFWwindow *m, double x, double y)
 
 	  float xoffset = x - lX;
 	  float yoffset = lY - y;
-
-	  //float xoffset =  (0.0f < x) - (x < 0.0f); // Gets sign... -1, 0, 1
-	  //float yoffset =  (0.0f < y) - (y < 0.0f);
 
 	  lX = x;
 	  lY = y;

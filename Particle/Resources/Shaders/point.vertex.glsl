@@ -19,8 +19,6 @@ void main()
 	{
 		gl_Position = projection * view * model * vec4(inPosition, 1.0);
 		 gl_PointSize = (1.0 - inMass / 1.0) * 10.0;
-		// gl_PointSize = 5.0;
-//		gl_PointSize = 5.0;
 		outColor = inColor;
 	}
 	else

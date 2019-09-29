@@ -1,15 +1,12 @@
 #ifndef CAMERAMANAGER_H
 #define CAMERAMANAGER_H
 
-#include "../Input/InputReceiver.h"
-
-#include "CameraStructures.h"
-#include "Camera2D.hpp"
-#include "Camera3D.hpp"
+#include "Camera.h"
 
 namespace PT
 {
-class CameraManager : public InputReceiver
+
+class CameraManager
 {
 private:
     static CameraManager *instance;
@@ -24,11 +21,11 @@ public:
     static CameraManager *get();
 
     bool startup();
-    bool registerCamera(const char *camera_name, SM_CAM_TYPE type, const CameraData &data = {});
+    bool registerCamera(const char *camera_name, const CameraData &data = {});
     Camera *getCamera(const char *camera_name = "DEFAULT");
 
-    void register_input_dispatch() override;
-    void receive_dispatched_input(unsigned int key) override;
+    void register_input_dispatch();
+    void receive_dispatched_input(unsigned int key);
 };
 
 } // namespace PT

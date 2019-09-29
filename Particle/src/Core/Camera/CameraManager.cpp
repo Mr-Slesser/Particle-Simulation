@@ -28,9 +28,7 @@ CameraManager::CameraManager()
 
 bool CameraManager::initCameras()
 {
-    // By default create the default camera!
-//    if (!registerCamera("DEFAULT", cam3D))
-    if (!registerCamera("DEFAULT", cam3D))
+    if (!registerCamera("DEFAULT"))
     {
         CORE_LOG_ERROR("CameraManager::initCameras() - Default camera could not be initialized.");
         return false;
@@ -62,31 +60,18 @@ bool CameraManager::startup()
     return true;
 }
 
-bool CameraManager::registerCamera(const char *camera_name, SM_CAM_TYPE type, const CameraData &data)
+bool CameraManager::registerCamera(const char *camera_name, const CameraData &data)
 {
     if (cameras.find(camera_name) == cameras.end())
     {
-        if (type == cam3D)
-        {
-            cameras[camera_name] = new Camera3D();
-        }
-        else if (type == cam2D)
-        {
-            cameras[camera_name] = new Camera2D();
-        }
-        else
-        {
-            CORE_LOG_WARN("CameraManager::registerCamera() - Invalid type specified -> {}", type);
-            return false;
-        }
+		cameras[camera_name] = new Camera(PROJECTION_TYPE::PERSPECTIVE);
+		return true;
     }
     else
     {
         CORE_LOG_WARN("CameraManager::registerCamera() - Name already exists -> {}", camera_name);
         return false;
     }
-
-    return true;
 }
 
 Camera *CameraManager::getCamera(const char *camera_name)

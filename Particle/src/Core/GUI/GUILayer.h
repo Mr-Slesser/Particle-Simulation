@@ -18,9 +18,7 @@ class GUILayer
 {
 private:
     std::vector<std::function<void()>> windows;
-    bool show_demo_window = false;
     ImGuiIO *io;
-    //ImVec4 clear_color;
     GLFWwindow *window;
 
 public:

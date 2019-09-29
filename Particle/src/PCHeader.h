@@ -62,9 +62,7 @@
 
 // Includes: Helpers
 #include "Headers/Colors.hpp"
-
-// Includes: Singletons
-#include "Core/GlobalConfiguration.h"
+#include "Core/Camera/CameraManager.h"
 #include "Core/Input/InputManager.h"
 
 #endif /* PCHEADER_H */

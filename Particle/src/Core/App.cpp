@@ -2,7 +2,7 @@
 #include "App.h"
 
 PT::App::App()
-	: dt(0.0), paused(false)
+	: dt(0.0)
 {
 }
 
@@ -42,11 +42,12 @@ bool PT::App::init()
 
   // Window
   window = new Window(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen));
-  if (window->init() == nullptr)
+  if (!window->Init())
   {
 	CORE_LOG_TRACE("EXIT: Window initialization failed");
 	return false;
   }
+  Log_GL_Parameters();
 
   // Datastores
   datastore = new GL::Datastore();
@@ -94,7 +95,7 @@ bool PT::App::init()
 
   // GUI
   gui = new GUILayer();
-  if (!gui->init(window->context()))
+  if (!gui->init(window->Context()))
   {
 	CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
 	return false;
@@ -113,7 +114,7 @@ bool PT::App::init()
 
 void PT::App::run()
 {
-  while (window->isActive())
+  while (window->IsActive())
   {
 	PROFILE("App::run");
 	double time = glfwGetTime();
@@ -148,6 +149,6 @@ void PT::App::run()
 	gui->constantElements();
 	gui->render(simulation);
 	gui->end();
-	glfwSwapBuffers(window->context());
+	glfwSwapBuffers(window->Context());
   }
 }
