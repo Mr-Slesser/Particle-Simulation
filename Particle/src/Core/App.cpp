@@ -64,20 +64,21 @@ bool PT::App::init()
 
   // Renderers & Forces
   simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore);
+  textureBuffer = new TextureBuffer(GL_TEXTURE0, simulation->Force(0));
 
   renderer = new GL::Renderer();
   debugRenderer = new GL::DebugRenderer();
   meshRenderer = new GL::MeshRenderer();
 
   // Renderer
-  if (!renderer->init(programs, datastore, simulation))
+  if (!renderer->init(programs, datastore, simulation, textureBuffer))
   {
 	CORE_LOG_TRACE("EXIT: Renderer initialization failed");
 	return false;
   }
 
   // Debug Renderer
-  if (!debugRenderer->init(programs, simulation->Force(0), simulation->Force(1)))
+  if (!debugRenderer->init(programs, debugDatastore, simulation, textureBuffer))
   {
 	CORE_LOG_TRACE("EXIT: Debug Renderer initialization failed");
 	return false;
@@ -121,14 +122,13 @@ void PT::App::run()
 	double time = glfwGetTime();
 	dt = (time - lastFrameTime);
 
-	if(dt >= maxPeriod)
-	{
+//	if(dt >= maxPeriod)
+//	{
 	  lastFrameTime = time;
 
 	  auto __simulation = simulation->__Update(dt);
 
 	  glfwPollEvents();
-	  this->debugDatastore->beginDebug();
 
 	  InputManager::get()->processInput(window, renderer, simulation);
 	  emitters->update(debugDatastore);
@@ -138,6 +138,8 @@ void PT::App::run()
 		__simulation[i].join();
 	  }
 
+	  textureBuffer->loadData();
+
 	  datastore->Update();
 	  meshDatastore->Update();
 
@@ -146,14 +148,16 @@ void PT::App::run()
 	  //	meshRenderer->draw();
 	  renderer->draw(dt);
 
-	  if (this->debugDraw)
-		debugRenderer->draw(debugDatastore);
+	  if (simulation->shouldDrawDebug())
+	  {
+		debugRenderer->draw();
+	  }
 
 	  gui->begin();
 	  gui->constantElements();
 	  gui->render(simulation);
 	  gui->end();
 	  glfwSwapBuffers(window->Context());
-	}
+//	}
   }
 }

@@ -9,6 +9,7 @@
 #include "../OpenGL/Renderers/MeshRenderer.h"
 #include "../OpenGL/Datastores/DebugDatastore.h"
 #include "../OpenGL/Datastores/Datastore.h"
+#include "../OpenGL/Buffers/TextureBuffer.h"
 #include "../Simulation/Simulation.h"
 #include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
@@ -34,6 +35,8 @@ private:
     GL::Datastore *datastore;
     GL::DebugDatastore *debugDatastore;
   	GL::MeshDatastore *meshDatastore;
+
+  	TextureBuffer *textureBuffer;
 
   	GUILayer *gui;
     Simulation *simulation;

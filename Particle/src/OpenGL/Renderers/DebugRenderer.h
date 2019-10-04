@@ -14,20 +14,22 @@ namespace GL
 class DebugRenderer
 {
 protected:
-    PT::ForceGrid *forces0;
-    PT::ForceGrid *forces1;
+    PT::ForceGrid *forces;
+  	PT::Simulation *simulation;
     ProgramManager *programs;
+  	DebugDatastore *datastore;
 
     VertexBuffer<PT::ParticleData> *VB;
     VertexArray *VA;
+  	TextureBuffer *textureBuffer;
 
 private:
 public:
     DebugRenderer();
     virtual ~DebugRenderer();
 
-    bool init(ProgramManager *_programs, PT::ForceGrid *_forces0, PT::ForceGrid *_forces1);
-    void draw(DebugDatastore *datastore);
+    bool init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb);
+    void draw();
 };
 
 } // namespace GL

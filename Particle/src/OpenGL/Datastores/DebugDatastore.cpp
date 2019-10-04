@@ -27,11 +27,4 @@ void DebugDatastore::addElement(DebugDatastoreElement element0, DebugDatastoreEl
     elements.push_back(element1);
 }
 
-void DebugDatastore::beginDebug()
-{
-    PROFILE("DebugDatastore::beginDebug");
-
-    elements.clear();
-}
-
 } // namespace GL

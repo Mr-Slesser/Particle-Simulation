@@ -18,9 +18,12 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
             for (int x = 0; x < data->Dimensions.x; x++)
             {
                 forces.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
-            }
+//				createDebugVertex(x, y, z);
+			  	debugData->addElement( { glm::vec3(x, y, z) } );
+			}
         }
     }
+
 }
 
 ForceGrid::~ForceGrid()
@@ -106,4 +109,16 @@ void ForceGrid::updateDebugLines()
         }
     }
 }
+
+void ForceGrid::createDebugVertex(int x, int y, int z)
+{
+  PROFILE("ForceGrid::createDebugVertex");
+
+  static float cellSize = (data->Resolution * 0.5f) * 0.5f;
+  float xp = x * data->Resolution + (data->Resolution * 0.5f);
+  float yp = y * data->Resolution + (data->Resolution * 0.5f) + data->yOffset;
+  float zp = z * data->Resolution + (data->Resolution * 0.5f);
+  debugData->addElement({glm::vec3(xp, yp, zp)});
+}
+
 } // namespace PT

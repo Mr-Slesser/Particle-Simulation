@@ -9,16 +9,14 @@ GL::Renderer::~Renderer()
 {
 }
 
-bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation)
+bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb)
 {
   PROFILE("Renderer::init");
 
   programs = _programs;
   simulation = _simulation;
   datastore = _datastore;
-
-  textureBuffers[0] = new TextureBuffer(GL_TEXTURE0, simulation->Force(0));
-//  textureBuffers[1] = new TextureBuffer(GL_TEXTURE1, simulation->Force(1));
+  textureBuffer = _tb;
 
   return true;
 }
@@ -38,16 +36,10 @@ void GL::Renderer::update(double dt)
 
   programs->use(UPDATE);
   datastore->bindUpdateArray();
-
-  textureBuffers[0]->loadData();
-  textureBuffers[0]->bindTexture();
-//  textureBuffers[1]->loadData();
-//  textureBuffers[1]->bindTexture();
+  textureBuffer->bindTexture();
 
   programs->get_active(UPDATE)->setFloat("dt", (float) dt);
   programs->get_active(UPDATE)->setInt("tbo_id0", 0);
-//  programs->get_active(UPDATE)->setInt("tbo_id1", 1);
-
   simulation->PrepareDraw(programs->get_active(UPDATE));
 
   GLCheck(glEnable(GL_RASTERIZER_DISCARD));

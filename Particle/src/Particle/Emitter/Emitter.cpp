@@ -43,15 +43,15 @@ void Emitter::spawnParticle()
 
 void Emitter::update(GL::DebugDatastore *debugdatastore)
 {
-  if (enabled)
-  {
-    debugdatastore->addElement({position, Colour::RED});
-    auto secondVertexPosition = glm::vec3(
-        position.x + (direction.x * force),
-        position.y + (direction.y * force),
-        position.z + (direction.z * force));
-    debugdatastore->addElement({secondVertexPosition, Colour::RED});
-  }
+//  if (enabled)
+//  {
+//    debugdatastore->addElement({position, Colour::RED});
+//    auto secondVertexPosition = glm::vec3(
+//        position.x + (direction.x * force),
+//        position.y + (direction.y * force),
+//        position.z + (direction.z * force));
+//    debugdatastore->addElement({secondVertexPosition, Colour::RED});
+//  }
 }
 
 void Emitter::GUIElement(std::string name)

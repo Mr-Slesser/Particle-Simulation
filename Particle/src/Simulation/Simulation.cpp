@@ -38,8 +38,8 @@ std::vector<std::thread> Simulation::__Update(double dt)
     {
         std::thread thread([this, i, &dt] {
             forces[i]->update(dt);
-            if (this->drawDebug)
-                forces[i]->updateDebugLines();
+//            if (this->drawDebug)
+//                forces[i]->updateDebugLines();
 // 				if (i == 0) forces[0]->updateDebugLines();
 
         });
@@ -60,6 +60,13 @@ void Simulation::PrepareDraw(GL::Program *program)
     program->setInt("samples", Samples);
     program->setFloat("sampleStrength", SampleStrength);
     program->setFloat("sampleStengthDegradation", SampleStengthDegradation);
+}
+
+void Simulation::PrepareDebugDraw(GL::Program *program)
+{
+  	program->setVec3("dimensions", Dimensions);
+ 	program->setVec2("resolution", Resolution);
+ 	program->setBool("showMagnitude", Force(0)->isShowingActualMagnitude());
 }
 
 void Simulation::AddParticle(int num_to_add)

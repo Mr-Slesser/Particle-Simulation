@@ -23,7 +23,7 @@ public:
     void addElement(DebugDatastoreElement element);
     void addElement(DebugDatastoreElement element0, DebugDatastoreElement element1);
     inline std::vector<DebugDatastoreElement> getElements() { return elements; }
-    void beginDebug();
+    int dataSize() { return elements.size(); }
 };
 
 } // namespace GL

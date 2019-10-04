@@ -19,13 +19,13 @@ private:
     Datastore *datastore;
 
     PT::Simulation *simulation;
-    TextureBuffer *textureBuffers[2];
+  	TextureBuffer *textureBuffer;
 
 public:
     Renderer();
     ~Renderer();
 
-    bool init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation);
+    bool init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb);
     void clear();
     void draw(double dt);
     void update(double dt);

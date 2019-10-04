@@ -1,16 +1,18 @@
 #ifndef DEBUGPROGRAM_H
 #define DEBUGPROGRAM_H
 
-#include "./Program.h"
+#include "Program.h"
 
 namespace GL
 {
 class DebugProgram : public Program
 {
-private:
-public:
-    DebugProgram();
-    virtual ~DebugProgram();
+ public:
+  DebugProgram();
+  virtual ~DebugProgram() {};
+
+  virtual bool init(const char *vertexPath = PATH("Shaders/point.vertex.glsl"), const char *fragmentPath = PATH("Shaders/point.fragment.glsl")) override;
+
 };
 
 } // namespace GL

@@ -32,6 +32,7 @@ public:
     std::vector<std::thread> __Update(double dt);
 
     void PrepareDraw(GL::Program *program);
+  	void PrepareDebugDraw(GL::Program *program);
 
     void AddParticle(int num_to_add);
 

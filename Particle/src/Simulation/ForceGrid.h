@@ -26,6 +26,7 @@ public:
 
     virtual void update(double dt);
     virtual void updateDebugLines();
+  	void createDebugVertex(int x, int y, int z);
     int index(int x, int y, int z);
 
     inline void setOctaves(int o) { data->Octaves = o; }
