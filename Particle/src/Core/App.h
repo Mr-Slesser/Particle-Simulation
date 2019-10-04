@@ -23,7 +23,9 @@ private:
     Window *window;
     double lastFrameTime = 0.0f;
     double dt;
-    bool debugDraw = true;
+    double fpsTarget = 600.0f;
+  	double maxPeriod = 1.0 / fpsTarget;
+  	bool debugDraw = true;
 
     GL::ProgramManager *programs;
     GL::Renderer *renderer;

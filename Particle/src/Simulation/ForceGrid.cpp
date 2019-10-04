@@ -57,7 +57,7 @@ void ForceGrid::update(double dt)
 		  double lon = data->Perlin->Noise(data->Octaves, data->Persistance, xoff, yoff + y, zoff) * TWO_PI * 4;
 
 		  float xp = 1.0f * sin(lon) * cos(lat);
-		  float yp = 0.1f * sin(lon) * sin(lat);
+		  float yp = 0.5f * sin(lon) * sin(lat);
 		  float zp = 1.0f * cos(lon);
 
 		  float mag = sqrt(xp * xp + yp * yp + zp * zp);

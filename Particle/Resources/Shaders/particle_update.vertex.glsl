@@ -120,7 +120,7 @@ vec4 SampleForceTexture()
     vec4 textureSample = vec4(0.0, 0.0, 0.0, 0.0);
     float ss = sampleStrength;
 
-    if (inPosition.y > 0 && inPosition.y <= 2 * SIZE_Y)
+    if (inPosition.y > 0)
     {
         textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, 0)));
 
@@ -132,6 +132,11 @@ vec4 SampleForceTexture()
             textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, 0)));  // Left
             textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, 0)));   // Right
             textureSample += (texelFetch(tbo_id0, SampleIndex(0, 0, -i)));  // Bottom
+
+            textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, i)));   // Top Right
+            textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, i)));  // Top Left
+            textureSample += (texelFetch(tbo_id0, SampleIndex(i, 0, -i)));   // Bottom Right
+            textureSample += (texelFetch(tbo_id0, SampleIndex(-i, 0, -i)));  // Bottom Left
 
             ss *= sampleStengthDegradation;
         }

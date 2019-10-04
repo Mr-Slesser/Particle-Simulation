@@ -117,38 +117,43 @@ void PT::App::run()
   while (window->IsActive())
   {
 	PROFILE("App::run");
+
 	double time = glfwGetTime();
 	dt = (time - lastFrameTime);
-	lastFrameTime = time;
 
-	auto __simulation = simulation->__Update(dt);
-
-	glfwPollEvents();
-	this->debugDatastore->beginDebug();
-
-	InputManager::get()->processInput(window, renderer, simulation);
-	emitters->update(debugDatastore);
-
-	for (int i = 0; i < __simulation.size(); i++)
+	if(dt >= maxPeriod)
 	{
-	  __simulation[i].join();
+	  lastFrameTime = time;
+
+	  auto __simulation = simulation->__Update(dt);
+
+	  glfwPollEvents();
+	  this->debugDatastore->beginDebug();
+
+	  InputManager::get()->processInput(window, renderer, simulation);
+	  emitters->update(debugDatastore);
+
+	  for (int i = 0; i < __simulation.size(); i++)
+	  {
+		__simulation[i].join();
+	  }
+
+	  datastore->Update();
+	  meshDatastore->Update();
+
+	  renderer->clear();
+
+	  //	meshRenderer->draw();
+	  renderer->draw(dt);
+
+	  if (this->debugDraw)
+		debugRenderer->draw(debugDatastore);
+
+	  gui->begin();
+	  gui->constantElements();
+	  gui->render(simulation);
+	  gui->end();
+	  glfwSwapBuffers(window->Context());
 	}
-
-	datastore->Update();
-	meshDatastore->Update();
-
-	renderer->clear();
-
-//	meshRenderer->draw();
-	renderer->draw(dt);
-
-	if (this->debugDraw)
-	  debugRenderer->draw(debugDatastore);
-
-	gui->begin();
-	gui->constantElements();
-	gui->render(simulation);
-	gui->end();
-	glfwSwapBuffers(window->Context());
   }
 }
