@@ -118,6 +118,11 @@ void GL::Program::setInt(const char *name, int value)
 {
     GLCheck(glUniform1i(getUniformLocation(name), value);)
 }
+
+void GL::Program::setIntArray(const char *name, int *value, int size)
+{
+  GLCheck(glUniform1iv(getUniformLocation(name), size, value);)
+}
 // ------------------------------------------------------------------------
 void GL::Program::setFloat(const char *name, float value)
 {

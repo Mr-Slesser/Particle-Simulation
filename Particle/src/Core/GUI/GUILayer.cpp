@@ -45,7 +45,7 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render(Simulation *sim)
+void GUILayer::render(Simulation *sim, GL::ForcesDatastore *forces)
 {
     PROFILE("GUILayer::render");
 
@@ -100,23 +100,19 @@ void GUILayer::render(Simulation *sim)
 
             // ------------ FORCE GRID 0 -------------------------------------
             // ---------------------------------------------------------------
-            ImGui::Text("Forcegrid 0");
-            auto forcegrid0 = sim->Force(0);
+            ImGui::Text("Forces");
+            //auto forcegrid0 = sim->Force(0);
 
-            int octaves = forcegrid0->getOctaves();
-            float per = forcegrid0->getPersistance();
+            int octaves = forces->getOctaves();
+            float per = forces->getPersistance();
             ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
             ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
-            forcegrid0->setOctaves(octaves);
-            forcegrid0->setPersistance(per);
+		  	forces->setOctaves(octaves);
+		  	forces->setPersistance(per);
 
-            bool actualMag = forcegrid0->isShowingActualMagnitude();
-		  	ImGui::Checkbox("Actual Magnitude", &actualMag);
-		  	forcegrid0->setShowActualMagnitude(actualMag);
-
-		  	float mag = forcegrid0->getMaxMagnitude();
+		  	float mag = forces->getMaxMagnitude();
 		  	ImGui::SliderFloat("Maximum Magnitude", &mag, 0.0f, 20.0f, "%.2f");
-		  	forcegrid0->setMaxMagnitude(mag);
+		  	forces->setMaxMagnitude(mag);
         }
         ImGui::End();
     }

@@ -3,12 +3,14 @@
 
 #include "UpdateProgram.h"
 #include "DebugProgram.h"
+#include "ForceUpdateProgram.h"
 
 namespace GL
 {
 enum PROGRAM_TYPE
 {
     UPDATE = 0,
+    UPDATE_FORCE,
     RENDER,
     RENDER_DEBUG,
     RENDER_MESH,

@@ -9,14 +9,13 @@ GL::Renderer::~Renderer()
 {
 }
 
-bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb)
+bool GL::Renderer::init(ProgramManager *_programs, Datastore *_datastore, PT::Simulation *_simulation)
 {
   PROFILE("Renderer::init");
 
   programs = _programs;
   simulation = _simulation;
   datastore = _datastore;
-  textureBuffer = _tb;
 
   return true;
 }
@@ -36,7 +35,6 @@ void GL::Renderer::update(double dt)
 
   programs->use(UPDATE);
   datastore->bindUpdateArray();
-  textureBuffer->bindTexture();
 
   programs->get_active(UPDATE)->setFloat("dt", (float) dt);
   programs->get_active(UPDATE)->setInt("tbo_id0", 0);

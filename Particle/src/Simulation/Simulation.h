@@ -2,7 +2,9 @@
 #define SIMULATION_H
 
 #include "ForceGrid.h"
+
 #include "../OpenGL/Datastores/Datastore.h"
+#include "../OpenGL/Datastores/ForcesDatastore.h"
 
 namespace PT
 {
@@ -17,16 +19,14 @@ private:
     int Samples = 5;
     float SampleStrength = 1.0f;
     float SampleStengthDegradation = 0.5f;
-
     bool drawDebug;
-
     std::vector<Utils::Perlin *> perlins;
     std::vector<ForceGrid *> forces;
-
+  	GL::ForcesDatastore *fds;
     GL::Datastore *datastore;
 
 public:
-    Simulation(int x, int y, int z, int resolution, int yresolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore);
+    Simulation(int x, int y, int z, int resolution, int yresolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore, GL::ForcesDatastore *forcedatastore);
     ~Simulation();
 
     std::vector<std::thread> __Update(double dt);

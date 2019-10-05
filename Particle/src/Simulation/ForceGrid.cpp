@@ -18,7 +18,6 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
             for (int x = 0; x < data->Dimensions.x; x++)
             {
                 forces.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
-//				createDebugVertex(x, y, z);
 			  	debugData->addElement( { glm::vec3(x, y, z) } );
 			}
         }
@@ -29,7 +28,6 @@ ForceGrid::ForceGrid(Utils::Perlin *perlin, glm::vec3 dimensions, int resolution
 ForceGrid::~ForceGrid()
 {
     forces.clear();
-    debugVertices.clear();
     delete data;
 }
 
@@ -78,47 +76,6 @@ void ForceGrid::update(double dt)
 	  }
 	  yoff += 0.01 * dt;
 	}
-}
-
-void ForceGrid::updateDebugLines()
-{
-    PROFILE("ForceGrid::updateDebugLines");
-
-    float cellSize = (data->Resolution * 0.5f) * 0.5f;
-    for (int y = 0; y < data->Dimensions.y; y++)
-    {
-        for (int z = 0; z < data->Dimensions.z; z++)
-        {
-            for (int x = 0; x < data->Dimensions.x; x++)
-            {
-              	auto f = forces[y + z + x];
-                glm::vec3 n = glm::normalize(f);
-
-                float xp = x * data->Resolution + (data->Resolution * 0.5f);
-                float yp = y * data->Resolution + (data->Resolution * 0.5f) + data->yOffset;
-                float zp = z * data->Resolution + (data->Resolution * 0.5f);
-
-                float mag = showActualMagnitude ? sqrt(f.x * f.x + f.y * f.y + f.z * f.z) : 1;
-
-                float dirx = xp + (n.x * cellSize * mag);
-                float diry = yp + (n.y * cellSize * mag);
-                float dirz = zp + (n.z * cellSize * mag);
-
-                debugData->addElement({glm::vec3(xp, yp, zp)}, {glm::vec3(dirx, diry, dirz)});
-            }
-        }
-    }
-}
-
-void ForceGrid::createDebugVertex(int x, int y, int z)
-{
-  PROFILE("ForceGrid::createDebugVertex");
-
-  static float cellSize = (data->Resolution * 0.5f) * 0.5f;
-  float xp = x * data->Resolution + (data->Resolution * 0.5f);
-  float yp = y * data->Resolution + (data->Resolution * 0.5f) + data->yOffset;
-  float zp = z * data->Resolution + (data->Resolution * 0.5f);
-  debugData->addElement({glm::vec3(xp, yp, zp)});
 }
 
 } // namespace PT

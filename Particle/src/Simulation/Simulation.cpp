@@ -3,18 +3,18 @@
 
 namespace PT
 {
-Simulation::Simulation(int x, int y, int z, int resolution, int yresolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore)
-    : Resolution(glm::vec2(resolution, yresolution)), Dimensions(glm::vec3(x, y, z)), drawDebug(true), datastore(datastore)
+Simulation::Simulation(int x, int y, int z, int resolution, int yresolution, GL::Datastore *datastore, GL::DebugDatastore *debugDatastore, GL::ForcesDatastore *forcedatastore)
+    : Resolution(glm::vec2(resolution, yresolution)), Dimensions(glm::vec3(x, y, z)), drawDebug(true), datastore(datastore), fds(forcedatastore)
 {
-    for (int i = 0; i < 1; i++)
-    {
-        perlins.push_back(new Utils::Perlin((i * 10) * 256));
-    }
-
-    for (int i = 0; i < 1; i++)
-    {
-        forces.push_back(new ForceGrid(perlins[i], glm::vec3(x, y, z), resolution, i * (y * yresolution), debugDatastore));
-    }
+//    for (int i = 0; i < 1; i++)
+//    {
+//        perlins.push_back(new Utils::Perlin((i * 10) * 256));
+//    }
+//
+//    for (int i = 0; i < 1; i++)
+//    {
+//        forces.push_back(new ForceGrid(perlins[i], glm::vec3(x, y, z), resolution, i * (y * yresolution), debugDatastore));
+//    }
 }
 
 Simulation::~Simulation()
@@ -73,10 +73,15 @@ void Simulation::AddParticle(int num_to_add)
 {
     std::vector<PT::ParticleData> a;
 
-    auto grid = Force(0)->getDimensions();
-    float X = grid.x * Force(0)->getResolution();
-    float Y = grid.y * Force(0)->getResolution();
-    float Z = grid.z * Force(0)->getResolution();
+//    auto grid = Force(0)->getDimensions();
+//    float X = grid.x * Force(0)->getResolution();
+//    float Y = grid.y * Force(0)->getResolution();
+//    float Z = grid.z * Force(0)->getResolution();
+
+    auto grid = fds->getDimensions();
+    float X = grid.x * fds->getResolution().x;
+    float Y = grid.y * fds->getResolution().y;
+    float Z = grid.z * fds->getResolution().y;
 
     for (int i = 0; i < num_to_add; ++i)
     {

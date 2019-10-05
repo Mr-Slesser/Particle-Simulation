@@ -7,6 +7,7 @@
 #include "../Camera/CameraManager.h"
 #include "../Window/Window.h"
 #include "../../Simulation/Simulation.h"
+#include "../../OpenGL/Datastores/ForcesDatastore.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -28,7 +29,7 @@ public:
     void constantElements();
     void addElement(std::function<void()> window);
     bool init(GLFWwindow *_window);
-    void render(Simulation *sim);
+    void render(Simulation *sim, GL::ForcesDatastore *forces);
 
     void begin();
     void end();

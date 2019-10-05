@@ -17,7 +17,6 @@ private:
     std::mutex mutex;
     ForceGridData *data;
     GL::DebugDatastore *debugData;
-    std::vector<glm::vec3> debugVertices;
     std::vector<glm::vec3> forces; // Layout: X-Dir, Y-Dir, Z-Dir
 
 public:
@@ -25,8 +24,6 @@ public:
     virtual ~ForceGrid();
 
     virtual void update(double dt);
-    virtual void updateDebugLines();
-  	void createDebugVertex(int x, int y, int z);
     int index(int x, int y, int z);
 
     inline void setOctaves(int o) { data->Octaves = o; }
@@ -34,7 +31,6 @@ public:
 
     inline std::vector<glm::vec3> getData() { return forces; }
     inline glm::vec3 *getDataPointer() { return forces.data(); }
-    inline std::vector<glm::vec3> getDebugData() { return debugVertices; }
 
     inline int getOctaves() { return data->Octaves; }
     inline float getPersistance() { return data->Persistance; }

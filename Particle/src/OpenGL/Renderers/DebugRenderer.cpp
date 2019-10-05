@@ -13,7 +13,7 @@ DebugRenderer::~DebugRenderer()
     delete VB;
 }
 
-bool DebugRenderer::init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb)
+bool DebugRenderer::init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation)
 {
     PROFILE("DebugRenderer::init");
 
@@ -21,7 +21,6 @@ bool DebugRenderer::init(ProgramManager *_programs, DebugDatastore *_datastore, 
 	simulation = _simulation;
 	datastore = _datastore;
     forces = simulation->Force(0);
-  	textureBuffer = _tb;
 
     GL::VBOLayout vbl = VBOLayout();
     vbl.push<float>(3, 0); // Position
@@ -45,32 +44,26 @@ bool DebugRenderer::init(ProgramManager *_programs, DebugDatastore *_datastore, 
     return true;
 }
 
-void DebugRenderer::draw()
+void DebugRenderer::draw(ForcesDatastore* forces)
 {
     PROFILE("DebugRenderer::draw");
 
-//    auto data = datastore->getElements();
     programs->use(RENDER_DEBUG);
 
     VA->bind();
     VB->bind();
-
-//	textureBuffer->loadData();
-	textureBuffer->bindTexture();
 
 	programs->get_active(RENDER_DEBUG)->setInt("tbo_id0", 0);
 
     programs->get_active(RENDER_DEBUG)->setMat4("model", glm::mat4(1.0f));
     programs->get_active(RENDER_DEBUG)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
     programs->get_active(RENDER_DEBUG)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
-  	simulation->PrepareDebugDraw(programs->get_active(RENDER_DEBUG));
 
-//    GLCheck(glDrawArrays(GL_LINES, 0, data.size()));
-    GLCheck(glDrawArrays(GL_POINTS, 0, datastore->dataSize()));
+    forces->SetDebugUniforms(programs->get_active(RENDER_DEBUG));
 
+    GLCheck(glDrawArrays(GL_POINTS, 0, forces->dataSize()));
 
-
-  VB->unbind();
+	VB->unbind();
     VA->unbind();
 }
 

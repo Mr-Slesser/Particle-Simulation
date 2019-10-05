@@ -5,6 +5,7 @@
 #include "../../Simulation/ForceGrid.h"
 #include "../../Core/Camera/CameraManager.h"
 #include "../Datastores/DebugDatastore.h"
+#include "../Datastores/ForcesDatastore.h"
 
 #include "../Buffers/VertexArray.h"
 
@@ -21,15 +22,13 @@ protected:
 
     VertexBuffer<PT::ParticleData> *VB;
     VertexArray *VA;
-  	TextureBuffer *textureBuffer;
-
 private:
 public:
     DebugRenderer();
     virtual ~DebugRenderer();
 
-    bool init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb);
-    void draw();
+    bool init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation);
+    void draw(ForcesDatastore* forces);
 };
 
 } // namespace GL

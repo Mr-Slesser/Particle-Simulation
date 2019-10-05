@@ -29,6 +29,15 @@ bool ProgramManager::init()
     }
     Print_All(programs[PROGRAM_TYPE::UPDATE]->getID());
 
+    // UPDATE FORCE PROGRAM
+	programs[PROGRAM_TYPE::UPDATE_FORCE] = new ForceUpdateProgram();
+	if (!programs[PROGRAM_TYPE::UPDATE_FORCE]->init(PATH("Shaders/Forces/force.update.vertex.glsl")))
+	{
+	  GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init UPDATE_FORCE program.");
+	  return false;
+	}
+	Print_All(programs[PROGRAM_TYPE::UPDATE_FORCE]->getID());
+
     // RENDER PROGRAM
     programs[PROGRAM_TYPE::RENDER] = new Program();
     if (!programs[PROGRAM_TYPE::RENDER]->init())

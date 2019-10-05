@@ -49,11 +49,6 @@ bool PT::App::init()
   }
   Log_GL_Parameters();
 
-  // Datastores
-  datastore = new GL::Datastore();
-  debugDatastore = new GL::DebugDatastore();
-  meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
-
   // Programs
   programs = new GL::ProgramManager();
   if (!programs->init())
@@ -62,23 +57,26 @@ bool PT::App::init()
 	return false;
   }
 
-  // Renderers & Forces
-  simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore);
-  textureBuffer = new TextureBuffer(GL_TEXTURE0, simulation->Force(0));
+  // Datastores
+  datastore = new GL::Datastore();
+  debugDatastore = new GL::DebugDatastore();
+  forcesDatastore = new GL::ForcesDatastore(programs, glm::vec3(d->simWidth, d->simHeight, d->simDepth), glm::vec2(d->simResolution, d->simYResolution), debugDatastore);
+  simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore, forcesDatastore);
+  meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
 
   renderer = new GL::Renderer();
   debugRenderer = new GL::DebugRenderer();
   meshRenderer = new GL::MeshRenderer();
 
   // Renderer
-  if (!renderer->init(programs, datastore, simulation, textureBuffer))
+  if (!renderer->init(programs, datastore, simulation))
   {
 	CORE_LOG_TRACE("EXIT: Renderer initialization failed");
 	return false;
   }
 
   // Debug Renderer
-  if (!debugRenderer->init(programs, debugDatastore, simulation, textureBuffer))
+  if (!debugRenderer->init(programs, debugDatastore, simulation))
   {
 	CORE_LOG_TRACE("EXIT: Debug Renderer initialization failed");
 	return false;
@@ -126,36 +124,36 @@ void PT::App::run()
 //	{
 	  lastFrameTime = time;
 
-	  auto __simulation = simulation->__Update(dt);
+//	  auto __simulation = simulation->__Update(dt);
 
 	  glfwPollEvents();
 
 	  InputManager::get()->processInput(window, renderer, simulation);
 	  emitters->update(debugDatastore);
 
-	  for (int i = 0; i < __simulation.size(); i++)
-	  {
-		__simulation[i].join();
-	  }
+//	  for (int i = 0; i < __simulation.size(); i++)
+//	  {
+//		__simulation[i].join();
+//	  }
 
-	  textureBuffer->loadData();
+	  forcesDatastore->Update(dt);
+	  forcesDatastore->bindTextureBuffer();
 
 	  datastore->Update();
 	  meshDatastore->Update();
 
 	  renderer->clear();
 
-	  //	meshRenderer->draw();
 	  renderer->draw(dt);
 
 	  if (simulation->shouldDrawDebug())
 	  {
-		debugRenderer->draw();
+		debugRenderer->draw(forcesDatastore);
 	  }
 
 	  gui->begin();
 	  gui->constantElements();
-	  gui->render(simulation);
+	  gui->render(simulation, forcesDatastore);
 	  gui->end();
 	  glfwSwapBuffers(window->Context());
 //	}

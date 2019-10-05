@@ -28,6 +28,7 @@ public:
     ~VertexBuffer();
 
     void init(const unsigned long &_size);
+  	void init(const unsigned long &_size, std::vector<T> &data);
 
     void bind();
     void unbind();
@@ -58,6 +59,15 @@ void VertexBuffer<T>::init(const unsigned long &_size)
   size = _size;
   GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
   GLCheck(glBufferData(GL_ARRAY_BUFFER, size, NULL, usage));
+}
+
+template<class T>
+void VertexBuffer<T>::init(const unsigned long &_size, std::vector<T> &data)
+{
+  GL_LOG_TRACE("VertexBuffer<T>::init (data): Size: {}", _size);
+  size = _size;
+  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
+  GLCheck(glBufferData(GL_ARRAY_BUFFER, size, data.data(), usage));
 }
 
 template<class T>
