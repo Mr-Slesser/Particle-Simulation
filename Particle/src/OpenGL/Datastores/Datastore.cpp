@@ -28,12 +28,12 @@ void Datastore::Init()
   pointer->start = pointer->it = nullptr;
   pointer->size = 0;
 
-  GL::VBOLayout vbl = VBOLayout();
-  vbl.push<float>(3, 0); // Position
-  vbl.push<float>(3, 0); // Velocity
-  vbl.push<float>(4, 1); // Colour
-  vbl.push<float>(1, 0); // Lifespan
-  vbl.push<float>(1, 0); // Mass
+	GL::VBOLayout vbl = VBOLayout();
+	vbl.push<float>(3, 0); // Position
+	vbl.push<float>(3, 0); // Velocity
+	vbl.push<float>(4, 1); // Colour
+	vbl.push<float>(1, 0); // Lifespan
+	vbl.push<float>(1, 0); // Mass
 
     vaU = new VertexArray();
     vaU->init();

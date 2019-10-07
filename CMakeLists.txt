@@ -127,4 +127,4 @@ add_executable(Particle
         Particle/src/Utility/Timer.h
         Particle/src/main.cpp
         Particle/src/PCHeader.cpp
-        Particle/src/PCHeader.h)
+        Particle/src/PCHeader.h Particle/src/OpenGL/Datastores/RenderData.h)

@@ -8,7 +8,7 @@ PT::App::App()
 
 PT::App::~App()
 {
-  delete emitters;
+//  delete emitters;
   delete simulation;
   delete programs;
   delete renderer;
@@ -106,9 +106,9 @@ bool PT::App::init()
   CameraManager::get()->register_input_dispatch();
 
   // Emitters
-  emitters = new EmitterManager();
-  emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
-  emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
+//  emitters = new EmitterManager();
+//  emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
+//  emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
 
   return true;
 }
@@ -131,7 +131,7 @@ void PT::App::run()
 	  glfwPollEvents();
 
 	  InputManager::get()->processInput(window, renderer, simulation);
-	  emitters->update(debugDatastore);
+//	  emitters->update(debugDatastore);
 
 	  for (int i = 0; i < __simulation.size(); i++)
 	  {
@@ -145,7 +145,7 @@ void PT::App::run()
 
 	  renderer->clear();
 
-	  //	meshRenderer->draw();
+	  meshRenderer->draw();
 	  renderer->draw(dt);
 
 	  if (simulation->shouldDrawDebug())

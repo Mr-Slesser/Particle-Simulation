@@ -16,6 +16,8 @@
 #include "../Utility/Timer.h"
 #include "../Particle/Emitter/EmitterManager.h"
 
+#include "../OpenGL/Primitives/Cube.h"
+
 namespace PT
 {
 class App
@@ -27,6 +29,8 @@ private:
     double fpsTarget = 600.0f;
   	double maxPeriod = 1.0 / fpsTarget;
   	bool debugDraw = true;
+
+  	Cube c;
 
     GL::ProgramManager *programs;
     GL::Renderer *renderer;
@@ -40,7 +44,7 @@ private:
 
   	GUILayer *gui;
     Simulation *simulation;
-    EmitterManager *emitters;
+//    EmitterManager *emitters;
 
 public:
     App();
