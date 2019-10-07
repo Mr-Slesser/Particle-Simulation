@@ -2,160 +2,151 @@
 #include "App.h"
 
 PT::App::App()
-	: dt(0.0)
+    : dt(0.0)
 {
 }
 
 PT::App::~App()
 {
-  delete emitters;
-  delete simulation;
-  delete programs;
-  delete renderer;
-  delete debugRenderer;
-  delete meshRenderer;
-  delete datastore;
-  delete debugDatastore;
-  delete meshDatastore;
-  delete gui;
+    delete emitters;
+    delete simulation;
+    delete programs;
+    delete renderer;
+    delete debugRenderer;
+    delete meshRenderer;
+    delete datastore;
+    delete debugDatastore;
+    delete meshDatastore;
+    delete gui;
 
-  glfwTerminate();
+    glfwTerminate();
 }
 
 bool PT::App::init()
 {
-  PROFILE("App::init");
+    PROFILE("App::init");
 
-  Log::init();
-  CORE_LOG_TRACE("Logger startup: [Core]");
-  GL_LOG_TRACE("  Logger startup: [GL  ]");
+    Log::init();
+    CORE_LOG_TRACE("Logger startup: [Core]");
+    GL_LOG_TRACE("  Logger startup: [GL  ]");
 
-  Utils::ApplicationData *d = Utils::ConfigReader::ReadConfig(PATH("config.ini"));
-  if (d == nullptr)
-  {
-	GL_LOG_CRITICAL("GL::Renderer::init() -> Failed to read configuration file");
-	return false;
-  }
+    Utils::ApplicationData *d = Utils::ConfigReader::ReadConfig(PATH("config.ini"));
+    if (d == nullptr)
+    {
+        GL_LOG_CRITICAL("GL::Renderer::init() -> Failed to read configuration file");
+        return false;
+    }
 
-  GC::get()->init(d->maxParticles);
-  InputManager::get()->setParticleFloodAmount(d->particleFloodNumber);
+    GC::get()->init(d->maxParticles);
+    InputManager::get()->setParticleFloodAmount(d->particleFloodNumber);
 
-  // Window
-  window = new Window(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen));
-  if (!window->Init())
-  {
-	CORE_LOG_TRACE("EXIT: Window initialization failed");
-	return false;
-  }
-  Log_GL_Parameters();
+    // Window
+    window = new Window(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen));
+    if (!window->Init())
+    {
+        CORE_LOG_TRACE("EXIT: Window initialization failed");
+        return false;
+    }
+    Log_GL_Parameters();
 
-  // Programs
-  programs = new GL::ProgramManager();
-  if (!programs->init())
-  {
-	GL_LOG_CRITICAL("GL::Renderer::init() -> Program Manager failed to init");
-	return false;
-  }
+    // Programs
+    programs = new GL::ProgramManager();
+    if (!programs->init())
+    {
+        GL_LOG_CRITICAL("GL::Renderer::init() -> Program Manager failed to init");
+        return false;
+    }
 
-  // Datastores
-  datastore = new GL::Datastore();
-  debugDatastore = new GL::DebugDatastore();
-  forcesDatastore = new GL::ForcesDatastore(programs, glm::vec3(d->simWidth, d->simHeight, d->simDepth), glm::vec2(d->simResolution, d->simYResolution), debugDatastore);
-  simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore, forcesDatastore);
-  meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
+    // Datastores
+    datastore = new GL::Datastore();
+    debugDatastore = new GL::DebugDatastore();
+    forcesDatastore = new GL::ForcesDatastore(programs, glm::vec3(d->simWidth, d->simHeight, d->simDepth), glm::vec2(d->simResolution, d->simYResolution), debugDatastore);
+    simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore, forcesDatastore);
+    meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
 
-  renderer = new GL::Renderer();
-  debugRenderer = new GL::DebugRenderer();
-  meshRenderer = new GL::MeshRenderer();
+    renderer = new GL::Renderer();
+    debugRenderer = new GL::DebugRenderer();
+    meshRenderer = new GL::MeshRenderer();
 
-  // Renderer
-  if (!renderer->init(programs, datastore, simulation))
-  {
-	CORE_LOG_TRACE("EXIT: Renderer initialization failed");
-	return false;
-  }
+    // Renderer
+    if (!renderer->init(programs, datastore, simulation))
+    {
+        CORE_LOG_TRACE("EXIT: Renderer initialization failed");
+        return false;
+    }
 
-  // Debug Renderer
-  if (!debugRenderer->init(programs, debugDatastore, simulation))
-  {
-	CORE_LOG_TRACE("EXIT: Debug Renderer initialization failed");
-	return false;
-  }
+    // Debug Renderer
+    if (!debugRenderer->init(programs, debugDatastore, simulation))
+    {
+        CORE_LOG_TRACE("EXIT: Debug Renderer initialization failed");
+        return false;
+    }
 
-  // Mesh Renderer
-  if (!meshRenderer->init(programs, meshDatastore))
-  {
-	CORE_LOG_TRACE("EXIT: Mesh Renderer initialization failed");
-	return false;
-  }
+    // Mesh Renderer
+    if (!meshRenderer->init(programs, meshDatastore))
+    {
+        CORE_LOG_TRACE("EXIT: Mesh Renderer initialization failed");
+        return false;
+    }
 
-  // InputManager
-  InputManager::get()->registerMouseCallbacks(window);
+    // InputManager
+    InputManager::get()->registerMouseCallbacks(window);
 
-  // GUI
-  gui = new GUILayer();
-  if (!gui->init(window->Context()))
-  {
-	CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
-	return false;
-  }
+    // GUI
+    gui = new GUILayer();
+    if (!gui->init(window->Context()))
+    {
+        CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
+        return false;
+    }
 
-  CameraManager::get()->getCamera();
-  CameraManager::get()->register_input_dispatch();
+    CameraManager::get()->getCamera();
+    CameraManager::get()->register_input_dispatch();
 
-  // Emitters
-  emitters = new EmitterManager();
-  emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
-  emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
+    // Emitters
+    emitters = new EmitterManager();
+    emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
+    emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
 
-  return true;
+    return true;
 }
 
 void PT::App::run()
 {
-  while (window->IsActive())
-  {
-	PROFILE("App::run");
+    while (window->IsActive())
+    {
+        PROFILE("App::run");
 
-	double time = glfwGetTime();
-	dt = (time - lastFrameTime);
+        double time = glfwGetTime();
+        dt = (time - lastFrameTime);
 
-//	if(dt >= maxPeriod)
-//	{
-	  lastFrameTime = time;
+        lastFrameTime = time;
 
-//	  auto __simulation = simulation->__Update(dt);
+        glfwPollEvents();
 
-	  glfwPollEvents();
+        InputManager::get()->processInput(window, renderer, simulation);
+        emitters->update(debugDatastore);
 
-	  InputManager::get()->processInput(window, renderer, simulation);
-	  emitters->update(debugDatastore);
+        forcesDatastore->Update(dt);
+        forcesDatastore->bindTextureBuffer();
 
-//	  for (int i = 0; i < __simulation.size(); i++)
-//	  {
-//		__simulation[i].join();
-//	  }
+        // forcesDatastore->bindNoisemap();
+        datastore->Update();
+        meshDatastore->Update();
 
-	  forcesDatastore->Update(dt);
-	  forcesDatastore->bindTextureBuffer();
+        renderer->clear();
 
-	  datastore->Update();
-	  meshDatastore->Update();
+        renderer->draw(dt);
 
-	  renderer->clear();
+        if (simulation->shouldDrawDebug())
+        {
+            debugRenderer->draw(forcesDatastore);
+        }
 
-	  renderer->draw(dt);
-
-	  if (simulation->shouldDrawDebug())
-	  {
-		debugRenderer->draw(forcesDatastore);
-	  }
-
-	  gui->begin();
-	  gui->constantElements();
-	  gui->render(simulation, forcesDatastore);
-	  gui->end();
-	  glfwSwapBuffers(window->Context());
-//	}
-  }
+        gui->begin();
+        gui->constantElements();
+        gui->render(simulation, forcesDatastore);
+        gui->end();
+        glfwSwapBuffers(window->Context());
+    }
 }
