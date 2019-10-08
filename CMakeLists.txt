@@ -29,12 +29,8 @@ add_executable(Particle
         Particle/Resources/Definitions/Input-Camera.def
         Particle/Resources/Shaders/Debug/debug.fragment.glsl
         Particle/Resources/Shaders/Debug/debug.vertex.glsl
-        Particle/Resources/Shaders/mesh.fragment.glsl
-        Particle/Resources/Shaders/mesh.vertex.glsl
-        Particle/Resources/Shaders/particle_update.vertex.glsl
-        Particle/Resources/Shaders/point.fragment.glsl
-        Particle/Resources/Shaders/point.vertex.glsl
-        Particle/Resources/config.ini
+        Particle/Resources/Shaders/Mesh/mesh.fragment.glsl
+        Particle/Resources/Shaders/Mesh/mesh.vertex.glsl
         Particle/src/Core/Camera/Camera.cpp
         Particle/src/Core/Camera/Camera.h
         Particle/src/Core/Camera/CameraManager.cpp
@@ -47,8 +43,6 @@ add_executable(Particle
         Particle/src/Core/Window/Window.h
         Particle/src/Core/App.cpp
         Particle/src/Core/App.h
-        Particle/src/Core/GlobalConfiguration.cpp
-        Particle/src/Core/GlobalConfiguration.h
         Particle/src/Headers/imgui/imconfig.h
         Particle/src/Headers/imgui/imgui.cpp
         Particle/src/Headers/imgui/imgui.h
@@ -74,12 +68,8 @@ add_executable(Particle
         Particle/src/OpenGL/Buffers/VertexArray.cpp
         Particle/src/OpenGL/Buffers/VertexArray.h
         Particle/src/OpenGL/Buffers/VertexBuffer.h
-        Particle/src/OpenGL/Datastores/Datastore.cpp
-        Particle/src/OpenGL/Datastores/Datastore.h
-        Particle/src/OpenGL/Datastores/DebugDatastore.cpp
-        Particle/src/OpenGL/Datastores/DebugDatastore.h
-        Particle/src/OpenGL/Datastores/MeshDatastore.cpp
-        Particle/src/OpenGL/Datastores/MeshDatastore.h
+        Particle/src/OpenGL/Datastores/DebugData.cpp
+        Particle/src/OpenGL/Datastores/DebugData.h
         Particle/src/OpenGL/Primitives/Cube.h
         Particle/src/OpenGL/Primitives/Quad.h
         Particle/src/OpenGL/Primitives/Vertex.h
@@ -89,40 +79,21 @@ add_executable(Particle
         Particle/src/OpenGL/Programs/Program.h
         Particle/src/OpenGL/Programs/ProgramManager.cpp
         Particle/src/OpenGL/Programs/ProgramManager.h
-        Particle/src/OpenGL/Programs/UpdateProgram.cpp
-        Particle/src/OpenGL/Programs/UpdateProgram.h
         Particle/src/OpenGL/Renderers/DebugRenderer.cpp
         Particle/src/OpenGL/Renderers/DebugRenderer.h
         Particle/src/OpenGL/Renderers/MeshRenderer.cpp
         Particle/src/OpenGL/Renderers/MeshRenderer.h
-        Particle/src/OpenGL/Renderers/Renderer.cpp
-        Particle/src/OpenGL/Renderers/Renderer.h
-        Particle/src/OpenGL/GLLog.h
-        Particle/src/OpenGL/Texture.cpp
-        Particle/src/OpenGL/Texture.h
         Particle/src/Particle/Emitter/Emitter.cpp
         Particle/src/Particle/Emitter/Emitter.h
         Particle/src/Particle/Emitter/EmitterManager.cpp
         Particle/src/Particle/Emitter/EmitterManager.h
-        Particle/src/Particle/Particle.cpp
-        Particle/src/Particle/Particle.h
-        Particle/src/Simulation/ForceGrid.cpp
-        Particle/src/Simulation/ForceGrid.h
-        Particle/src/Simulation/ForceGridData.h
-        Particle/src/Simulation/Simulation.cpp
-        Particle/src/Simulation/Simulation.h
         Particle/src/Utility/Math/Mathf.cpp
         Particle/src/Utility/Math/Mathf.h
         Particle/src/Utility/Random/Perlin.cpp
         Particle/src/Utility/Random/Perlin.h
         Particle/src/Utility/Random/Random.cpp
         Particle/src/Utility/Random/Random.h
-        Particle/src/Utility/ConfigReader.h
-        Particle/src/Utility/Log.cpp
-        Particle/src/Utility/Log.h
         Particle/src/Utility/Profiler.h
-        Particle/src/Utility/Timer.cpp
-        Particle/src/Utility/Timer.h
         Particle/src/main.cpp
         Particle/src/PCHeader.cpp
-        Particle/src/PCHeader.h Particle/src/OpenGL/Datastores/RenderData.h Particle/src/OpenGL/Datastores/ModelRenderData.cpp Particle/src/OpenGL/Datastores/ModelRenderData.h Particle/src/Core/Window/Camera.cpp Particle/src/Core/Window/Camera.h Particle/src/Simulation/Container.cpp Particle/src/Simulation/Container.h Particle/src/OpenGL/Primitives/Plane.cpp Particle/src/OpenGL/Primitives/Plane.h "Particle/src/OpenGL/Base Objects/Object.h" Particle/src/OpenGL/Renderables/Renderable.h Particle/src/OpenGL/BaseObjects/Terrain.cpp Particle/src/OpenGL/BaseObjects/Terrain.h)
+        Particle/src/PCHeader.h Particle/src/Core/Window/Camera.cpp Particle/src/Core/Window/Camera.h Particle/src/Simulation/Container.cpp Particle/src/Simulation/Container.h Particle/src/OpenGL/Primitives/Plane.cpp Particle/src/OpenGL/Primitives/Plane.h "Particle/src/OpenGL/Base Objects/Object.h" Particle/src/OpenGL/Renderables/Renderable.h Particle/src/Simulation/Terrain.cpp Particle/src/Simulation/Terrain.h)

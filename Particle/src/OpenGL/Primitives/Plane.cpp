@@ -32,25 +32,25 @@ void Plane::Generate()
 
 	  glm::vec4 COLOUR = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
 
-	  CVertex A = { // A
+	  Vertex A = { // A
 		  {xp, position.y, zp },
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex B = { // B
+	  Vertex B = { // B
 		  {xp + resolution, position.y, zp },
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex C = { // C
+	  Vertex C = { // C
 		  {xp + resolution, position.y, zp + resolution},
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex D = { // D
+	  Vertex D = { // D
 		  {xp, position.y, zp + resolution},
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}

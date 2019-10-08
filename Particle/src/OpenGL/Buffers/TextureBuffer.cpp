@@ -1,17 +1,17 @@
 #include "PCHeader.h"
 #include "TextureBuffer.h"
 
-TextureBuffer::TextureBuffer(GLenum _textureUnit, PT::ForceGrid *_force)
-	: textureUnit(_textureUnit), force(_force)
+TextureBuffer::TextureBuffer(GLenum _textureUnit)
+	: textureUnit(_textureUnit)
 {
   PROFILE("TextureBuffer::TextureBuffer");
 
-    GLCheck(glGenBuffers(1, &bufferID));
-    GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, bufferID));
-    GLCheck(glBufferData(GL_TEXTURE_BUFFER, force->size(), force->getDataPointer(), GL_DYNAMIC_DRAW));
-    GLCheck(glGenTextures(1, &bufferTextureID));
-    GLCheck(glBindTexture(GL_TEXTURE_BUFFER, bufferTextureID));
-    GLCheck(glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, bufferID));
+//    GLCheck(glGenBuffers(1, &bufferID));
+//    GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, bufferID));
+//    GLCheck(glBufferData(GL_TEXTURE_BUFFER, force->size(), force->getDataPointer(), GL_DYNAMIC_DRAW));
+//    GLCheck(glGenTextures(1, &bufferTextureID));
+//    GLCheck(glBindTexture(GL_TEXTURE_BUFFER, bufferTextureID));
+//    GLCheck(glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32F, bufferID));
 }
 
 TextureBuffer::~TextureBuffer()
@@ -47,8 +47,8 @@ void TextureBuffer::loadData()
 {
   PROFILE("TextureBuffer::loadData");
 
-  GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, bufferID));
-  auto bufferPointer = getPointer();
-  memcpy(bufferPointer, force->getDataPointer(), force->size());
-  releasePointer();
+//  GLCheck(glBindBuffer(GL_TEXTURE_BUFFER, bufferID));
+//  auto bufferPointer = getPointer();
+//  memcpy(bufferPointer, force->getDataPointer(), force->size());
+//  releasePointer();
 }

@@ -7,7 +7,7 @@
 {
  protected:
 	unsigned int resolution;
-   	std::vector<CVertex> vertices;
+   	std::vector<Vertex> vertices;
    	std::vector<unsigned int> indices;
 
  public:

@@ -16,46 +16,30 @@ ProgramManager::~ProgramManager()
     programs.clear();
 }
 
-bool ProgramManager::init()
+bool ProgramManager::Init()
 {
     programs.resize(PROGRAM_TYPE::SIZE, nullptr);
 
-    // UPDATE PROGRAM
-    programs[PROGRAM_TYPE::UPDATE] = new UpdateProgram();
-    if (!programs[PROGRAM_TYPE::UPDATE]->init(PATH("Shaders/particle_update.vertex.glsl")))
-    {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init UPDATE program.");
-        return false;
-    }
-
-    // RENDER PROGRAM
-    programs[PROGRAM_TYPE::RENDER] = new Program();
-    if (!programs[PROGRAM_TYPE::RENDER]->init())
-    {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER program.");
-        return false;
-    }
-
     // DEBUG PROGRAM
     programs[PROGRAM_TYPE::RENDER_DEBUG] = new DebugProgram();
-    if (!programs[PROGRAM_TYPE::RENDER_DEBUG]->init(PATH("Shaders/Debug/debug.vertex.glsl"), PATH("Shaders/Debug/debug.fragment.glsl")))
+    if (!programs[PROGRAM_TYPE::RENDER_DEBUG]->Init(PATH("Shaders/Debug/debug.vertex.glsl"), PATH("Shaders/Debug/debug.fragment.glsl")))
     {
-        GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_DEBUG program.");
+        GL_LOG_CRITICAL("GL::ProgramManager::Init() -> Unable to init RENDER_DEBUG program.");
         return false;
     }
 
     // RENDER MESH PROGRAM
 	programs[PROGRAM_TYPE::RENDER_MESH] = new Program();
-	if (!programs[PROGRAM_TYPE::RENDER_MESH]->init(PATH("Shaders/mesh.vertex.glsl"), PATH("Shaders/mesh.fragment.glsl")))
+	if (!programs[PROGRAM_TYPE::RENDER_MESH]->Init(PATH("Shaders/Mesh/mesh.vertex.glsl"), PATH("Shaders/Mesh/mesh.fragment.glsl")))
 	{
-	  GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_MESH program.");
+	  GL_LOG_CRITICAL("GL::ProgramManager::Init() -> Unable to init RENDER_MESH program.");
 	  return false;
 	}
 
     return true;
 }
 
-void ProgramManager::use(PROGRAM_TYPE type, unsigned int i)
+void ProgramManager::Use(PROGRAM_TYPE type)
 {
     if (!programs[type])
     {
@@ -63,13 +47,20 @@ void ProgramManager::use(PROGRAM_TYPE type, unsigned int i)
     }
     else
     {
-        programs[type]->use();
+      	active = type;
+        programs[type]->Use();
     }
 }
 
-Program *ProgramManager::get_active(PROGRAM_TYPE type)
+Program *ProgramManager::Active()
 {
-    return programs[type];
+  if (active == PROGRAM_TYPE::ERROR)
+  {
+	GL_LOG_CRITICAL("GL::ProgramManager::Active() -> No active program");
+	return nullptr;
+  }
+
+  return programs[active];
 }
 
 } // namespace GL

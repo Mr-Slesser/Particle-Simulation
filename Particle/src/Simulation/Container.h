@@ -1,7 +1,7 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
-#include "../OpenGL/Datastores/DebugDatastore.h"
+#include "OpenGL/Datastores/DebugData.h"
 
 class Container : public Object
 {

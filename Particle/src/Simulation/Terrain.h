@@ -1,7 +1,7 @@
 #ifndef PARTICLE_PARTICLE_SRC_OPENGL_BASEOBJECTS_TERRAIN_H_
 #define PARTICLE_PARTICLE_SRC_OPENGL_BASEOBJECTS_TERRAIN_H_
 
-#include "../Primitives/Plane.h"
+#include "OpenGL/Primitives/Plane.h"
 
 class Terrain : public Plane
 {

@@ -2,11 +2,7 @@
 #define DEBUGRENDERER_H
 
 #include "../Programs/ProgramManager.h"
-#include "../../Simulation/Simulation.h"
-#include "../Datastores/DebugDatastore.h"
-
-#include "../Buffers/VertexArray.h"
-#include "../Buffers/TextureBuffer.h"
+#include "../Datastores/DebugData.h"
 
 namespace GL
 {
@@ -14,22 +10,16 @@ namespace GL
 class DebugRenderer
 {
 protected:
-    PT::ForceGrid *forces;
-  	PT::Simulation *simulation;
-    ProgramManager *programs;
-  	DebugDatastore *datastore;
-
-    VertexBuffer<PT::ParticleData> *VB;
-    VertexArray *VA;
-  	TextureBuffer *textureBuffer;
+  	std::shared_ptr<ProgramManager> programs;
+  	std::shared_ptr<DebugData> datastore;
 
 private:
 public:
     DebugRenderer();
     virtual ~DebugRenderer();
 
-    bool init(ProgramManager *_programs, DebugDatastore *_datastore, PT::Simulation *_simulation, TextureBuffer *_tb);
-    void draw();
+    bool Init(std::shared_ptr<ProgramManager> _programs, std::shared_ptr<DebugData> _datastore);
+    void Draw();
 };
 
 } // namespace GL

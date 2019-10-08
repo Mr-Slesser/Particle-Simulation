@@ -8,14 +8,6 @@ PT::App::App()
 
 PT::App::~App()
 {
-  delete simulation;
-  delete programs;
-  delete renderer;
-  delete debugRenderer;
-  delete meshRenderer;
-  delete datastore;
-  delete debugDatastore;
-  delete meshDatastore;
   delete gui;
 }
 
@@ -27,11 +19,11 @@ bool PT::App::init()
   Utils::ApplicationData *d = Utils::ConfigReader::ReadConfig(PATH("config.ini"));
   if (d == nullptr)
   {
-	GL_LOG_CRITICAL("GL::Renderer::init() -> Failed to read configuration file");
+	GL_LOG_CRITICAL("GL::App::init() -> Failed to read configuration file");
 	return false;
   }
 
-  GC::get()->init(d->maxParticles);
+  maxParticles = d->maxParticles;
 
   // Window
   if (!window.Init(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen)))
@@ -39,57 +31,36 @@ bool PT::App::init()
 	CORE_LOG_TRACE("EXIT: Window initialization failed");
 	return false;
   }
+
   window.AttachCamera(Camera());
 
   // Datastores
-  datastore = new GL::Datastore();
-  debugDatastore = new GL::DebugDatastore();
-  meshDatastore =
-	  new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
-
+  debugDatastore = std::make_unique<GL::DebugData>();
   container = std::make_unique<Container>(0.0f, 0.0f, 0.0f, 600.0f, 200.0f, 500.0f);
   container->SubmitDebugOutline(debugDatastore);
-  p = std::make_shared<Terrain>(0.0f, 0.0f, 0.0f, 600.0f, 200.0f, 500.f, 5);
+  debugDatastore->Init();
+
+  p = std::make_shared<Terrain>(0.0f, 0.0f, 0.0f, 1200.0f, 600.0f, 900.f, 5);
   p->Generate();
 
   // Programs
-  programs = new GL::ProgramManager();
-  if (!programs->init())
+  programs = std::make_unique<GL::ProgramManager>();
+  if (!programs->Init())
   {
 	GL_LOG_CRITICAL("GL::Renderer::init() -> Program Manager failed to init");
 	return false;
   }
 
-  // Renderers & Forces
-  simulation = new Simulation(d->simWidth,
-							  d->simHeight,
-							  d->simDepth,
-							  d->simResolution,
-							  d->simYResolution,
-							  datastore,
-							  debugDatastore);
-  textureBuffer = new TextureBuffer(GL_TEXTURE0, simulation->Force(0));
-
-  renderer = new GL::Renderer();
-  debugRenderer = new GL::DebugRenderer();
-  meshRenderer = new GL::MeshRenderer();
-
-  // Renderer
-  if (!renderer->init(programs, datastore, simulation, textureBuffer))
-  {
-	CORE_LOG_TRACE("EXIT: Renderer initialization failed");
-	return false;
-  }
-
-  // Debug Renderer
-  if (!debugRenderer->init(programs, debugDatastore, simulation, textureBuffer))
+  // Renderers
+  debugRenderer = std::make_unique<GL::DebugRenderer>();
+  if (!debugRenderer->Init(programs, debugDatastore))
   {
 	CORE_LOG_TRACE("EXIT: Debug Renderer initialization failed");
 	return false;
   }
 
-  // Mesh Renderer
-  if (!meshRenderer->init(programs, meshDatastore))
+  meshRenderer = std::make_unique<GL::MeshRenderer>();
+  if (!meshRenderer->Init(programs))
   {
 	CORE_LOG_TRACE("EXIT: Mesh Renderer initialization failed");
 	return false;
@@ -119,28 +90,14 @@ void PT::App::run()
 	  lastFrameTime = time;
 	}
 
-	auto __simulation = simulation->__Update(dt);
-
 	glfwPollEvents();
 	processInput(&window);
-
-	for (int i = 0; i < __simulation.size(); i++)
-	{
-	  __simulation[i].join();
-	}
-
-	textureBuffer->loadData();
-	datastore->Update();
-	meshDatastore->Update();
 
 	{
 	  // Begin Draw
 	  window.Clear();
-//	  window.SetWireframeMode(true);
-	  meshRenderer->draw(p);
-	  renderer->draw(dt);
-
-	  debugRenderer->draw();
+	  meshRenderer->Draw(p);
+	  debugRenderer->Draw();
 
 //	  gui->begin();
 //	  gui->constantElements();

@@ -13,12 +13,9 @@ public:
     VertexArray();
     virtual ~VertexArray();
 
-    void init();
-
-    void bind();
-    void unbind();
-
-    void setVertexLayout(VBOLayout vbol);
+    void Init();
+    void Bind();
+    void SetLayout(VBOLayout vbol);
 
 private:
     unsigned int ID;

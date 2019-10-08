@@ -4,17 +4,12 @@
 #include "../Simulation/Container.h"
 #include "../Utility/ConfigReader.h"
 #include "../OpenGL/Programs/ProgramManager.h"
-#include "../OpenGL/Renderers/Renderer.h"
 #include "../OpenGL/Renderers/DebugRenderer.h"
 #include "../OpenGL/Renderers/MeshRenderer.h"
-#include "../OpenGL/Datastores/Datastore.h"
 #include "../OpenGL/Buffers/TextureBuffer.h"
-#include "../Simulation/Simulation.h"
-#include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
-#include "../Utility/Timer.h"
 #include "../OpenGL/Primitives/Cube.h"
-#include "../OpenGL/BaseObjects/Terrain.h"
+#include "Simulation/Terrain.h"
 
 namespace PT
 {
@@ -29,24 +24,17 @@ private:
   	double maxPeriod = 1.0 / fpsTarget;
   	bool debugDraw = true;
 
-  	Cube c;
+  	int maxParticles;
 
-    GL::ProgramManager *programs;
-    GL::Renderer *renderer;
-    GL::DebugRenderer *debugRenderer;
-    GL::MeshRenderer *meshRenderer;
-    GL::Datastore *datastore;
-    GL::DebugDatastore *debugDatastore;
-  	GL::MeshDatastore *meshDatastore;
+	std::shared_ptr<GL::ProgramManager> programs;
+	std::shared_ptr<GL::DebugRenderer> debugRenderer;
+	std::shared_ptr<GL::MeshRenderer> meshRenderer;
+  	std::shared_ptr<GL::DebugData> debugDatastore;
 
   	std::unique_ptr<Container> container;
   	std::shared_ptr<Terrain> p;
 
-  	TextureBuffer *textureBuffer;
-
   	GUILayer *gui;
-    Simulation *simulation;
-//    EmitterManager *emitters;
 
 public:
     App();

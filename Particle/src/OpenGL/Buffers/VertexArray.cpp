@@ -12,9 +12,9 @@ GL::VertexArray::~VertexArray()
     GLCheck(glDeleteVertexArrays(1, &ID));
 }
 
-void GL::VertexArray::setVertexLayout(VBOLayout layout)
+void GL::VertexArray::SetLayout(VBOLayout layout)
 {
-    this->bind();
+    this->Bind();
 
     const auto &elements = layout.getElements();
     unsigned int offset = 0;
@@ -27,17 +27,12 @@ void GL::VertexArray::setVertexLayout(VBOLayout layout)
     }
 }
 
-void GL::VertexArray::init()
+void GL::VertexArray::Init()
 {
     GLCheck(glBindVertexArray(ID));
 }
 
-void GL::VertexArray::bind()
+void GL::VertexArray::Bind()
 {
     GLCheck(glBindVertexArray(ID));
-}
-
-void GL::VertexArray::unbind()
-{
-    GLCheck(glBindVertexArray(0));
 }

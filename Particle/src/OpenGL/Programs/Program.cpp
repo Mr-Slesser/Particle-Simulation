@@ -11,17 +11,17 @@ GL::Program::~Program()
     GLCheck(glDeleteProgram(ID));
 }
 
-bool GL::Program::init(const char *vertexPath, const char *fragmentPath)
+bool GL::Program::Init(const char *vertexPath, const char *fragmentPath)
 {
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    if (!compileShader(vertexPath, vertexShader))
+    if (!CompileShader(vertexPath, vertexShader))
     {
         return false;
     }
 
     int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    if (!compileShader(fragmentPath, fragmentShader))
+    if (!CompileShader(fragmentPath, fragmentShader))
     {
         return false;
     }
@@ -49,12 +49,12 @@ bool GL::Program::init(const char *vertexPath, const char *fragmentPath)
     return true;
 }
 
-void GL::Program::use()
+void GL::Program::Use()
 {
     GLCheck(glUseProgram(ID));
 }
 
-int GL::Program::getUniformLocation(const char *name)
+int GL::Program::UniformLocation(const char *name)
 {
     if (uniform_locations.find(name) != uniform_locations.end())
     {
@@ -68,7 +68,7 @@ int GL::Program::getUniformLocation(const char *name)
     }
 }
 
-bool GL::Program::compileShader(const char *filePath, int &id)
+bool GL::Program::CompileShader(const char *filePath, int &id)
 {
     std::ifstream shaderFile(filePath);
 
@@ -107,64 +107,64 @@ bool GL::Program::compileShader(const char *filePath, int &id)
 }
 
 // SECTION: Uniform Helper Functions
-void GL::Program::setBool(const char *name, bool value)
+void GL::Program::Bool(const char *name, bool value)
 {
-    GLCheck(glUniform1i(getUniformLocation(name), (int)value);)
+    GLCheck(glUniform1i(UniformLocation(name), (int)value);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setInt(const char *name, int value)
+void GL::Program::Int(const char *name, int value)
 {
-    GLCheck(glUniform1i(getUniformLocation(name), value);)
+    GLCheck(glUniform1i(UniformLocation(name), value);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setFloat(const char *name, float value)
+void GL::Program::Float(const char *name, float value)
 {
-    GLCheck(glUniform1f(getUniformLocation(name), value);)
+    GLCheck(glUniform1f(UniformLocation(name), value);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setDouble(const char *name, double value)
+void GL::Program::Double(const char *name, double value)
 {
-    GLCheck(glUniform1d(getUniformLocation(name), value);)
+    GLCheck(glUniform1d(UniformLocation(name), value);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setVec2(const char *name, const glm::vec2 &value)
+void GL::Program::Vec2(const char *name, const glm::vec2 &value)
 {
-    GLCheck(glUniform2fv(getUniformLocation(name), 1, &value[0]);)
+    GLCheck(glUniform2fv(UniformLocation(name), 1, &value[0]);)
 }
-void GL::Program::setVec2(const char *name, float x, float y)
+void GL::Program::Vec2(const char *name, float x, float y)
 {
-    GLCheck(glUniform2f(getUniformLocation(name), x, y);)
-}
-// ------------------------------------------------------------------------
-void GL::Program::setVec3(const char *name, const glm::vec3 &value)
-{
-    GLCheck(glUniform3fv(getUniformLocation(name), 1, &value[0]);)
-}
-void GL::Program::setVec3(const char *name, float x, float y, float z)
-{
-    GLCheck(glUniform3f(getUniformLocation(name), x, y, z);)
+    GLCheck(glUniform2f(UniformLocation(name), x, y);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setVec4(const char *name, const glm::vec4 &value)
+void GL::Program::Vec3(const char *name, const glm::vec3 &value)
 {
-    GLCheck(glUniform4fv(getUniformLocation(name), 1, &value[0]);)
+    GLCheck(glUniform3fv(UniformLocation(name), 1, &value[0]);)
 }
-void GL::Program::setVec4(const char *name, float x, float y, float z, float w)
+void GL::Program::Vec3(const char *name, float x, float y, float z)
 {
-    GLCheck(glUniform4f(getUniformLocation(name), x, y, z, w);)
-}
-// ------------------------------------------------------------------------
-void GL::Program::setMat2(const char *name, const glm::mat2 &mat)
-{
-    GLCheck(glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+    GLCheck(glUniform3f(UniformLocation(name), x, y, z);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setMat3(const char *name, const glm::mat3 &mat)
+void GL::Program::Vec4(const char *name, const glm::vec4 &value)
 {
-    GLCheck(glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+    GLCheck(glUniform4fv(UniformLocation(name), 1, &value[0]);)
+}
+void GL::Program::Vec4(const char *name, float x, float y, float z, float w)
+{
+    GLCheck(glUniform4f(UniformLocation(name), x, y, z, w);)
 }
 // ------------------------------------------------------------------------
-void GL::Program::setMat4(const char *name, const glm::mat4 &mat)
+void GL::Program::Mat2(const char *name, const glm::mat2 &mat)
 {
-    GLCheck(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+    GLCheck(glUniformMatrix2fv(UniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+}
+// ------------------------------------------------------------------------
+void GL::Program::Mat3(const char *name, const glm::mat3 &mat)
+{
+    GLCheck(glUniformMatrix3fv(UniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+}
+// ------------------------------------------------------------------------
+void GL::Program::Mat4(const char *name, const glm::mat4 &mat)
+{
+    GLCheck(glUniformMatrix4fv(UniformLocation(name), 1, GL_FALSE, &mat[0][0]));
 }

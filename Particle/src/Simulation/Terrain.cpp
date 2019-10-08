@@ -45,25 +45,25 @@ void Terrain::Generate()
 	  xoff += 0.01;
 	  glm::vec4 COLOUR = glm::vec4(0.98f, 0.77f, 0.19f, 1.0f);
 
-	  CVertex A = { // A
+	  Vertex A = { // A
 		  {xp, yp + (float)ypA, zp },
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex B = { // B
+	  Vertex B = { // B
 		  {xp + resolution, yp + (float)ypB, zp },
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex C = { // C
+	  Vertex C = { // C
 		  {xp + resolution, yp + (float)ypC, zp + resolution},
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
 	  };
 
-	  CVertex D = { // D
+	  Vertex D = { // D
 		  {xp, yp + (float)ypD, zp + resolution},
 		  COLOUR,
 		  {0.0f, 0.0f, 0.0f	}
@@ -119,16 +119,5 @@ void Terrain::GenerateHeightThresholds()
 	  } else if (percent >= 0.6) {
 	    maxHeightThresholds[i] += 100.0f;
 	  }
-
-//	  if (percent < 0.3) {
-//	    minHeightThresholds.push_back(position.y + 0.0f);
-//	    maxHeightThresholds.push_back(position.y + dimensions.y * 0.43);
-//	  } else if (percent < 0.6) {
-//		minHeightThresholds.push_back(position.y + dimensions.y * 0.2f);
-//		maxHeightThresholds.push_back(position.y + dimensions.y * 0.8f);
-//	  } else {
-//		minHeightThresholds.push_back(position.y + (dimensions.y * 0.7f));
-//		maxHeightThresholds.push_back(position.y + dimensions.y);
-//	  }
   }
 }

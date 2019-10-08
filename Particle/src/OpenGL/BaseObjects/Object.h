@@ -1,7 +1,7 @@
 #ifndef PARTICLE_PARTICLE_SRC_OPENGL_PRIMITIVES_OBJECT_H_
 #define PARTICLE_PARTICLE_SRC_OPENGL_PRIMITIVES_OBJECT_H_
 
-#include "OpenGL/Datastores/DebugDatastore.h"
+#include "OpenGL/Datastores/DebugData.h"
 
 class Object
 {
@@ -26,7 +26,7 @@ class Object
   void AddY(int add) { position.y += add; }
   void AddZ(int add) { position.z += add; }
 
-  void SubmitDebugOutline(GL::DebugDatastore *debugData)
+  void SubmitDebugOutline(std::shared_ptr<GL::DebugData> debugData)
   {
 	float x = position.x;
 	float y = position.y;
@@ -37,22 +37,22 @@ class Object
 	int Z = dimensions.z;
 
 	// Front
-	debugData->addElement({glm::vec3(x, y, z)}, {glm::vec3(x + X, y, z)}); // Bottom
-	debugData->addElement({glm::vec3(x, y, z)}, {glm::vec3(0.0f, y + Y, z)}); // Left
-	debugData->addElement({glm::vec3(x, y + Y, z)}, {glm::vec3(x + X, y + Y, z)}); // Top
-	debugData->addElement({glm::vec3(x + X, y, z)}, {glm::vec3(x + X, y + Y, z)}); // Right
+	debugData->Add({glm::vec3(x, y, z)}, {glm::vec3(x + X, y, z)}); // Bottom
+	debugData->Add({glm::vec3(x, y, z)}, {glm::vec3(0.0f, y + Y, z)}); // Left
+	debugData->Add({glm::vec3(x, y + Y, z)}, {glm::vec3(x + X, y + Y, z)}); // Top
+	debugData->Add({glm::vec3(x + X, y, z)}, {glm::vec3(x + X, y + Y, z)}); // Right
 
 	// Back
-	debugData->addElement({glm::vec3(x, y, z + Z)}, {glm::vec3(x + X, y, z + Z)}); // Bottom
-	debugData->addElement({glm::vec3(x, y, z + Z)}, {glm::vec3(x, y + Y, z + Z)}); // Left
-	debugData->addElement({glm::vec3(x, y + Y, z + Z)}, {glm::vec3(X, y + Y, z + Z)}); // Top
-	debugData->addElement({glm::vec3(x + X, y, z + Z)}, {glm::vec3(X, y + Y, z + Z)}); // Right
+	debugData->Add({glm::vec3(x, y, z + Z)}, {glm::vec3(x + X, y, z + Z)}); // Bottom
+	debugData->Add({glm::vec3(x, y, z + Z)}, {glm::vec3(x, y + Y, z + Z)}); // Left
+	debugData->Add({glm::vec3(x, y + Y, z + Z)}, {glm::vec3(X, y + Y, z + Z)}); // Top
+	debugData->Add({glm::vec3(x + X, y, z + Z)}, {glm::vec3(X, y + Y, z + Z)}); // Right
 
 	// Connections
-	debugData->addElement({glm::vec3(x, y + Y, z)}, {glm::vec3(x, y + Y, z + Z)}); // Top Left
-	debugData->addElement({glm::vec3(x + X, y + Y, z)}, {glm::vec3(x + X, y + Y, z + Z)}); // Top Right
-	debugData->addElement({glm::vec3(x, y, z)}, {glm::vec3(x, y, z + Z)}); // Bottom Left
-	debugData->addElement({glm::vec3(x + X, y, z)}, {glm::vec3(x + X, y, z + Z)}); // Bottom Right
+	debugData->Add({glm::vec3(x, y + Y, z)}, {glm::vec3(x, y + Y, z + Z)}); // Top Left
+	debugData->Add({glm::vec3(x + X, y + Y, z)}, {glm::vec3(x + X, y + Y, z + Z)}); // Top Right
+	debugData->Add({glm::vec3(x, y, z)}, {glm::vec3(x, y, z + Z)}); // Bottom Left
+	debugData->Add({glm::vec3(x + X, y, z)}, {glm::vec3(x + X, y, z + Z)}); // Bottom Right
   }
 };
 

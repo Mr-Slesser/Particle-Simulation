@@ -1,7 +1,6 @@
 #ifndef VERTEXBUFFER_H
 #define VERTEXBUFFER_H
 
-#include "../../Particle/Particle.h"
 #include "../Primitives/Vertex.h"
 
 namespace GL
@@ -27,15 +26,11 @@ public:
     VertexBuffer(GLenum _usage);
     ~VertexBuffer();
 
-    void init(const unsigned long &_size);
+    void Init(const unsigned long &_size);
+    void Bind();
 
-    void bind();
-    void unbind();
-
-    T *getPointer();
-    void releasePointer();
-
-    unsigned int getID() const { return ID; }
+    T *Pointer();
+    void PointerRelease();
 };
 
 template<class T>
@@ -52,7 +47,7 @@ VertexBuffer<T>::~VertexBuffer()
 }
 
 template<class T>
-void VertexBuffer<T>::init(const unsigned long &_size)
+void VertexBuffer<T>::Init(const unsigned long &_size)
 {
   GL_LOG_TRACE("VertexBuffer<T>::init (null): Size: {}", _size);
   size = _size;
@@ -61,25 +56,19 @@ void VertexBuffer<T>::init(const unsigned long &_size)
 }
 
 template<class T>
-void VertexBuffer<T>::bind()
+void VertexBuffer<T>::Bind()
 {
-  glBindBuffer(GL_ARRAY_BUFFER, ID);
+  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
 }
 
 template<class T>
-void VertexBuffer<T>::unbind()
-{
-  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
-}
-
-template<class T>
-T *VertexBuffer<T>::getPointer()
+T *VertexBuffer<T>::Pointer()
 {
   return (T *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 }
 
 template<class T>
-void VertexBuffer<T>::releasePointer()
+void VertexBuffer<T>::PointerRelease()
 {
   GLCheck(glUnmapBuffer(GL_ARRAY_BUFFER));
 }

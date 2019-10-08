@@ -11,7 +11,7 @@ class DebugProgram : public Program
   DebugProgram();
   virtual ~DebugProgram() {};
 
-  virtual bool init(const char *vertexPath = PATH("Shaders/point.vertex.glsl"), const char *fragmentPath = PATH("Shaders/point.fragment.glsl")) override;
+  virtual bool Init(const char *vertexPath = PATH("Shaders/point.vertex.glsl"), const char *fragmentPath = PATH("Shaders/point.fragment.glsl")) override;
 
 };
 

@@ -13,7 +13,7 @@ namespace  GL
 	unsigned int countIndices;
 
 	VertexArray *vao;
-	VertexBuffer<CVertex> *vbo;
+	VertexBuffer<Vertex> *vbo;
 	unsigned int IBO;
 
    public:
@@ -26,8 +26,8 @@ namespace  GL
 
 	virtual void Bind()
 	{
-	  vao->bind();
-	  vbo->bind();
+	  vao->Bind();
+	  vbo->Bind();
 	  GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO));
 	}
 
@@ -35,43 +35,43 @@ namespace  GL
 	inline unsigned int Indices() { return countIndices; }
 
 	inline VertexArray *VAO() { return vao; }
-	inline VertexBuffer<CVertex> *VBO() { return vbo; }
+	inline VertexBuffer<Vertex> *VBO() { return vbo; }
 
-	inline CVertex *Pointer() { return vbo->getPointer(); }
-	inline void PointerRelease() { vbo->releasePointer(); }
+	inline Vertex *Pointer() { return vbo->Pointer(); }
+	inline void PointerRelease() { vbo->PointerRelease(); }
 
    protected:
-	virtual void __Init(std::vector<CVertex> &data, std::vector<unsigned int> &indices)
+	virtual void __Init(std::vector<Vertex> &data, std::vector<unsigned int> &indices)
 	{
 	  countElements = data.size();
 	  countIndices = indices.size();
 
 	  vao = new VertexArray();
-	  vao->init();
+	  vao->Init();
 
-	  vbo = new VertexBuffer<CVertex>(GL_DYNAMIC_DRAW);
-	  vbo->init(sizeof(CVertex) * countElements);
+	  vbo = new VertexBuffer<Vertex>(GL_DYNAMIC_DRAW);
+	  vbo->Init(sizeof(Vertex) * countElements);
 
 	  // TODO: Init with data!!
 	  auto ptr = Pointer();
-	  memcpy(ptr, data.data(), sizeof(CVertex) * countElements);
+	  memcpy(ptr, data.data(), sizeof(Vertex) * countElements);
 	  PointerRelease();
 	  ptr = nullptr;
 
-	  vao->setVertexLayout(CVertex::GetLayout());
+	  vao->SetLayout(Vertex::GetLayout());
 
 	  GLCheck(glGenBuffers(1, &IBO));
 	  GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO));
 	  GLCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, countIndices * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 	}
 
-	virtual void __ChangeData(std::vector<CVertex> &data, std::vector<unsigned int> &indices)
+	virtual void __ChangeData(std::vector<Vertex> &data, std::vector<unsigned int> &indices)
 	{
 	  countElements = data.size();
 	  countIndices = indices.size();
 
-	  vbo->bind();
-	  GLCheck(glBufferData(GL_ARRAY_BUFFER, sizeof(CVertex) * countElements, data.data(), GL_DYNAMIC_DRAW));
+	  vbo->Bind();
+	  GLCheck(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * countElements, data.data(), GL_DYNAMIC_DRAW));
 
 	  GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO));
 	  GLCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, countIndices * sizeof(unsigned int), indices.data(), GL_DYNAMIC_DRAW));

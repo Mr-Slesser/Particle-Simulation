@@ -5,30 +5,23 @@ GL::DebugProgram::DebugProgram()
 {
 }
 
-bool GL::DebugProgram::init(const char *vertexPath, const char *fragmentPath)
+bool GL::DebugProgram::Init(const char *vertexPath, const char *fragmentPath)
 {
   int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-  if (!compileShader(vertexPath, vertexShader))
+  if (!CompileShader(vertexPath, vertexShader))
   {
 	return false;
   }
 
-//  int geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-//  if (!compileShader(PATH("Shaders/Debug/debug.geometry.glsl"), geometryShader))
-//  {
-//	return false;
-//  }
-
   int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  if (!compileShader(fragmentPath, fragmentShader))
+  if (!CompileShader(fragmentPath, fragmentShader))
   {
 	return false;
   }
 
   ID = glCreateProgram();
   GLCheck(glAttachShader(ID, vertexShader));
-//  GLCheck(glAttachShader(ID, geometryShader));
   GLCheck(glAttachShader(ID, fragmentShader));
   GLCheck(glLinkProgram(ID));
 
@@ -44,7 +37,6 @@ bool GL::DebugProgram::init(const char *vertexPath, const char *fragmentPath)
   }
 
   GLCheck(glDeleteShader(vertexShader));
-//  GLCheck(glDeleteShader(geometryShader));
   GLCheck(glDeleteShader(fragmentShader));
 
   GL_LOG_TRACE("Program created with id: {}", ID);

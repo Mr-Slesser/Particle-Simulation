@@ -51,7 +51,6 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/random.hpp"
 
-#include "Core/GlobalConfiguration.h"
 #include "Utility/Log.h"
 #include "Utility/Profiler.h"
 #include "OpenGL/GLLog.h"
@@ -66,6 +65,5 @@
 #include "Core/Window/Window.h"
 #include "OpenGL/BaseObjects/Object.h"
 #include "OpenGL/BaseObjects/Renderable.h"
-#include "OpenGL/Datastores/RenderData.h"
 
 #endif /* PCHEADER_H */

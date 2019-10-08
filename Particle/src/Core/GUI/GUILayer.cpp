@@ -45,7 +45,7 @@ void GUILayer::addElement(std::function<void()> window)
     windows.push_back(window);
 }
 
-void GUILayer::render(Simulation *sim)
+void GUILayer::render()
 {
     PROFILE("GUILayer::render");
 
@@ -59,64 +59,64 @@ void GUILayer::render(Simulation *sim)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
             // Fill
-            ImGui::Text("Fill: %d / %d",
-                        GC::get()->getInt("CURR_NO_PARTICLES"),
-                        GC::get()->getInt("MAX_PARTICLES"));
+//            ImGui::Text("Fill: %d / %d",
+//                        GC::get()->getInt("CURR_NO_PARTICLES"),
+//                        GC::get()->getInt("MAX_PARTICLES"));
 
-            bool debug = sim->shouldDrawDebug();
-            ImGui::Checkbox("Debug Draw", &debug);
-            sim->setDrawDebug(debug);
-
-            // Speed.
-            glm::vec2 speed = sim->getSpeed();
-            ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");
-            ImGui::SliderFloat("Max Speed", &speed.y, 0.0f, 10.0f, "%.2f");
-            sim->setSpeed(speed);
-
-            // Drag coefficient
-            float dragCoeff = sim->getDragCoeff();
-            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, 0.0f, 1.0f, "%.2f");
-            sim->setDragCoeff(dragCoeff);
-
-            // Gravity
-            float gravity = sim->getGravity();
-            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
-            sim->setGravity(gravity);
-
-            // Samples
-            int samples = sim->getSamples();
-            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
-            sim->setSamples(samples);
-
-            // Sample Strength
-            float ss = sim->getSampleStrength();
-            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
-            sim->setSampleStrength(ss);
-
-            // Sample Strength Degredation
-            float ssd = sim->getSampleStengthDegradation();
-            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
-            sim->setSampleStengthDegradation(ssd);
+//            bool debug = sim->shouldDrawDebug();
+//            ImGui::Checkbox("Debug Draw", &debug);
+//            sim->setDrawDebug(debug);
+//
+//            // Speed.
+//            glm::vec2 speed = sim->getSpeed();
+//            ImGui::SliderFloat("Min Speed", &speed.x, -10.0f, 0.0f, "%.2f");
+//            ImGui::SliderFloat("Max Speed", &speed.y, 0.0f, 10.0f, "%.2f");
+//            sim->setSpeed(speed);
+//
+//            // Drag coefficient
+//            float dragCoeff = sim->getDragCoeff();
+//            ImGui::SliderFloat("Drag Coefficient", &dragCoeff, 0.0f, 1.0f, "%.2f");
+//            sim->setDragCoeff(dragCoeff);
+//
+//            // Gravity
+//            float gravity = sim->getGravity();
+//            ImGui::SliderFloat("Gravity", &gravity, 0.0f, 3.0f, "%.3f");
+//            sim->setGravity(gravity);
+//
+//            // Samples
+//            int samples = sim->getSamples();
+//            ImGui::SliderInt("Samples", &samples, 0.0f, 10.0f, "%d");
+//            sim->setSamples(samples);
+//
+//            // Sample Strength
+//            float ss = sim->getSampleStrength();
+//            ImGui::SliderFloat("Sample Str.", &ss, 0.0f, 2.0f, "%.2f");
+//            sim->setSampleStrength(ss);
+//
+//            // Sample Strength Degredation
+//            float ssd = sim->getSampleStengthDegradation();
+//            ImGui::SliderFloat("Sample Str Deg.", &ssd, 0.0f, 1.0f, "%.2f");
+//            sim->setSampleStengthDegradation(ssd);
 
             // ------------ FORCE GRID 0 -------------------------------------
             // ---------------------------------------------------------------
-            ImGui::Text("Forcegrid 0");
-            auto forcegrid0 = sim->Force(0);
-
-            int octaves = forcegrid0->getOctaves();
-            float per = forcegrid0->getPersistance();
-            ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
-            ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
-            forcegrid0->setOctaves(octaves);
-            forcegrid0->setPersistance(per);
-
-            bool actualMag = forcegrid0->isShowingActualMagnitude();
-		  	ImGui::Checkbox("Actual Magnitude", &actualMag);
-		  	forcegrid0->setShowActualMagnitude(actualMag);
-
-		  	float mag = forcegrid0->getMaxMagnitude();
-		  	ImGui::SliderFloat("Maximum Magnitude", &mag, 0.0f, 20.0f, "%.2f");
-		  	forcegrid0->setMaxMagnitude(mag);
+//            ImGui::Text("Forcegrid 0");
+//            auto forcegrid0 = sim->Force(0);
+//
+//            int octaves = forcegrid0->getOctaves();
+//            float per = forcegrid0->getPersistance();
+//            ImGui::SliderInt("Octaves", &octaves, 1.0f, 8.0f, "%d");
+//            ImGui::SliderFloat("Persistance", &per, 0.0f, 1.0f, "%.2f");
+//            forcegrid0->setOctaves(octaves);
+//            forcegrid0->setPersistance(per);
+//
+//            bool actualMag = forcegrid0->isShowingActualMagnitude();
+//		  	ImGui::Checkbox("Actual Magnitude", &actualMag);
+//		  	forcegrid0->setShowActualMagnitude(actualMag);
+//
+//		  	float mag = forcegrid0->getMaxMagnitude();
+//		  	ImGui::SliderFloat("Maximum Magnitude", &mag, 0.0f, 20.0f, "%.2f");
+//		  	forcegrid0->setMaxMagnitude(mag);
         }
         ImGui::End();
     }
