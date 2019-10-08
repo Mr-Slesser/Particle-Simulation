@@ -57,6 +57,8 @@ class RenderData
 	delete VAO;
   }
 
+  virtual void Init() = 0;
+
   virtual void Update()
   {
 

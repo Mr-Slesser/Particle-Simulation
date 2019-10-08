@@ -141,7 +141,7 @@ void PT::App::run()
 	  textureBuffer->loadData();
 
 	  datastore->Update();
-	  meshDatastore->Update();
+//	  meshDatastore->Update();
 
 	  renderer->clear();
 
@@ -153,10 +153,10 @@ void PT::App::run()
 		debugRenderer->draw();
 	  }
 
-	  gui->begin();
-	  gui->constantElements();
-	  gui->render(simulation);
-	  gui->end();
+//	  gui->begin();
+//	  gui->constantElements();
+//	  gui->render(simulation);
+//	  gui->end();
 	  glfwSwapBuffers(window->Context());
 //	}
   }

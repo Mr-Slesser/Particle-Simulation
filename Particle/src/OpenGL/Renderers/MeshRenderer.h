@@ -6,7 +6,8 @@
 #include "../../Utility/Profiler.h"
 #include "../Buffers/TextureBuffer.h"
 #include "../Primitives/Cube.h"
-#include "../Datastores/RenderData.h"
+//#include "../Datastores/RenderData.h"
+#include "../Datastores/ModelRenderData.h"
 
 namespace GL
 {
@@ -15,8 +16,7 @@ class MeshRenderer
  private:
   ProgramManager *programs;
   MeshDatastore *datastore;
-  RenderData<CVertex> *rd;
-
+  ModelRenderData *rd;
 
  public:
   MeshRenderer();
