@@ -111,8 +111,6 @@ add_executable(Particle
         Particle/src/Simulation/ForceGridData.h
         Particle/src/Simulation/Simulation.cpp
         Particle/src/Simulation/Simulation.h
-        Particle/src/Simulation/Vortex.cpp
-        Particle/src/Simulation/Vortex.h
         Particle/src/Utility/Math/Mathf.cpp
         Particle/src/Utility/Math/Mathf.h
         Particle/src/Utility/Random/Perlin.cpp
@@ -127,4 +125,4 @@ add_executable(Particle
         Particle/src/Utility/Timer.h
         Particle/src/main.cpp
         Particle/src/PCHeader.cpp
-        Particle/src/PCHeader.h Particle/src/OpenGL/Datastores/RenderData.h Particle/src/OpenGL/Datastores/ModelRenderData.cpp Particle/src/OpenGL/Datastores/ModelRenderData.h Particle/src/Core/Window/Camera.cpp Particle/src/Core/Window/Camera.h)
+        Particle/src/PCHeader.h Particle/src/OpenGL/Datastores/RenderData.h Particle/src/OpenGL/Datastores/ModelRenderData.cpp Particle/src/OpenGL/Datastores/ModelRenderData.h Particle/src/Core/Window/Camera.cpp Particle/src/Core/Window/Camera.h Particle/src/Simulation/Container.cpp Particle/src/Simulation/Container.h Particle/src/OpenGL/Primitives/Plane.cpp Particle/src/OpenGL/Primitives/Plane.h "Particle/src/OpenGL/Base Objects/Object.h" Particle/src/OpenGL/Renderables/Renderable.h Particle/src/OpenGL/BaseObjects/Terrain.cpp Particle/src/OpenGL/BaseObjects/Terrain.h)

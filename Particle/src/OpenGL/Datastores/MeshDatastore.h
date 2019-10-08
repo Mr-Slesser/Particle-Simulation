@@ -12,7 +12,6 @@ class MeshDatastore
   std::vector<MVertex> elements;
   std::vector<unsigned int> indices;
 
-
   int width;
   int height;
   int resolution;

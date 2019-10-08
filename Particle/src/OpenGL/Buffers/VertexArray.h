@@ -18,7 +18,7 @@ public:
     void bind();
     void unbind();
 
-    void setVertexLayout(VBOLayout &vbol);
+    void setVertexLayout(VBOLayout vbol);
 
 private:
     unsigned int ID;

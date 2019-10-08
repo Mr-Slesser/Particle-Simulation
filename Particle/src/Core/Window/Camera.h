@@ -4,13 +4,13 @@
 class Camera
 {
  private:
-  glm::vec3 position   = glm::vec3(0.0f, 0.0f,  200.0f);
+  glm::vec3 position   = glm::vec3(0.0f, 100.0f,  200.0f);
   glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
   glm::vec3 right;
   glm::vec3 up    = glm::vec3(0.0f, 1.0f,  0.0f);
   glm::vec3 worldUp   = glm::vec3(0.0f, 1.0f,  0.0f);
 
-  float speed = 0.05f;
+  float speed = 1.0f;
   float sensitivity = 0.5f;
   float yaw = -90.0f;
   float pitch = 0.0f;

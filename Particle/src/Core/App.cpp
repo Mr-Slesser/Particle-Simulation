@@ -44,7 +44,13 @@ bool PT::App::init()
   // Datastores
   datastore = new GL::Datastore();
   debugDatastore = new GL::DebugDatastore();
-  meshDatastore = new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
+  meshDatastore =
+	  new GL::MeshDatastore(d->simWidth * d->simResolution, d->simDepth * d->simResolution, d->meshResolution);
+
+  container = std::make_unique<Container>(0.0f, 0.0f, 0.0f, 600.0f, 200.0f, 500.0f);
+  container->SubmitDebugOutline(debugDatastore);
+  p = std::make_shared<Terrain>(0.0f, 0.0f, 0.0f, 600.0f, 200.0f, 500.f, 5);
+  p->Generate();
 
   // Programs
   programs = new GL::ProgramManager();
@@ -55,7 +61,13 @@ bool PT::App::init()
   }
 
   // Renderers & Forces
-  simulation = new Simulation(d->simWidth, d->simHeight, d->simDepth, d->simResolution, d->simYResolution, datastore, debugDatastore);
+  simulation = new Simulation(d->simWidth,
+							  d->simHeight,
+							  d->simDepth,
+							  d->simResolution,
+							  d->simYResolution,
+							  datastore,
+							  debugDatastore);
   textureBuffer = new TextureBuffer(GL_TEXTURE0, simulation->Force(0));
 
   renderer = new GL::Renderer();
@@ -100,45 +112,43 @@ void PT::App::run()
   {
 	PROFILE("App::run");
 
-	double time = glfwGetTime();
-	dt = (time - lastFrameTime);
-
-//	if(dt >= maxPeriod)
-//	{
+	{
+	  // Timing Functions
+	  double time = glfwGetTime();
+	  dt = (time - lastFrameTime);
 	  lastFrameTime = time;
+	}
 
-	  auto __simulation = simulation->__Update(dt);
+	auto __simulation = simulation->__Update(dt);
 
-	  glfwPollEvents();
-	  processInput(&window);
+	glfwPollEvents();
+	processInput(&window);
 
-	  for (int i = 0; i < __simulation.size(); i++)
-	  {
-		__simulation[i].join();
-	  }
+	for (int i = 0; i < __simulation.size(); i++)
+	{
+	  __simulation[i].join();
+	}
 
-	  textureBuffer->loadData();
+	textureBuffer->loadData();
+	datastore->Update();
+	meshDatastore->Update();
 
-	  datastore->Update();
-//	  meshDatastore->Update();
-
-//	  renderer->clear();
-		window.Clear();
-
-	  meshRenderer->draw();
+	{
+	  // Begin Draw
+	  window.Clear();
+//	  window.SetWireframeMode(true);
+	  meshRenderer->draw(p);
 	  renderer->draw(dt);
 
-//	  if (simulation->shouldDrawDebug())
-//	  {
-//		debugRenderer->draw();
-//	  }
+	  debugRenderer->draw();
 
-	  gui->begin();
-	  gui->constantElements();
-	  gui->render(simulation);
-	  gui->end();
-//	  glfwSwapBuffers(window.Context());
+//	  gui->begin();
+//	  gui->constantElements();
+//	  gui->render(simulation);
+//	  gui->end();
+
 	  window.SwapBuffers();
-//	}
+	  // End Draw
+	}
   }
 }

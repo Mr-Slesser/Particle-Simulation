@@ -10,7 +10,6 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-
 out vec4 outColor;
 
 void main()
@@ -18,7 +17,7 @@ void main()
 	if (inLifespan > 0.0)
 	{
 		gl_Position = projection * view * model * vec4(inPosition, 1.0);
-		 gl_PointSize = (1.0 - inMass / 1.0) * 10.0;
+		gl_PointSize = (1.0 - inMass / 1.0) * 10.0;
 		outColor = inColor;
 	}
 	else

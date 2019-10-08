@@ -12,7 +12,7 @@ GL::VertexArray::~VertexArray()
     GLCheck(glDeleteVertexArrays(1, &ID));
 }
 
-void GL::VertexArray::setVertexLayout(VBOLayout &layout)
+void GL::VertexArray::setVertexLayout(VBOLayout layout)
 {
     this->bind();
 

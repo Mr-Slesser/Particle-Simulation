@@ -42,9 +42,8 @@ void MeshRenderer::draw()
 
   datastore->bindRenderArray();
   datastore->bindVertexBuffer();
-
   programs->get_active(RENDER_MESH)->setMat4("model", glm::mat4(1.0f));
-  glDrawElements(GL_TRIANGLES, 0, datastore->getIndicesSize());
+  glDrawElements(GL_TRIANGLES, datastore->getIndicesSize(), GL_UNSIGNED_INT, nullptr);
 
   rd->bindRenderArray();
   rd->bindVertexBuffer();
@@ -57,5 +56,19 @@ void MeshRenderer::draw()
 	programs->get_active(RENDER_MESH)->setMat4("model", modelMatrix);
 	glDrawArrays(GL_TRIANGLES, 0, rd->getVerticesCount());
   }
+}
+
+void MeshRenderer::draw(std::shared_ptr<Renderable> r)
+{
+  programs->use(RENDER_MESH);
+  Camera *camera = Window::instance->GetCamera();
+  programs->get_active(RENDER_MESH)->setMat4("view", camera->View());
+  programs->get_active(RENDER_MESH)->setMat4("projection", camera->Projection(Window::instance->AspectRatio()));
+  programs->get_active(RENDER_MESH)->setVec3("lightPosition", 0.0f, 100.0f, 0.0f);
+  programs->get_active(RENDER_MESH)->setVec3("cameraPosition",camera->Position());
+
+  r->Bind();
+  programs->get_active(RENDER_MESH)->setMat4("model", glm::mat4(1.0f));
+  glDrawElements(GL_TRIANGLES, r->Indices(), GL_UNSIGNED_INT, nullptr);
 }
 }

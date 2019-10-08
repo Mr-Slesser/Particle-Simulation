@@ -64,5 +64,8 @@
 // Includes: Helpers
 #include "Headers/Colors.hpp"
 #include "Core/Window/Window.h"
+#include "OpenGL/BaseObjects/Object.h"
+#include "OpenGL/BaseObjects/Renderable.h"
+#include "OpenGL/Datastores/RenderData.h"
 
 #endif /* PCHEADER_H */

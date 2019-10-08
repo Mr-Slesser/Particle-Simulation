@@ -11,7 +11,6 @@ DebugDatastore::DebugDatastore()
 DebugDatastore::~DebugDatastore()
 {
     elements.clear();
-    elements.resize(100000);
 }
 
 void DebugDatastore::addElement(DebugDatastoreElement element)

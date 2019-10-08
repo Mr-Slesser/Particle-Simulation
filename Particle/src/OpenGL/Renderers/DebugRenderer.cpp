@@ -67,7 +67,7 @@ void DebugRenderer::draw()
 	programs->get_active(RENDER_DEBUG)->setMat4("projection", camera->Projection(Window::instance->AspectRatio()));
   	simulation->PrepareDebugDraw(programs->get_active(RENDER_DEBUG));
 
-    GLCheck(glDrawArrays(GL_POINTS, 0, datastore->dataSize()));
+    GLCheck(glDrawArrays(GL_LINES, 0, datastore->dataSize()));
 	VB->unbind();
     VA->unbind();
 }

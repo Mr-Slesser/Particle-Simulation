@@ -10,10 +10,12 @@ uniform mat4 projection;
 uniform vec2 resolution;
 uniform vec3 dimensions;
 
-out VS_OUT {
-	vec4 color;
-	vec3 index;
-} vs_out;
+//out VS_OUT {
+//	vec4 color;
+//	vec3 index;
+//} vs_out;
+
+out vec4 fColor;
 
 #define GD dimensions
 #define SIZE resolution
@@ -30,9 +32,11 @@ vec4 ConvertFromGridToWorld();
 
 void main()
 {
-	vs_out.index = inPosition;
-	gl_Position = projection * view * model * ConvertFromGridToWorld();
-	vs_out.color = inColor;
+//	vs_out.index = inPosition;
+	gl_Position = projection * view * model * vec4(inPosition, 1.0);
+//	gl_Position = projection * view * model * ConvertFromGridToWorld();
+	//	vs_out.color = inColor;
+	fColor = inColor;
 }
 
 vec4 ConvertFromGridToWorld()

@@ -25,6 +25,8 @@ class MeshRenderer
 
   bool init(ProgramManager *_programs, MeshDatastore *_datastore);
   void draw();
+  void draw(std::shared_ptr<Renderable> r);
+
 //  void draw(Cube &c);
 };
 }
