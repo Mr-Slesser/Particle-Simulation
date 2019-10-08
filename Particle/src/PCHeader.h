@@ -53,6 +53,7 @@
 
 #include "Core/GlobalConfiguration.h"
 #include "Utility/Log.h"
+#include "Utility/Profiler.h"
 #include "OpenGL/GLLog.h"
 #include "Headers/OpenGL.hpp"
 
@@ -62,7 +63,6 @@
 
 // Includes: Helpers
 #include "Headers/Colors.hpp"
-#include "Core/Camera/CameraManager.h"
-#include "Core/Input/InputManager.h"
+#include "Core/Window/Window.h"
 
 #endif /* PCHEADER_H */

@@ -32,6 +32,11 @@ Simulation::~Simulation()
 
 std::vector<std::thread> Simulation::__Update(double dt)
 {
+  if (glfwGetKey(Window::instance->Context(), GLFW_KEY_SPACE) == GLFW_PRESS)
+  {
+	AddParticle(1000);
+  }
+
     std::vector<std::thread> threads;
 
     for (int i = 0; i < forces.size(); i++)

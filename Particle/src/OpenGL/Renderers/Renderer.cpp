@@ -76,8 +76,8 @@ void GL::Renderer::draw(double dt)
 void GL::Renderer::MVP()
 {
   PROFILE("Renderer::MVP");
-
+  Camera *camera = Window::instance->GetCamera();
   programs->get_active(RENDER)->setMat4("model", glm::mat4(1.0f));
-  programs->get_active(RENDER)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
-  programs->get_active(RENDER)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
+  programs->get_active(RENDER)->setMat4("view", camera->View());
+  programs->get_active(RENDER)->setMat4("projection", camera->Projection(Window::instance->AspectRatio()));
 }

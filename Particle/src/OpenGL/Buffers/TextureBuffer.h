@@ -1,6 +1,8 @@
 #ifndef PARTICLE_TEXTUREBUFFER_H
 #define PARTICLE_TEXTUREBUFFER_H
 
+#include "../../Simulation/Simulation.h"
+
 class TextureBuffer {
 private:
     unsigned int bufferID;

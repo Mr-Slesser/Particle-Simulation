@@ -60,17 +60,15 @@ void DebugRenderer::draw()
 
 	programs->get_active(RENDER_DEBUG)->setInt("tbo_id0", 0);
 
+	Camera *camera = Window::instance->GetCamera();
+
     programs->get_active(RENDER_DEBUG)->setMat4("model", glm::mat4(1.0f));
-    programs->get_active(RENDER_DEBUG)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
-    programs->get_active(RENDER_DEBUG)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
+	programs->get_active(RENDER_DEBUG)->setMat4("view", camera->View());
+	programs->get_active(RENDER_DEBUG)->setMat4("projection", camera->Projection(Window::instance->AspectRatio()));
   	simulation->PrepareDebugDraw(programs->get_active(RENDER_DEBUG));
 
-//    GLCheck(glDrawArrays(GL_LINES, 0, data.size()));
     GLCheck(glDrawArrays(GL_POINTS, 0, datastore->dataSize()));
-
-
-
-  VB->unbind();
+	VB->unbind();
     VA->unbind();
 }
 

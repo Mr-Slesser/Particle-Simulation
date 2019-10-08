@@ -32,27 +32,19 @@ void MeshRenderer::draw()
 
   programs->use(RENDER_MESH);
 
+  Camera *camera = Window::instance->GetCamera();
 
-//  glm::mat4 m = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, -20.0f, 20.0f));
-//  m = glm::translate(m, glm::vec3(0.5f, -0.5f, 0.5f));
-//
-//  programs->get_active(RENDER_MESH)->setMat4("model", m);
-  programs->get_active(RENDER_MESH)->setMat4("view", PT::CameraManager::get()->getCamera()->getLookAt());
-  programs->get_active(RENDER_MESH)->setMat4("projection", PT::CameraManager::get()->getCamera()->getProjection());
-
-//  programs->get_active(RENDER_MESH)->setMat4("view", glm::mat4(1.0f));
-//  programs->get_active(RENDER_MESH)->setMat4("projection", glm::mat4(1.0f));
+  programs->get_active(RENDER_MESH)->setMat4("view", camera->View());
+  programs->get_active(RENDER_MESH)->setMat4("projection", camera->Projection(Window::instance->AspectRatio()));
 
   programs->get_active(RENDER_MESH)->setVec3("lightPosition", 0.0f, 100.0f, 0.0f);
-  programs->get_active(RENDER_MESH)->setVec3("cameraPosition", PT::CameraManager::get()->getCamera()->getPosition());
+  programs->get_active(RENDER_MESH)->setVec3("cameraPosition",camera->Position());
 
-//  datastore->bindRenderArray();
-//  datastore->bindVertexBuffer();
+  datastore->bindRenderArray();
+  datastore->bindVertexBuffer();
 
-//  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//  GLCheck(glDrawArrays(GL_TRIANGLES, 0, datastore->getVerticesCount()));
-//  glDrawElements(GL_TRIANGLES, datastore->getIndicesSize(), GL_UNSIGNED_INT, nullptr);
-//  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  programs->get_active(RENDER_MESH)->setMat4("model", glm::mat4(1.0f));
+  glDrawElements(GL_TRIANGLES, 0, datastore->getIndicesSize());
 
   rd->bindRenderArray();
   rd->bindVertexBuffer();
@@ -61,8 +53,8 @@ void MeshRenderer::draw()
   m = glm::rotate(m, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   for(auto &t : rd->GetTranslations())
   {
-	glm::mat4 model = glm::translate(m, t);
-	programs->get_active(RENDER_MESH)->setMat4("model", model);
+	glm::mat4 modelMatrix = glm::translate(m, t);
+	programs->get_active(RENDER_MESH)->setMat4("model", modelMatrix);
 	glDrawArrays(GL_TRIANGLES, 0, rd->getVerticesCount());
   }
 }

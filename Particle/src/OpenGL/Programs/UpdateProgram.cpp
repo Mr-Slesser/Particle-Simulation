@@ -11,8 +11,6 @@ GL::UpdateProgram::~UpdateProgram()
 
 bool GL::UpdateProgram::init(const char *vertexPath, const char *fragmentPath)
 {
-    GL_LOG_TRACE("Starting update program init.");
-
     int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     if (!compileShader(vertexPath, vertexShader))

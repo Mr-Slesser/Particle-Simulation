@@ -8,7 +8,6 @@ PT::App::App()
 
 PT::App::~App()
 {
-//  delete emitters;
   delete simulation;
   delete programs;
   delete renderer;
@@ -18,8 +17,6 @@ PT::App::~App()
   delete debugDatastore;
   delete meshDatastore;
   delete gui;
-
-  glfwTerminate();
 }
 
 bool PT::App::init()
@@ -27,9 +24,6 @@ bool PT::App::init()
   PROFILE("App::init");
 
   Log::init();
-  CORE_LOG_TRACE("Logger startup: [Core]");
-  GL_LOG_TRACE("  Logger startup: [GL  ]");
-
   Utils::ApplicationData *d = Utils::ConfigReader::ReadConfig(PATH("config.ini"));
   if (d == nullptr)
   {
@@ -38,16 +32,14 @@ bool PT::App::init()
   }
 
   GC::get()->init(d->maxParticles);
-  InputManager::get()->setParticleFloodAmount(d->particleFloodNumber);
 
   // Window
-  window = new Window(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen));
-  if (!window->Init())
+  if (!window.Init(WindowConfig(d->windowWidth, d->windowHeight, d->wireframe, d->fullscreen)))
   {
 	CORE_LOG_TRACE("EXIT: Window initialization failed");
 	return false;
   }
-  Log_GL_Parameters();
+  window.AttachCamera(Camera());
 
   // Datastores
   datastore = new GL::Datastore();
@@ -91,31 +83,20 @@ bool PT::App::init()
 	return false;
   }
 
-  // InputManager
-  InputManager::get()->registerMouseCallbacks(window);
-
   // GUI
   gui = new GUILayer();
-  if (!gui->init(window->Context()))
+  if (!gui->init(window.Context()))
   {
 	CORE_LOG_TRACE("EXIT: GUI Layer initialization failed");
 	return false;
   }
-
-  CameraManager::get()->getCamera();
-  CameraManager::get()->register_input_dispatch();
-
-  // Emitters
-//  emitters = new EmitterManager();
-//  emitters->addEmitter(datastore, gui, S_TO_MS(0.1), Colour::GREEN);
-//  emitters->addEmitter(datastore, gui, S_TO_MS(0.4), Colour::BLUE);
 
   return true;
 }
 
 void PT::App::run()
 {
-  while (window->IsActive())
+  while (window.IsActive())
   {
 	PROFILE("App::run");
 
@@ -129,9 +110,7 @@ void PT::App::run()
 	  auto __simulation = simulation->__Update(dt);
 
 	  glfwPollEvents();
-
-	  InputManager::get()->processInput(window, renderer, simulation);
-//	  emitters->update(debugDatastore);
+	  processInput(&window);
 
 	  for (int i = 0; i < __simulation.size(); i++)
 	  {
@@ -143,21 +122,23 @@ void PT::App::run()
 	  datastore->Update();
 //	  meshDatastore->Update();
 
-	  renderer->clear();
+//	  renderer->clear();
+		window.Clear();
 
 	  meshRenderer->draw();
 	  renderer->draw(dt);
 
-	  if (simulation->shouldDrawDebug())
-	  {
-		debugRenderer->draw();
-	  }
+//	  if (simulation->shouldDrawDebug())
+//	  {
+//		debugRenderer->draw();
+//	  }
 
-//	  gui->begin();
-//	  gui->constantElements();
-//	  gui->render(simulation);
-//	  gui->end();
-	  glfwSwapBuffers(window->Context());
+	  gui->begin();
+	  gui->constantElements();
+	  gui->render(simulation);
+	  gui->end();
+//	  glfwSwapBuffers(window.Context());
+	  window.SwapBuffers();
 //	}
   }
 }

@@ -2,11 +2,11 @@
 #define DEBUGRENDERER_H
 
 #include "../Programs/ProgramManager.h"
-#include "../../Simulation/ForceGrid.h"
-#include "../../Core/Camera/CameraManager.h"
+#include "../../Simulation/Simulation.h"
 #include "../Datastores/DebugDatastore.h"
 
 #include "../Buffers/VertexArray.h"
+#include "../Buffers/TextureBuffer.h"
 
 namespace GL
 {

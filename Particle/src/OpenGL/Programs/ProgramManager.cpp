@@ -27,7 +27,6 @@ bool ProgramManager::init()
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init UPDATE program.");
         return false;
     }
-    Print_All(programs[PROGRAM_TYPE::UPDATE]->getID());
 
     // RENDER PROGRAM
     programs[PROGRAM_TYPE::RENDER] = new Program();
@@ -36,7 +35,6 @@ bool ProgramManager::init()
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER program.");
         return false;
     }
-    Print_All(programs[PROGRAM_TYPE::RENDER]->getID());
 
     // DEBUG PROGRAM
     programs[PROGRAM_TYPE::RENDER_DEBUG] = new DebugProgram();
@@ -45,7 +43,6 @@ bool ProgramManager::init()
         GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_DEBUG program.");
         return false;
     }
-    Print_All(programs[PROGRAM_TYPE::RENDER_DEBUG]->getID());
 
     // RENDER MESH PROGRAM
 	programs[PROGRAM_TYPE::RENDER_MESH] = new Program();
@@ -54,7 +51,6 @@ bool ProgramManager::init()
 	  GL_LOG_CRITICAL("GL::ProgramManager::init() -> Unable to init RENDER_MESH program.");
 	  return false;
 	}
-	Print_All(programs[PROGRAM_TYPE::RENDER_MESH]->getID());
 
     return true;
 }
@@ -63,7 +59,6 @@ void ProgramManager::use(PROGRAM_TYPE type, unsigned int i)
 {
     if (!programs[type])
     {
-
         GL_LOG_CRITICAL("Use Program Call: Type {} has not been initialized!", type);
     }
     else

@@ -4,7 +4,6 @@
 // Include: ImGUI
 #include "Headers/ImGUI.hpp"
 
-#include "../Camera/CameraManager.h"
 #include "../Window/Window.h"
 #include "../../Simulation/Simulation.h"
 

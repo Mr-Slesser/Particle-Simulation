@@ -14,7 +14,6 @@
 #include "../Simulation/ForceGrid.h"
 #include "GUI/GUILayer.h"
 #include "../Utility/Timer.h"
-#include "../Particle/Emitter/EmitterManager.h"
 
 #include "../OpenGL/Primitives/Cube.h"
 
@@ -23,7 +22,8 @@ namespace PT
 class App
 {
 private:
-    Window *window;
+    Window window;
+
     double lastFrameTime = 0.0f;
     double dt;
     double fpsTarget = 600.0f;

@@ -2,12 +2,11 @@
 #define MESH_RENDERER_H
 
 #include "../Datastores/MeshDatastore.h"
-#include "../../Core/Camera/CameraManager.h"
 #include "../../Utility/Profiler.h"
 #include "../Buffers/TextureBuffer.h"
 #include "../Primitives/Cube.h"
-//#include "../Datastores/RenderData.h"
 #include "../Datastores/ModelRenderData.h"
+#include "../Programs/ProgramManager.h"
 
 namespace GL
 {

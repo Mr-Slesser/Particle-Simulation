@@ -50,7 +50,7 @@ void GUILayer::render(Simulation *sim)
     PROFILE("GUILayer::render");
 
     bool hov = ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow);
-    GC::get()->updateBool("GUI_HOVER", hov);
+	Window::instance->SetMouseOverGUI(hov);
 
     {
         ImGui::Begin("Debug Variables");
